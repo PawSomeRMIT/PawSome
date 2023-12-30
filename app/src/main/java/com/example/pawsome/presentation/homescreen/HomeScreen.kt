@@ -46,6 +46,7 @@ import com.example.pawsome.common.FilterChipsWithEmoji
 import com.example.pawsome.common.NavBar
 import com.example.pawsome.presentation.searchscreen.SearchBar
 import com.example.pawsome.presentation.searchscreen.SearchResults
+import com.example.pawsome.presentation.settings.SettingScreen
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -109,9 +110,9 @@ private fun navHost(
 //                MapScreen(inputEventData = eventsList)
 //            }
 //
-//            composable(com.example.pawsome.model.Screen.Setting.route) {
-//                Setting(navController = navController)
-//            }
+            composable(com.example.pawsome.model.Screen.Setting.route) {
+                SettingScreen(navController = navController)
+            }
         }
     }
 
@@ -146,13 +147,6 @@ fun HomeContent(
 fun Date.toFormattedString(): String {
     val simpleDateFormat = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
     return simpleDateFormat.format(this)
-}
-
-
-enum class Screen(val route: String, val icon: ImageVector, val title: String) {
-    Home("home", Icons.Default.Home, "Home"),
-    Profile("profile", Icons.Default.Person, "Profile"),
-    Settings("settings", Icons.Default.Settings, "Settings")
 }
 
 @Preview(showBackground = true)

@@ -58,7 +58,7 @@ fun ButtonComponent(
             .heightIn(48.dp)
             .background(
                 brush = Brush.horizontalGradient(
-                    if (value.lowercase() != "logout") {
+                    if (value.lowercase() != "logout" && value.lowercase() != "sign out") {
                         listOf(
                             Color(49,109,246),
                             Color(49,109,246),

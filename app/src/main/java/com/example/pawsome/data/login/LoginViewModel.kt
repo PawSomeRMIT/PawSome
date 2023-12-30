@@ -99,6 +99,10 @@ class LoginViewModel(
 
     private fun logout() {
 
+//        navHostController.navigate(Screen.Register.Login.route) {
+//            popUpTo(Screen.Register.Login.route)
+//        }
+
         val firebaseAuth = FirebaseAuth.getInstance()
 
         firebaseAuth.signOut()
@@ -113,11 +117,10 @@ class LoginViewModel(
                 Log.d("Auth", "Sign out success")
 
                 // Back to login page
-//                AppRouter.goTo(Page.LoginPage)
-//                navHostController.navigate(Screen.Register.Login.route) {
-//                    launchSingleTop = true
-//                    popUpTo(Screen.Register.Login.route)
-//                }
+                navHostController.navigate(Screen.Register.Login.route) {
+                    launchSingleTop = true
+                    popUpTo(Screen.Register.Login.route)
+                }
 
             } else {
                 Log.d("Auth", "Sign out fail")

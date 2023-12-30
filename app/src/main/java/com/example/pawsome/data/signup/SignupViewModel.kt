@@ -202,7 +202,7 @@ fun saveUserData(
     val TAG = "Data save"
 
     val userData = User(userID = userID, firstname = firstname, lastname = lastname, username = username,
-        email = email, image = "https://i.postimg.cc/7hjg2wZm/836.jpg", attendActivity = attendActivity,
+        email = email, image = "https://i.postimg.cc/Kj1LjWRN/charles-leclerc.png", attendActivity = attendActivity,
         membership = membership, userType = userType)
 
     val userRef = Firebase.firestore.collection("user").document(userID)
