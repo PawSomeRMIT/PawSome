@@ -22,6 +22,8 @@ sealed class Screen(val route: String) {
     }
 
     object HomeScreen : Screen("home")
+    object LoadingScreen : Screen("loading")
+    object FailureScreen : Screen("failure")
 //    object DetailScreen : Screen("detail")
     object Setting : Screen("settings")
 //    object StatScreen : Screen("dashboard")

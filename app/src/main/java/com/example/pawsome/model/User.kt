@@ -16,12 +16,8 @@ import android.os.Parcelable
 
 data class User (
     var userID: String = "",
-    val firstname: String = "",
-    val lastname: String = "",
     val username: String = "",
     val email: String = "",
     val image: String = "",
-    val attendActivity: Int = 0,
     val membership: String = "normal",
-    val userType: String = "normal"
 )

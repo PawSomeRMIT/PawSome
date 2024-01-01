@@ -14,12 +14,12 @@
 package com.example.pawsome.data.signup
 
 sealed class SignupUIEvent {
-    data class LastNameChanged(val lastname: String): SignupUIEvent()
-    data class FirstNameChanged(val firstname: String): SignupUIEvent()
+//    data class LastNameChanged(val lastname: String): SignupUIEvent()
+//    data class FirstNameChanged(val firstname: String): SignupUIEvent()
     data class UsernameChanged(val username: String): SignupUIEvent()
-    data class UserTypeChanged(val userType: String): SignupUIEvent()
     data class EmailChanged(val email: String): SignupUIEvent()
     data class PasswordChanged(val password: String): SignupUIEvent()
+    data class ConfirmedPasswordChanged(val confirmedPassword: String): SignupUIEvent()
 
     object RegisterButtonClicked: SignupUIEvent()
 }

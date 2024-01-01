@@ -14,21 +14,20 @@
 package com.example.pawsome.data.signup
 
 data class SignupUIState(
-    var firstName: String = "",
-    var lastName: String = "",
+//    var firstName: String = "",
+//    var lastName: String = "",
     var email: String = "",
     var password: String = "",
+    var confirmedPassword: String = "",
     var username: String = "",
     var image: String = "",
-    val attendActivity: Int = 0,
     val membership: String = "normal",
-    val userType: String = "normal",
 
 
-    var firstNameError: Boolean = false,
-    var lastNameError: Boolean = false,
+//    var firstNameError: Boolean = false,
+//    var lastNameError: Boolean = false,
     var emailError: Boolean = false,
-    var userTypeError: Boolean = false,
     var passwordError: Boolean = false,
+    var confirmedPasswordError: Boolean = false,
     var usernameError: Boolean = false
 )
