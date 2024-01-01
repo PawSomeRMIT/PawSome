@@ -22,12 +22,16 @@ import androidx.navigation.NavHostController
 import com.example.pawsome.data.Validator
 import com.example.pawsome.model.Screen
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class LoginViewModel(
     private val navHostController: NavHostController
 ) : ViewModel() {
-    private val TAG = LoginViewModel::class.simpleName
+    private val tag = LoginViewModel::class.simpleName
     var loginUIState = mutableStateOf(LoginUIState())
     var allValidationsPassed = mutableStateOf(false)
     var loginInProgress = mutableStateOf(false)
@@ -48,8 +52,6 @@ class LoginViewModel(
 
             is LoginUIEvent.LoginButtonClicked -> { login() }
             is LoginUIEvent.LogoutButtonClicked -> { logout() }
-
-            else -> {}
         }
 
         validateLoginUIDataWithRules()
@@ -81,18 +83,47 @@ class LoginViewModel(
             .getInstance()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                Log.d(TAG,"Inside_login_success")
-                Log.d(TAG,"${it.isSuccessful}")
+                Log.d(tag,"Inside_login_success")
+                Log.d(tag,"${it.isSuccessful}")
 
                 if(it.isSuccessful){
                     loginInProgress.value = false
-                    navHostController.navigate(Screen.HomeScreen.route)
+
+                    // Navigate to LoadingScreen
+                    navHostController.navigate(Screen.LoadingScreen.route)
+
+                    // Loading for 3 seconds
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(3000) // 3 seconds
+                        // Navigate to home page after delay
+                        navHostController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.LoadingScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             }
             .addOnFailureListener {
-                Log.d(TAG,"Inside_login_failure")
-                Log.d(TAG,"${it.localizedMessage}")
+                Log.d(tag,"Inside_login_failure")
+                it.localizedMessage?.let { message -> Log.d(tag, message) }
 
+                val errorType = "Login Failed"
+                val errorDesc = it.localizedMessage
+
+                // Navigate to LoadingScreen
+                navHostController.navigate("${Screen.FailureScreen.route}/$errorType/$errorDesc")
+
+                // Loading for 3 seconds
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(3000) // 3 seconds
+                    // Navigate to login page after delay
+                    navHostController.navigate(Screen.Register.Login.route) {
+                        popUpTo(Screen.FailureScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
                 loginInProgress.value = false
             }
     }

@@ -41,61 +41,61 @@ class DataViewModel: ViewModel() {
         }
     }
 
-    fun saveForm(
-        tag: String,
-        image: Uri?,
-        organizerName: String,
-        eventName: String,
-        eventTime: String,
-        location: String,
-        attendeeCount: Int,
-        description: String
-    ) {
-        // Create a storage reference
-        val storage = FirebaseStorage.getInstance().reference.child("sites/${UUID.randomUUID()}.jpg")
-
-        // Create a FireStore reference
-        val db = FirebaseFirestore.getInstance()
-
-        var imgUrl: String = ""
-
-        image?.let {
-            storage.putFile(it)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        storage.downloadUrl.addOnSuccessListener { uri ->
-                            imgUrl = uri.toString()
-
-                            val formData = EventData(
-                                tag = tag,
-                                imageUrl =  imgUrl,
-                                organizerName =  organizerName,
-                                eventName = eventName,
-                                eventTime = eventTime,
-                                location = location,
-                                attendeeCount =  attendeeCount,
-                                description = description)
-
-                            db.collection("form")
-                                .add(formData)
-                                .addOnSuccessListener {
-                                    updateUserDetails()
-
-                                    Log.d("Firestore", "Inside_OnSuccessListener")
-                                    Log.d("Firestore", "Save form successfully")
-                                }
-                                .addOnFailureListener{
-                                    Log.d("Firestore", "Inside_OnFailureListener")
-                                    Log.d("Firestore", "Exception= ${it.message}")
-                                    Log.d("Firestore", "Exception= ${it.localizedMessage}")
-                                }
-                        }
-                    } else {
-                        Log.d("Storage", "Upload failed: ${task.exception?.message}")
-                    }
-                }
-        }
-    }
+//    fun saveForm(
+//        tag: String,
+//        image: Uri?,
+//        organizerName: String,
+//        eventName: String,
+//        eventTime: String,
+//        location: String,
+//        attendeeCount: Int,
+//        description: String
+//    ) {
+//        // Create a storage reference
+//        val storage = FirebaseStorage.getInstance().reference.child("sites/${UUID.randomUUID()}.jpg")
+//
+//        // Create a FireStore reference
+//        val db = FirebaseFirestore.getInstance()
+//
+//        var imgUrl: String = ""
+//
+//        image?.let {
+//            storage.putFile(it)
+//                .addOnCompleteListener { task ->
+//                    if (task.isSuccessful) {
+//                        storage.downloadUrl.addOnSuccessListener { uri ->
+//                            imgUrl = uri.toString()
+//
+//                            val formData = EventData(
+//                                tag = tag,
+//                                imageUrl =  imgUrl,
+//                                organizerName =  organizerName,
+//                                eventName = eventName,
+//                                eventTime = eventTime,
+//                                location = location,
+//                                attendeeCount =  attendeeCount,
+//                                description = description)
+//
+//                            db.collection("form")
+//                                .add(formData)
+//                                .addOnSuccessListener {
+//                                    updateUserDetails()
+//
+//                                    Log.d("Firestore", "Inside_OnSuccessListener")
+//                                    Log.d("Firestore", "Save form successfully")
+//                                }
+//                                .addOnFailureListener{
+//                                    Log.d("Firestore", "Inside_OnFailureListener")
+//                                    Log.d("Firestore", "Exception= ${it.message}")
+//                                    Log.d("Firestore", "Exception= ${it.localizedMessage}")
+//                                }
+//                        }
+//                    } else {
+//                        Log.d("Storage", "Upload failed: ${task.exception?.message}")
+//                    }
+//                }
+//        }
+//    }
 
 
     fun getUserDetails(): User? {
@@ -104,7 +104,7 @@ class DataViewModel: ViewModel() {
 
         val db = Firebase.firestore
 
-        val TAG = "Firestore"
+        val tag = "Firestore"
         var userData: User? = null
 
         if (userID != null) {
@@ -118,7 +118,7 @@ class DataViewModel: ViewModel() {
                         userData = null
                 }
                 .addOnFailureListener {
-                    Log.e(TAG, "Failed to retrieve user.")
+                    Log.e(tag, "Failed to retrieve user.")
                 }
 
             return userData
@@ -128,41 +128,30 @@ class DataViewModel: ViewModel() {
     }
 
 
-    fun updateUserDetails() {
-        val auth = FirebaseAuth.getInstance()
-        val userID = auth.currentUser?.uid
-
-        val db = Firebase.firestore
-
-        val TAG = "Firestore"
-
-        if (userID != null) {
-            val userDocument = db.collection("user").document(userID)
-            userDocument
-                .get()
-                .addOnSuccessListener {
-                    if (it.exists()) {
-                        val userData = it.toObject(User::class.java)
-                        var currentAttendActivity = userData!!.attendActivity
-                        currentAttendActivity += 1
-
-                        userDocument
-                            .update("attendActivity", currentAttendActivity)
-                            .addOnSuccessListener {
-                                Log.d(TAG, "attendActivity successfully updated!")
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e(TAG, "Error updating attendActivity", e)
-                            }
-                    } else {
-                        Log.e(TAG, "No user found")
-                    }
-                }
-                .addOnFailureListener {
-                    Log.e(TAG, "Failed to retrieve user $userID")
-                }
-        }
-    }
+//    fun updateUserDetails() {
+//        val auth = FirebaseAuth.getInstance()
+//        val userID = auth.currentUser?.uid
+//
+//        val db = Firebase.firestore
+//
+//        val tag = "Firestore"
+//
+//        if (userID != null) {
+//            val userDocument = db.collection("user").document(userID)
+//            userDocument
+//                .get()
+//                .addOnSuccessListener {
+//                    if (it.exists()) {
+//
+//                    } else {
+//                        Log.e(tag, "No user found")
+//                    }
+//                }
+//                .addOnFailureListener {
+//                    Log.e(tag, "Failed to retrieve user $userID")
+//                }
+//        }
+//    }
 
 
     fun getAllEvents(
@@ -170,7 +159,7 @@ class DataViewModel: ViewModel() {
     ) {
         // Create a FireStore reference
         val db = FirebaseFirestore.getInstance()
-        val TAG = "firestore"
+        val tag = "firestore"
 
         db.collection("form")
             .get()
@@ -183,11 +172,11 @@ class DataViewModel: ViewModel() {
                 }
 
                 onResult(eventList)
-                Log.e(TAG, "Get all event data success")
+                Log.e(tag, "Get all event data success")
             }
             .addOnFailureListener {e ->
                 onResult(emptyList())
-                Log.e(TAG, "Failed to get event data: ${e.message}")
+                Log.e(tag, "Failed to get event data: ${e.message}")
             }
     }
 }

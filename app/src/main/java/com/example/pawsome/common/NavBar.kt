@@ -91,7 +91,7 @@ fun CenterActionButton(navController: NavController,
             snapshot?.let {
                 snapshot.toObject<User>()?.let {
                     userData = it
-                    userRole = it.userType
+                    userRole = it.membership
                 }
             }
         }

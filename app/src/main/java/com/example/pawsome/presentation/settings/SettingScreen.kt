@@ -73,9 +73,8 @@ fun SettingScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             Profile(
                 inputImageUrl = userData.image,
-                name = "${userData.firstname} ${userData.lastname}",
-                username = userData.username,
-                tier = userData.userType)
+                name = userData.username,
+                tier = userData.membership)
 
             ButtonComponent(
                 value = "Sign out",

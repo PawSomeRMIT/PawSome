@@ -26,41 +26,25 @@ import com.example.pawsome.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class SignupViewModel(
     private val navHostController: NavHostController
 ) : ViewModel() {
-    private val TAG = SignupViewModel::class.simpleName
+    private val tag = SignupViewModel::class.simpleName
     var signupUIState = mutableStateOf(SignupUIState())
     var allValidationsPassed = mutableStateOf(false)
     var signUpInProgress = mutableStateOf(false)
     fun onEvent(event: SignupUIEvent) {
         when (event) {
-            is SignupUIEvent.FirstNameChanged -> {
-                signupUIState.value = signupUIState.value.copy(
-                    firstName = event.firstname
-                )
-                printState()
-            }
-
-            is SignupUIEvent.LastNameChanged -> {
-                signupUIState.value = signupUIState.value.copy(
-                    lastName = event.lastname
-                )
-                printState()
-            }
 
             is SignupUIEvent.UsernameChanged -> {
                 signupUIState.value = signupUIState.value.copy(
                     username = event.username
-                )
-                printState()
-            }
-
-            is SignupUIEvent.UserTypeChanged -> {
-                signupUIState.value = signupUIState.value.copy(
-                    userType = event.userType
                 )
                 printState()
             }
@@ -72,7 +56,6 @@ class SignupViewModel(
                 printState()
             }
 
-
             is SignupUIEvent.PasswordChanged -> {
                 signupUIState.value = signupUIState.value.copy(
                     password = event.password
@@ -80,16 +63,21 @@ class SignupViewModel(
                 printState()
             }
 
-            is SignupUIEvent.RegisterButtonClicked -> { signUp() }
+            is SignupUIEvent.ConfirmedPasswordChanged -> {
+                signupUIState.value = signupUIState.value.copy(
+                    confirmedPassword = event.confirmedPassword
+                )
+                printState()
+            }
 
-            else -> {}
+            is SignupUIEvent.RegisterButtonClicked -> { signUp() }
         }
         validateDataWithRules()
     }
 
 
     private fun signUp() {
-        Log.d(TAG, "Inside_signUp")
+        Log.d(tag, "Inside_signUp")
         printState()
         createUserInFirebase(
             email = signupUIState.value.email,
@@ -99,66 +87,56 @@ class SignupViewModel(
     }
 
     private fun validateDataWithRules() {
-        val fNameResult = Validator.validateFirstName(
-            fName = signupUIState.value.firstName
-        )
-
-        val lNameResult = Validator.validateLastName(
-            lName = signupUIState.value.lastName
-        )
 
         val usernameResult = Validator.validateUsername(
             username = signupUIState.value.username
-        )
-
-        val userTypeResult = Validator.validateUsername(
-            username = signupUIState.value.userType
         )
 
         val emailResult = Validator.validateEmail(
             email = signupUIState.value.email
         )
 
-
         val passwordResult = Validator.validatePassword(
             password = signupUIState.value.password
         )
 
-        Log.d(TAG, "Inside_validateDataWithRules")
-        Log.d(TAG, "fNameResult= $fNameResult")
-        Log.d(TAG, "lNameResult= $lNameResult")
-        Log.d(TAG, "emailResult= $emailResult")
-        Log.d(TAG, "userTypeResult= $userTypeResult")
-        Log.d(TAG, "passwordResult= $passwordResult")
-        Log.d(TAG, "usernameResult= $usernameResult")
-
-        signupUIState.value = signupUIState.value.copy(
-            firstNameError = fNameResult.status,
-            lastNameError = lNameResult.status,
-            emailError = emailResult.status,
-            userTypeError = userTypeResult.status,
-            usernameError = emailResult.status,
-            passwordError = passwordResult.status
+        val confirmedPasswordResult = Validator.validateConfirmedPassword(
+            confirmedPassword = signupUIState.value.confirmedPassword,
+            password = signupUIState.value.password
         )
 
-        allValidationsPassed.value = fNameResult.status && lNameResult.status &&
-                emailResult.status && passwordResult.status && usernameResult.status
+        Log.d(tag, "Inside_validateDataWithRules")
+        Log.d(tag, "emailResult= $emailResult")
+        Log.d(tag, "passwordResult= $passwordResult")
+        Log.d(tag, "confirmedPasswordResult= $confirmedPasswordResult")
+        Log.d(tag, "usernameResult= $usernameResult")
+
+        signupUIState.value = signupUIState.value.copy(
+            emailError = emailResult.status,
+            usernameError = emailResult.status,
+            passwordError = passwordResult.status,
+            confirmedPasswordError = confirmedPasswordResult.status
+        )
+
+        allValidationsPassed.value =
+                emailResult.status && passwordResult.status &&
+                usernameResult.status && confirmedPasswordResult.status
     }
 
     private fun printState() {
-        Log.d(TAG, "Inside_printState")
-        Log.d(TAG, signupUIState.value.toString())
+        Log.d(tag, "Inside_printState")
+        Log.d(tag, signupUIState.value.toString())
     }
 
     private fun createUserInFirebase(email: String, password: String, others: MutableState<SignupUIState>) {
         signUpInProgress.value = true
-        var auth = FirebaseAuth.getInstance()
+        val auth = FirebaseAuth.getInstance()
 
         auth
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
-                Log.d(TAG, "Inside_OnCompleteListener")
-                Log.d(TAG, " isSuccessful = ${it.isSuccessful}")
+                Log.d(tag, "Inside_OnCompleteListener")
+                Log.d(tag, " isSuccessful = ${it.isSuccessful}")
 
                 signUpInProgress.value = false
                 if (it.isSuccessful) {
@@ -166,56 +144,80 @@ class SignupViewModel(
                     // Save user data
                     saveUserData(
                         auth.currentUser?.uid ?: "",
-                        others.value.lastName,
-                        others.value.firstName,
                         others.value.username,
                         others.value.email,
                         others.value.image,
-                        others.value.attendActivity,
-                        others.value.membership,
-                        others.value.userType
+                        others.value.membership
                     )
 
-                    // Back to Login page
-                    navHostController.navigate(Screen.Register.Login.route)
+                    // Navigate to LoadingScreen
+                    navHostController.navigate(Screen.LoadingScreen.route)
+
+                    // Loading for 3 seconds
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(3000) // 3 seconds
+                        // Navigate to Login page after delay
+                        navHostController.navigate(Screen.Register.Login.route) {
+                            popUpTo(Screen.LoadingScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             }
             .addOnFailureListener {
-                Log.d(TAG, "Inside_OnFailureListener")
-                Log.d(TAG, "Exception= ${it.message}")
-                Log.d(TAG, "Exception= ${it.localizedMessage}")
+                Log.d(tag, "Inside_OnFailureListener")
+                Log.d(tag, "Exception= ${it.message}")
+                Log.d(tag, "Exception= ${it.localizedMessage}")
+
+                val errorType = "Signup Failed"
+                val errorDesc = it.localizedMessage
+
+                // Navigate to LoadingScreen
+                navHostController.navigate("${Screen.FailureScreen.route}/$errorType/$errorDesc")
+
+                // Loading for 3 seconds
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(3000) // 3 seconds
+                    // Navigate to signup page after delay
+                    navHostController.navigate(Screen.Register.Signup.route) {
+                        popUpTo(Screen.FailureScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             }
     }
 }
 
 fun saveUserData(
     userID: String,
-    lastname: String,
-    firstname: String,
     username: String,
     email: String,
-    image: String,
-    attendActivity: Int = 0,
+    image: String = "https://i.postimg.cc/Kj1LjWRN/charles-leclerc.png",
     membership: String = "normal",
-    userType: String = "normal"
 ) {
-    val TAG = "Data save"
+    val tag = "Data save"
 
-    val userData = User(userID = userID, firstname = firstname, lastname = lastname, username = username,
-        email = email, image = "https://i.postimg.cc/Kj1LjWRN/charles-leclerc.png", attendActivity = attendActivity,
-        membership = membership, userType = userType)
+    val userData = User(
+        userID = userID,
+        username = username,
+        email = email,
+        image = image,
+        membership = membership
+    )
 
     val userRef = Firebase.firestore.collection("user").document(userID)
 
     userRef
         .set(userData)
         .addOnSuccessListener {
-            Log.d(TAG, "Successfully store user")
+            Log.d(tag, "Successfully store user")
         }
         .addOnFailureListener {
-            Log.d(TAG, "Inside_OnFailureListener")
-            Log.d(TAG, "Exception= ${it.message}")
-            Log.d(TAG, "Exception= ${it.localizedMessage}")
+            Log.d(tag, "Inside_OnFailureListener")
+            Log.d(tag, "Exception= ${it.message}")
+            Log.d(tag, "Exception= ${it.localizedMessage}")
         }
 }
 

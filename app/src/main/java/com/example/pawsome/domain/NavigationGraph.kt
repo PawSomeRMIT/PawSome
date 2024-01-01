@@ -14,10 +14,14 @@
 package com.example.pawsome.domain
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.pawsome.common.FailureScreen
+import com.example.pawsome.common.LoadingScreen
 import com.example.pawsome.model.Screen
 import com.example.pawsome.presentation.authentication.Login
 import com.example.pawsome.presentation.authentication.Signup
@@ -54,6 +58,29 @@ fun NavigationGraph() {
         // Home Screen
         composable(Screen.HomeScreen.route) {
             HomeScreen()
+        }
+
+        // Loading Screen
+        composable(Screen.LoadingScreen.route) {
+            LoadingScreen()
+        }
+
+        // Failure Screen
+        composable(Screen.FailureScreen.route) {
+            FailureScreen()
+        }
+
+        composable(
+            route = "${Screen.FailureScreen.route}/{errorType}/{errorDesc}",
+            arguments = listOf(
+                navArgument("errorType") { type = NavType.StringType },
+                navArgument("errorDesc") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            FailureScreen(
+                errorType = backStackEntry.arguments?.getString("errorType") ?: "",
+                errorDesc = backStackEntry.arguments?.getString("errorDesc") ?: ""
+            )
         }
     }
 }

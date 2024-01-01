@@ -62,7 +62,7 @@ fun Login(
     navHostController: NavHostController
 ) {
 
-    var loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navHostController))
+    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navHostController))
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -81,10 +81,11 @@ fun Login(
             ) {
 
                 Image(painter = painterResource(
-                    id = R.drawable.login_background),
+                    id = R.drawable.background_3),
                     contentDescription = "App Logo",
-                    modifier =Modifier.fillMaxWidth())
+                    modifier = Modifier.fillMaxWidth().height(300.dp))
 
+                Spacer(modifier = Modifier.height(20.dp))
 
                 TitleText(value = stringResource(id = R.string.login_title))
 
@@ -94,7 +95,7 @@ fun Login(
 
                 CustomTextField(
                     labelValue = stringResource(id = R.string.email),
-                    painterResource(id = R.drawable.baseline_alternate_email_24),
+                    painterResource(id = R.drawable.baseline_email_24),
                     onTextChanged = {
                         loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                     },

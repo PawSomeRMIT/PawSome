@@ -113,7 +113,7 @@ fun SearchBar(searchText: TextFieldValue, onSearchTextChanged: (TextFieldValue) 
     Column(modifier = Modifier.padding(top = 20.dp)) {
 
         Row(modifier = Modifier.padding(start = 20.dp)) {
-            NormalText(value = "👋🏻 Hi ${userData.firstname} ${userData.lastname}",)
+            NormalText(value = "👋🏻 Hi ${userData.username}",)
         }
 
         TextField(
