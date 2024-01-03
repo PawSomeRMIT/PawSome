@@ -36,7 +36,6 @@ import com.example.pawsome.common.TitleText
 fun Profile(
     inputImageUrl: String?,
     name: String,
-    username: String,
     tier: String
 ) {
     Row(
@@ -58,7 +57,6 @@ fun Profile(
 
         Column {
             TitleText(value = name)
-            NormalText(value = "@$username")
             Spacer(modifier = Modifier.height(10.dp))
 
             Row {
@@ -112,6 +110,5 @@ fun Profile(
 fun PreviewProfile() {
     Profile(inputImageUrl = "https://i.postimg.cc/7hjg2wZm/836.jpg",
         name = "John Doe",
-        username = "john awesome",
         tier = "Gold")
 }

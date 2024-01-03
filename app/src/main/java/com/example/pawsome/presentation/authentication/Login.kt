@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -60,7 +62,7 @@ fun Login(
     navHostController: NavHostController
 ) {
 
-    var loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navHostController))
+    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navHostController))
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -73,14 +75,17 @@ fun Login(
                 .padding(28.dp)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
 
                 Image(painter = painterResource(
-                    id = R.drawable.login_background),
+                    id = R.drawable.background_3),
                     contentDescription = "App Logo",
-                    modifier =Modifier.fillMaxWidth())
+                    modifier = Modifier.fillMaxWidth().height(300.dp))
 
+                Spacer(modifier = Modifier.height(20.dp))
 
                 TitleText(value = stringResource(id = R.string.login_title))
 
@@ -90,7 +95,7 @@ fun Login(
 
                 CustomTextField(
                     labelValue = stringResource(id = R.string.email),
-                    painterResource(id = R.drawable.baseline_alternate_email_24),
+                    painterResource(id = R.drawable.baseline_email_24),
                     onTextChanged = {
                         loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                     },
