@@ -20,4 +20,5 @@ data class User (
     val email: String = "",
     val image: String = "",
     val membership: String = "normal",
+    val chatToken: String = ""
 )

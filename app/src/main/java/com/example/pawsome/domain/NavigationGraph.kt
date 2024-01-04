@@ -14,6 +14,7 @@
 package com.example.pawsome.domain
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +23,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.pawsome.common.FailureScreen
 import com.example.pawsome.common.LoadingScreen
-import com.example.pawsome.model.Screen
+import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.presentation.authentication.Login
 import com.example.pawsome.presentation.authentication.Signup
 import com.example.pawsome.presentation.homescreen.HomeScreen
@@ -31,12 +32,12 @@ import com.example.pawsome.presentation.homescreen.HomeScreen
  * Create navigation link to screens
  */
 @Composable
-fun NavigationGraph() {
-
-    val navHostController = rememberNavController()
-
+fun NavigationGraph(
+    navHostController: NavHostController = rememberNavController()
+) {
     NavHost(
         navController = navHostController,
+        route = Graph.ROOT,
         startDestination = Screen.Register.route
     ) {
         navigation(
@@ -57,7 +58,7 @@ fun NavigationGraph() {
 
         // Home Screen
         composable(Screen.HomeScreen.route) {
-            HomeScreen()
+            HomeScreen(rootNavController = navHostController)
         }
 
         // Loading Screen
@@ -83,4 +84,10 @@ fun NavigationGraph() {
             )
         }
     }
+}
+
+object Graph {
+    const val ROOT = "root_graph"
+    const val HOME = "home_graph"
+    const val CHAT = "chat_graph"
 }

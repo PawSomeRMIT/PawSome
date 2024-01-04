@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.example.pawsome.model.EventData
-import com.example.pawsome.model.Screen
 
 @Composable
 fun PopularEvents(eventsList: List<EventData>,

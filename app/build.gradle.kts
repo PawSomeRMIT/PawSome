@@ -3,6 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    // Google map plugin
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
+    // Kapt and dagger hilt
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -12,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "com.example.pawsome"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -32,14 +38,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
+        // Date-time picker
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -52,11 +62,8 @@ android {
 }
 
 dependencies {
-
-
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
-    implementation("androidx.compose.material:material-icons-core:1.0.1")// Use the latest version
-//    implementation("androidx.compose.material:material-icons-extended:1.0.1")
+    implementation("androidx.compose.material:material-icons-core:1.0.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.compose.material:material-icons-core:1.0.1") // Use the latest version
@@ -105,6 +112,8 @@ dependencies {
     implementation("com.google.maps.android:maps-utils-ktx:3.2.1")
     implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta01")
 
+    // Permission
+    implementation("com.google.accompanist:accompanist-permissions:0.31.1-alpha")
 
     /* ---- Testing ---- */
 
@@ -120,4 +129,24 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:2.7.6")
+
+    // Dagger hilt and kapt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // core libary
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
+
+    // Stream Chat
+    implementation("io.getstream:stream-chat-android-compose:6.0.8")
+    implementation("io.getstream:stream-chat-android-offline:6.0.8")
+
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    // Networking
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }
