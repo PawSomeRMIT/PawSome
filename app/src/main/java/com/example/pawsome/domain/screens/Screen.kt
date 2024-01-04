@@ -10,7 +10,7 @@
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-package com.example.pawsome.model
+package com.example.pawsome.domain.screens
 
 sealed class Screen(val route: String) {
 
@@ -25,7 +25,10 @@ sealed class Screen(val route: String) {
     object LoadingScreen : Screen("loading")
     object FailureScreen : Screen("failure")
 //    object DetailScreen : Screen("detail")
-    object Setting : Screen("settings")
+
+//    object ChannelsListScreen : Screen("channelsList")
+//    object ChannelScreen : Screen("channelScreen")
+//    object Setting : Screen("settings")
 //    object StatScreen : Screen("dashboard")
 //    object MapScreen : Screen("maps")
 //    object AddSiteScreen : Screen("addBooking")

@@ -12,11 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.pawsome.domain.NavigationGraph
 import com.example.pawsome.ui.theme.PawSomeTheme
+import com.google.firebase.FirebaseApp
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            FirebaseApp.initializeApp(this)
+
             PawSomeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(

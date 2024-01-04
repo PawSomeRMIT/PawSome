@@ -1,6 +1,6 @@
 //package com.example.pawsome.domain
 //
-//import com.example.pawsome.model.Screen
+//import com.example.pawsome.domain.screens.Screen
 //
 //sealed class Destination(protected val route: String, vararg params: String) {
 //    val fullRoute: String = if (params.isEmpty()) route else {

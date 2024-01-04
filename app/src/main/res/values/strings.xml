@@ -18,4 +18,7 @@
     <string name="userType">User Type</string>
     <string name="app_desc">Earthling is a volunteer booking software that matches users with different volunteer activities based on their availability and interests, allowing activity scheduling and administration simple. The objective is to prmote a worldwide community committed to good change.></string>
     <string name="retyped_password">Confirm password</string>
+
+    <string name="api_key">yuh454u249qa</string>
+    <string name="jwt_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiVGh1YyJ9.ble-Rru6LcmuM80IvoNrJyALCafucx2j49t7cIdxKRI</string>
 </resources>

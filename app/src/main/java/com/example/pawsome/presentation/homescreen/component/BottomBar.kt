@@ -10,28 +10,27 @@
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-package com.example.pawsome.common
-import android.annotation.SuppressLint
-import android.widget.Toast
+package com.example.pawsome.presentation.homescreen.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pawsome.data.DataViewModel
+import com.example.pawsome.domain.Graph
+import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -40,34 +39,57 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
 @Composable
-fun NavBar(navController: NavController) {
-    BottomAppBar(
-        cutoutShape = MaterialTheme.shapes.small.copy(
-            androidx.compose.foundation.shape.CornerSize(
-                percent = 50
-            )
-        ),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        backgroundColor = Color.White
-    ) {
-        IconButton(onClick = { navController.navigate("home") }) {
-            Icon(Icons.Outlined.Home, contentDescription = "Home")
+fun BottomBar(navController: NavController) {
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.ChannelsList,
+        BottomBarScreen.Settings
+    )
 
-        }
-        Spacer(Modifier.weight(1f, true))
-        IconButton(onClick = { navController.navigate("maps") }) {
-            Icon(Icons.Outlined.Map, contentDescription = "Maps")
-        }
-        Spacer(Modifier.weight(1f, true))
-        Box(Modifier.size(48.dp)) // Placeholder for the FAB
-        Spacer(Modifier.weight(1f, true))
-        IconButton(onClick = { navController.navigate("aboutus") }) {
-            Icon(Icons.Outlined.Info, contentDescription = "About US")
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-        }
-        Spacer(Modifier.weight(1f, true))
-        IconButton(onClick = { navController.navigate("settings") }) {
-            Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route}
+
+    if (bottomBarDestination) {
+        BottomAppBar(
+            cutoutShape = MaterialTheme.shapes.small.copy(
+                androidx.compose.foundation.shape.CornerSize(
+                    percent = 50
+                )
+            ),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            backgroundColor = Color.White
+        ) {
+            IconButton(onClick = { navController.navigate("home") }) {
+                Icon(Icons.Outlined.Home, contentDescription = "Home")
+
+            }
+            Spacer(Modifier.weight(1f, true))
+            IconButton(onClick = { navController.navigate("maps") }) {
+                Icon(Icons.Outlined.Map, contentDescription = "Maps")
+            }
+            Spacer(Modifier.weight(1f, true))
+            Box(Modifier.size(48.dp)) // Placeholder for the FAB
+            Spacer(Modifier.weight(1f, true))
+
+            IconButton(
+                onClick = {
+                    navController.navigate(Graph.CHAT)
+                }
+            ) {
+                Icon(Icons.Outlined.ChatBubbleOutline, contentDescription = "Chat List")
+
+            }
+
+            Spacer(Modifier.weight(1f, true))
+            IconButton(
+                onClick = {
+                    navController.navigate(BottomBarScreen.Settings.route)
+                }
+            ) {
+                Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+            }
         }
     }
 }
@@ -116,15 +138,15 @@ fun NavigationGraph(navController: NavHostController) {
     }
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Preview
-@Composable
-fun NavPreview() {
-    val navController = rememberNavController()
-    Scaffold(
-        bottomBar = { NavBar(navController = navController) },
-        floatingActionButton = { CenterActionButton(navController = navController) },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true
-    ){}
-}
+//@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+//@Preview
+//@Composable
+//fun NavPreview() {
+//    val navController = rememberNavController()
+//    Scaffold(
+//        bottomBar = { NavBar(navController = navController) },
+//        floatingActionButton = { CenterActionButton(navController = navController) },
+//        floatingActionButtonPosition = FabPosition.Center,
+//        isFloatingActionButtonDocked = true
+//    ){}
+//}
