@@ -18,5 +18,5 @@ data class PetDetail(
     val img: String,
     val location: String,
     val ownerId: String,
-    val bookingList: List<Book> = emptyList()
+    val bookingList: List<Booking> = emptyList()
 )
