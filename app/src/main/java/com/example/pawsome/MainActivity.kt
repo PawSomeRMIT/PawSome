@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pawsome.domain.NavigationGraph
@@ -24,7 +25,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestCameraPermission()
         setContent {
             FirebaseApp.initializeApp(this)
 
@@ -38,6 +38,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        requestCameraPermission()
+        requestLocationPermission()
 
     }
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -66,6 +68,39 @@ class MainActivity : ComponentActivity() {
             ) -> Log.i("kilo", "Show camera permissions dialog")
 
             else -> requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private val requestPermissionLauncherMap = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission is granted. Get the location.
+            getLocation()
+        } else {
+            // Explain why the permission is needed.
+        }
+    }
+
+    private fun requestLocationPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // Permission is already granted; get the location.
+                getLocation()
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                // Show an explanation to the user.
+            }
+
+            else -> {
+                // No explanation needed; request the permission.
+                requestPermissionLauncherMap.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            }
         }
     }
 
