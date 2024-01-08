@@ -12,15 +12,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PriceAdoptButton(price: String, onAdoptClick: () -> Unit) {
+fun PriceAdoptButton(price: Float, onAdoptClick: () -> Unit) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().height(80.dp)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = price,
+            text = "$ $price",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black
@@ -29,14 +29,14 @@ fun PriceAdoptButton(price: String, onAdoptClick: () -> Unit) {
         Button(
             onClick = onAdoptClick,
             colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFFFE0B2)), // Creamy background color
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(),
             shape = RoundedCornerShape(15) // Fully rounded corners
         ) {
             Text(
                 text = "Adopt Me",
                 color = Color(0xFFF57C00), // Button text color
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 20.sp
             )
         }
     }
@@ -46,6 +46,6 @@ fun PriceAdoptButton(price: String, onAdoptClick: () -> Unit) {
 @Composable
 fun PreviewPriceAdoptButton() {
     MaterialTheme {
-        PriceAdoptButton(price = "$120", onAdoptClick = {})
+        PriceAdoptButton(price = 120f) {}
     }
 }
