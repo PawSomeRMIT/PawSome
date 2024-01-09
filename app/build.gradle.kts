@@ -62,6 +62,9 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.camera:camera-camera2:1.0.1")
+    implementation("androidx.camera:camera-lifecycle:1.0.1")
+    implementation ("androidx.camera:camera-view:1.0.0-alpha27")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.compose.material:material-icons-core:1.0.1")
     implementation("androidx.core:core-ktx:1.9.0")
