@@ -1,5 +1,10 @@
 package com.example.pawsome.presentation.detailscreen
 
+
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +37,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pawsome.model.PetDetail
+import com.example.pawsome.model.generateFakePetDetail
 import com.example.pawsome.presentation.detailscreen.components.DetailChip
+import com.example.pawsome.presentation.detailscreen.components.PetLocationMap
 import com.example.pawsome.presentation.detailscreen.components.PriceAdoptButton
 import com.example.pawsome.presentation.detailscreen.components.VideoCallButton
 
@@ -48,34 +56,55 @@ fun PetDetailUI(
     onVideoCall: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission granted, you can access the location
+        } else {
+            // Permission denied, handle the denial
+        }
+    }
+
+    val checkAndRequestPermission = {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
+                // Permissions are granted, proceed with your functionality
+            }
+
+            else -> {
+                // Permissions are not granted, request them
+                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Top back navigation arrow
-        IconButton(onClick = {
-            onBackClick()
-        }) {
+        IconButton(onClick = onBackClick) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
         }
 
-        // Cat image using AsyncImage
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(petDetail.img)
                 .crossfade(true)
                 .build(),
-            contentDescription = "Cat",
+            contentDescription = "Pet Image",
             modifier = Modifier
                 .fillMaxWidth()
-//                .height(250.dp)
                 .aspectRatio(287f / 175f)
         )
 
-        // Cat information card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-//                .padding(16.dp)
                 .height(550.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = 4.dp
@@ -122,7 +151,7 @@ fun PetDetailUI(
                         .height(240.dp)
                 ) {
                     item {
-                        UserProfile(ownerProfileImg,ownerName)
+                        UserProfile(ownerProfileImg, ownerName)
                     }
                     item {
                         Row(
@@ -139,6 +168,16 @@ fun PetDetailUI(
                     }
                     item {
                         Text(petDetail.petDescription)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                    item {
+                        val petLocation =
+                            petDetail.latLng// Replace with actual latitude and longitude
+                        Box(modifier = Modifier.fillMaxWidth().height(200.dp).padding(start = 4.dp, end = 4.dp)) {
+                            PetLocationMap(petLocation)
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -174,5 +213,5 @@ fun UserProfile(profileImg: String, profileName: String) {
 @Preview
 @Composable
 fun PreviewCatProfileUI() {
-//    PetDetailUI()
+    PetDetailUI(generateFakePetDetail(),"","",{},{},{})
 }

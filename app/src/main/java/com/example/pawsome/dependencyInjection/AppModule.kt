@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.pawsome.R
 import com.example.pawsome.api.ApiConstants
 import com.example.pawsome.api.BackEndApi
+import com.example.pawsome.api.EKYCApi
+import com.example.pawsome.api.MyInterceptor
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.AuthRepoImpl
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +19,7 @@ import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.offline.plugin.factory.StreamOfflinePluginFactory
 import io.getstream.chat.android.state.plugin.config.StatePluginConfig
 import io.getstream.chat.android.state.plugin.factory.StreamStatePluginFactory
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -54,6 +57,13 @@ object AppModule {
             .logLevel(ChatLogLevel.ALL)
             .build()
 
+    @Provides
+    @Singleton
+    fun httpClient(): OkHttpClient {
+        return OkHttpClient.Builder().apply {
+            addInterceptor(MyInterceptor())
+        }.build()
+    }
 
     @Provides
     @Singleton
@@ -70,4 +80,25 @@ object AppModule {
             .baseUrl(ApiConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
     }
+
+    // For eKYC
+    @Provides
+    @Singleton
+    fun provideEKYCApi(client: OkHttpClient): EKYCApi {
+        return Retrofit.Builder()
+            .baseUrl(ApiConstants.EKYC_DOMAIN)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(EKYCApi::class.java)
+    }
+
+//    @Provides
+//    @Singleton
+//    fun provideEKYCRetrofit(client: OkHttpClient): Retrofit.Builder {
+//        return Retrofit.Builder()
+//            .baseUrl(ApiConstants.EKYC_DOMAIN)
+//            .client(client)
+//            .addConverterFactory(GsonConverterFactory.create())
+//    }
 }

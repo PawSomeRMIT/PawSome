@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import com.example.pawsome.data.Validator
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
-import com.example.pawsome.model.RequestBody
+import com.example.pawsome.model.api_model.RequestBody
 import com.example.pawsome.model.User
 import com.example.pawsome.util.Resource
 import com.google.firebase.Firebase

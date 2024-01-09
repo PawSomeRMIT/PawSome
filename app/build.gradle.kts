@@ -62,6 +62,9 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.camera:camera-camera2:1.0.1")
+    implementation("androidx.camera:camera-lifecycle:1.0.1")
+    implementation ("androidx.camera:camera-view:1.0.0-alpha27")
     implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
     implementation("androidx.compose.material:material-icons-core:1.0.1")
     implementation("androidx.core:core-ktx:1.9.0")
@@ -149,4 +152,8 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
+
+    // Stripe API
+    implementation("com.stripe:stripe-android:20.36.0")
 }

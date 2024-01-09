@@ -14,4 +14,8 @@ sealed class BottomBarScreen (
     object Settings : BottomBarScreen(
         route = "Setting"
     )
+
+    object Payment: BottomBarScreen(
+        route = "Payment"
+    )
 }

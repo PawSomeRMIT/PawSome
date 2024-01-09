@@ -12,6 +12,7 @@ import com.example.pawsome.model.EventData
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
 import com.example.pawsome.presentation.homescreen.HomeContent
+import com.example.pawsome.presentation.payment.PaymentScreen
 import com.example.pawsome.presentation.settings.SettingScreen
 
 @Composable
@@ -35,9 +36,10 @@ fun HomeNavGraph(
             SettingScreen(navController = navController, rootNavController = rootNavController)
         }
 
-//        composable(BottomBarScreen.ChannelsList.route) {
-//            ChannelsListScreen(navController = navController)
-//        }
+        composable(BottomBarScreen.Payment.route) {
+            PaymentScreen(navController = navController)
+        }
+
         channelNavGraph(navController = navController)
 
     }

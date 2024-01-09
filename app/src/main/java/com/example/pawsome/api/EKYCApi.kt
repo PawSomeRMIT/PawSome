@@ -1,30 +1,29 @@
 package com.example.pawsome.api
 
-import com.example.pawsome.model.api_model.CreateChannelRequestBody
-import com.example.pawsome.model.api_model.RequestBody
-import com.example.pawsome.model.Response
 import com.example.pawsome.model.api_model.CheckLivenessBody
 import com.example.pawsome.model.api_model.CheckLivenessResponse
-import com.example.pawsome.model.api_model.StripeResponse
+import com.example.pawsome.model.api_model.UploadImgResponse
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.Query
 
-interface BackEndApi {
-    @POST("create_user")
-    suspend fun create_user(
-        @Body requestBody: RequestBody
-    ): Response
-
-    @POST("create_channel")
-    suspend fun create_channel(
-        @Body requestBody: CreateChannelRequestBody
-    ): Response
-
-    @POST("payment-sheet")
-    suspend fun call_payment_sheet(
-
-    ): StripeResponse
+interface EKYCApi {
+    @Multipart
+    @Headers(
+        "Authorization: " + ApiConstants.EKYC_ACCESS_TOKEN,
+        "Token-id: " + ApiConstants.EKYC_TOKEN_ID,
+        "Token-key: " + ApiConstants.EKYC_TOKEN_KEY,
+    )
+    @POST("file-service/v1/addFile")
+    suspend fun upload_image(
+        @Part file: MultipartBody.Part,
+        @Part("title") title: String,
+        @Part("description") description: String
+    ): UploadImgResponse
 
     @Headers(
         "Content-Type: application/json",
@@ -37,4 +36,5 @@ interface BackEndApi {
     suspend fun check_liveness(
         @Body requestBody: CheckLivenessBody
     ): CheckLivenessResponse
+
 }

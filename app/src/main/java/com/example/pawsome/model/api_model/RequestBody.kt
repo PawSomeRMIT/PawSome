@@ -1,4 +1,4 @@
-package com.example.pawsome.model
+package com.example.pawsome.model.api_model
 
 data class RequestBody (
     val userId: String,

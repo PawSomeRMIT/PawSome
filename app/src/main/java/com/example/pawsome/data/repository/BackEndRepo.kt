@@ -2,9 +2,12 @@ package com.example.pawsome.data.repository
 
 
 import com.example.pawsome.api.BackEndApi
-import com.example.pawsome.model.CreateChannelRequestBody
-import com.example.pawsome.model.RequestBody
 import com.example.pawsome.model.Response
+import com.example.pawsome.model.api_model.CheckLivenessBody
+import com.example.pawsome.model.api_model.CheckLivenessResponse
+import com.example.pawsome.model.api_model.CreateChannelRequestBody
+import com.example.pawsome.model.api_model.RequestBody
+import com.example.pawsome.model.api_model.StripeResponse
 import javax.inject.Inject
 
 class BackEndRepo @Inject constructor(
@@ -18,4 +21,13 @@ class BackEndRepo @Inject constructor(
         return backEndApi.create_channel(requestBody)
     }
 
+    suspend fun call_payment_sheet(): StripeResponse {
+        return backEndApi.call_payment_sheet()
+    }
+
+    suspend fun check_liveness(requestBody: CheckLivenessBody): CheckLivenessResponse {
+        return backEndApi.check_liveness(
+            requestBody = requestBody
+        )
+    }
 }
