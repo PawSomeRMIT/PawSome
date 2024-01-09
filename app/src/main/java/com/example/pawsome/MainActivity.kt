@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.pawsome.domain.NavigationGraph
 import com.example.pawsome.ui.theme.PawSomeTheme
 import com.google.firebase.FirebaseApp
+import com.stripe.android.BuildConfig
+import com.stripe.android.PaymentConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +23,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FirebaseApp.initializeApp(this)
+
+            PaymentConfiguration.init(
+                this,
+                "pk_test_51OVWbwHJQIp0NYHECOK7IBcTKBKHzWMRgzS22LZjRDjLFUakjumpqrS4eYN7ye9XJTyiy9VjfoJzahKdWdgWkaKo00iyNxfvxq"
+            )
 
             PawSomeTheme {
                 // A surface container using the 'background' color from the theme

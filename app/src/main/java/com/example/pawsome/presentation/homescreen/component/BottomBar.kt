@@ -65,11 +65,19 @@ fun BottomBar(navController: NavController) {
                 Icon(Icons.Outlined.Home, contentDescription = "Home")
 
             }
+
             Spacer(Modifier.weight(1f, true))
-            IconButton(onClick = { navController.navigate("maps") }) {
+
+            IconButton(
+                onClick = {
+                    navController.navigate(BottomBarScreen.Payment.route)
+                }
+            ) {
                 Icon(Icons.Outlined.Map, contentDescription = "Maps")
             }
+
             Spacer(Modifier.weight(1f, true))
+
             Box(Modifier.size(48.dp)) // Placeholder for the FAB
             Spacer(Modifier.weight(1f, true))
 
