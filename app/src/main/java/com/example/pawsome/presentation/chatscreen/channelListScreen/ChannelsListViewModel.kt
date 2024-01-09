@@ -1,17 +1,13 @@
 package com.example.pawsome.presentation.chatscreen.channelListScreen
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.repository.BackEndRepo
-import com.example.pawsome.model.CreateChannelRequestBody
+import com.example.pawsome.model.api_model.CreateChannelRequestBody
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +28,7 @@ class ChannelsListViewModel @Inject constructor(
 
         val result = backEndRepo.create_channel(requestBody)
 
-        Log.d("Create Channel", result.response)
+        Log.d("Create Channel", result.toString())
 
         _isLoading.send(false)
     }

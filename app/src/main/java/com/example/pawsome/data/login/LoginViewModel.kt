@@ -67,7 +67,6 @@ class LoginViewModel @Inject constructor (
 
             is LoginUIEvent.LoginButtonClicked -> { login() }
             is LoginUIEvent.LogoutButtonClicked -> { logout() }
-            else -> {}
         }
 
         validateLoginUIDataWithRules()
