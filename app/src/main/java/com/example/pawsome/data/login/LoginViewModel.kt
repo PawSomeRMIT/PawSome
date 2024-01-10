@@ -175,6 +175,9 @@ class LoginViewModel @Inject constructor (
             name = user.username
         )
 
+        Log.d("ABCD", user.username)
+        Log.d("ABCD", chatUser.toString())
+
         client.connectUser(
             user = chatUser,
             token = user.chatToken
@@ -227,7 +230,7 @@ suspend fun getUserFromFireStore(email: String) : User {
         db.collection("user").whereEqualTo("email", email).get().await().map {
             val result = User(
                 userID = it.get("userID").toString(),
-                username = it.get("name").toString(),
+                username = it.get("username").toString(),
                 email = it.get("email").toString(),
                 image = it.get("image").toString(),
                 membership = it.get("membership").toString(),

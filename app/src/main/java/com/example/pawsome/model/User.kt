@@ -13,6 +13,7 @@
 package com.example.pawsome.model
 
 import android.os.Parcelable
+import java.io.Serializable
 
 data class User (
     var userID: String = "",
@@ -22,4 +23,4 @@ data class User (
     val membership: String = "normal",
     val chatToken: String = "",
     val history: List <Booking> = emptyList()
-)
+): Serializable

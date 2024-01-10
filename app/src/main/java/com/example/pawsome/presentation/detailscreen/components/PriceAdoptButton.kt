@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PriceAdoptButton(price: Float, onAdoptClick: () -> Unit) {
+fun PriceAdoptButton(price: Double, onAdoptClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth().height(80.dp)
@@ -42,10 +42,10 @@ fun PriceAdoptButton(price: Float, onAdoptClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewPriceAdoptButton() {
-    MaterialTheme {
-        PriceAdoptButton(price = 120f) {}
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewPriceAdoptButton() {
+//    MaterialTheme {
+//        PriceAdoptButton(price = 120f) {}
+//    }
+//}

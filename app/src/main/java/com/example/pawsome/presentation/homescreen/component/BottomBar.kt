@@ -30,6 +30,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pawsome.data.DataViewModel
 import com.example.pawsome.domain.Graph
+import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.User
 import com.google.firebase.Firebase
@@ -43,6 +44,7 @@ fun BottomBar(navController: NavController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.ChannelsList,
+        BottomBarScreen.Payment,
         BottomBarScreen.Settings
     )
 
@@ -61,7 +63,11 @@ fun BottomBar(navController: NavController) {
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             backgroundColor = Color.White
         ) {
-            IconButton(onClick = { navController.navigate("home") }) {
+            IconButton(
+                onClick = {
+                    navController.navigate(Graph.PETSLIST)
+                }
+            ) {
                 Icon(Icons.Outlined.Home, contentDescription = "Home")
 
             }
