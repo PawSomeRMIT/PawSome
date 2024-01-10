@@ -9,17 +9,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pawsome.domain.NavigationGraph
 import com.example.pawsome.ui.theme.PawSomeTheme
 import com.google.firebase.FirebaseApp
-import com.stripe.android.BuildConfig
 import com.stripe.android.PaymentConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 

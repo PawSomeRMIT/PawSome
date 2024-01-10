@@ -93,6 +93,8 @@ object AppModule {
             .create(EKYCApi::class.java)
     }
 
+
+
 //    @Provides
 //    @Singleton
 //    fun provideEKYCRetrofit(client: OkHttpClient): Retrofit.Builder {
