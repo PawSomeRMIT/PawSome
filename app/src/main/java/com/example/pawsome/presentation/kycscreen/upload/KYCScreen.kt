@@ -88,10 +88,18 @@ fun KYCContent(
             modifier = Modifier.padding(20.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
+
+        imageUri?.let { uri ->
+            AsyncImage(
+                model = uri,
+                contentDescription = "Captured or selected image",
+                modifier = Modifier.size(200.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = takePhotoAction, modifier = Modifier.width(200.dp)) {
             Text("Take Photo")
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = selectFromGalleryAction, modifier = Modifier.width(200.dp)) {
@@ -101,13 +109,6 @@ fun KYCContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        imageUri?.let { uri ->
-            AsyncImage(
-                model = uri,
-                contentDescription = "Captured or selected image",
-                modifier = Modifier.size(200.dp)
-            )
-        }
     }
 }
 
