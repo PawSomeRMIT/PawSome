@@ -1,4 +1,4 @@
-package com.example.pawsome.presentation.kycscreen
+package com.example.pawsome.presentation.kycscreen.upload
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -35,7 +35,7 @@ import com.example.pawsome.viewmodel.CameraViewModel
 //import com.example.pawsome.viewmodel.CameraViewModel
 
 @Composable
-fun KYCScreen(
+fun KYCUploadScreen(
     viewModel: CameraViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
