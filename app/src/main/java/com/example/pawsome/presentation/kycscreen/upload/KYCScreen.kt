@@ -65,7 +65,9 @@ fun KYCUploadScreen(
 
 @Composable
 fun KYCContent(
-    takePhotoAction: () -> Unit, selectFromGalleryAction: () -> Unit, imageUri: Uri?
+    takePhotoAction: () -> Unit,
+    selectFromGalleryAction: () -> Unit,
+    imageUri: Uri?
 ) {
     Column(
         modifier = Modifier
@@ -74,41 +76,43 @@ fun KYCContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Image(
-            painterResource(R.drawable.passport_id_card_travel),
-            contentDescription = null,
-            modifier = Modifier
-                .width(150.dp)
-                .height(150.dp)
-        )
+        if (imageUri != null) {
+            // Display the selected or captured image
+            AsyncImage(
+                model = imageUri,
+                contentDescription = "Captured or selected image",
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp)
+            )
+        } else {
+            // Display the placeholder image
+            Image(
+                painterResource(R.drawable.passport_id_card_travel),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp)
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Upload Your Passport/Id",
+            text = "Upload Your Passport/ID",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(20.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        imageUri?.let { uri ->
-            AsyncImage(
-                model = uri,
-                contentDescription = "Captured or selected image",
-                modifier = Modifier.size(200.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+        // Buttons for taking photo and selecting from gallery
         Button(onClick = takePhotoAction, modifier = Modifier.width(200.dp)) {
             Text("Take Photo")
         }
         Spacer(modifier = Modifier.height(16.dp))
-
         Button(onClick = selectFromGalleryAction, modifier = Modifier.width(200.dp)) {
             Text("Select from Gallery")
-
         }
-
         Spacer(modifier = Modifier.height(16.dp))
-
     }
 }
 
