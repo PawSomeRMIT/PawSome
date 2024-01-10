@@ -181,10 +181,6 @@ fun Login(
                     )
                 }
             }
-
-            if (loginViewModel.loginInProgress.value)
-                CircularProgressIndicator()
-
         }
     }
     else {

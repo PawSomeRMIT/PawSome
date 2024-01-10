@@ -41,17 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pawsome.common.CommonVar
+import com.example.pawsome.model.PetDetail
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview()
 @Composable
 fun HorizontalHomeEventCard(
-    inputImageUrl: String = "",
-    nameEvent: String = "",
-    location: String = "",
-    admin: String = "",
-    numberOfVolunteer: String = "",
-    date: String = "",
+    petDetail: PetDetail,
     modifier: Modifier = Modifier,
     onEventClick: () -> Unit = {}
 ) {
@@ -73,7 +68,7 @@ fun HorizontalHomeEventCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = nameEvent,
+                    text = petDetail.petName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
                     color = Color.Black
@@ -87,15 +82,16 @@ fun HorizontalHomeEventCard(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = location,
+                        text = "location",
                         color = Color.Gray
                     )
                 }
-                DateSection(date)
+//                DateSection(date)
             }
             Spacer(modifier = Modifier.width(20.dp))
             AsyncImage(
-                if (inputImageUrl != "") inputImageUrl else CommonVar.placeHolderImageURL,
+                petDetail.img,
+//                 CommonVar.placeHolderImageURL,
                 contentDescription = "Description",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

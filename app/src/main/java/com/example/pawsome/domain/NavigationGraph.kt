@@ -90,4 +90,5 @@ object Graph {
     const val ROOT = "root_graph"
     const val HOME = "home_graph"
     const val CHAT = "chat_graph"
+    const val PETSLIST = "petList_graph"
 }

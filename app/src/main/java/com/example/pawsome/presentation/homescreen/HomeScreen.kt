@@ -14,26 +14,54 @@
 package com.example.pawsome.presentation.homescreen
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
+import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.FabPosition
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.pawsome.presentation.homescreen.component.BottomBar
+import com.example.pawsome.R
 import com.example.pawsome.common.FilterChipsWithEmoji
 import com.example.pawsome.data.DataViewModel
 import com.example.pawsome.domain.HomeNavGraph
+import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.FilterChipData
-import com.example.pawsome.presentation.searchscreen.SearchBar
+import com.example.pawsome.presentation.homescreen.component.BottomBar
+import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
 import com.example.pawsome.presentation.searchscreen.SearchResults
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -68,7 +96,7 @@ fun HomeScreen(
         floatingActionButton = {
 //            CenterActionButton(navController = navController)
                                },
-        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButtonPosition = androidx.compose.material.FabPosition.Center,
     ) {
         HomeNavGraph(
             rootNavController = rootNavController,
@@ -80,31 +108,115 @@ fun HomeScreen(
     }
 }
 
-//TODO: Configuring routing strategy
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun HomeContent(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 ) {
-    var searchText by remember { mutableStateOf(TextFieldValue("")) }
+    val scope = rememberCoroutineScope()
+
+    val searchText by homeScreenViewModel.searchText.collectAsState()
+
+    val displayPetsList by homeScreenViewModel.matchedPets.collectAsState()
+
+    // Check data loading
+    val loadingState by homeScreenViewModel.isLoading.collectAsState(initial = false)
+
     var filterOptions = listOf(
-        FilterChipData("🌊", "Beach"),
-        FilterChipData("🏕️", "Forest"),
-        FilterChipData("👨‍👩‍👧‍👦", "Popular"),
-        FilterChipData("🏕️", "City"),
-        FilterChipData("⭐️", "Trending"),
-        FilterChipData("🥬", "Community"),
-        FilterChipData("🏫", "School")
+        FilterChipData("\uD83D\uDC31", "Cat"),
+        FilterChipData("\uD83D\uDC36️", "Dog"),
     )
+
     var filterSelected by remember { mutableStateOf(filterOptions[0]) }
 
     Column {
-        SearchBar(searchText, onSearchTextChanged = { searchText = it })
+        Column(modifier = Modifier.padding(top = 20.dp)) {
+            TextField(
+                value = searchText,
+                onValueChange = homeScreenViewModel::onSearchTextChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                placeholder = {
+                    Text(text = "Search")
+                },
+                shape = RoundedCornerShape(20.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = Color.Black,
+                    focusedIndicatorColor = Color.Transparent,
+                    containerColor = colorResource(id = R.color.light_gray),
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                trailingIcon = {
+                    Icon(
+                        Icons.Filled.Search, "",
+                        tint = Color.Black
+                    )
+                },
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+
+                    },
+                )
+            )
+        }
+
         FilterChipsWithEmoji(
             filterOptions = filterOptions,
             selectedFilter = filterSelected.category
-        ) { filterSelected.category = it }
-        SearchResults(searchText.text, filterSelected.category,
-            navHostController = navHostController)
+        ) {
+            filterSelected.category = it
+        }
+
+        if (loadingState) {
+            androidx.compose.material.Text(text = "Loading data...")
+        }
+        else {
+            Column(modifier = Modifier.padding(16.dp)) {
+                // Display filtered results based on searchText and selectedFilter
+                Column {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        items(displayPetsList) { pet ->
+                            //Display to the card
+                            HorizontalHomeEventCard(
+                                petDetail = pet,
+                                onEventClick = {
+                                    scope.launch {
+                                        navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                            "petDetail",
+                                            pet
+                                        )
+
+                                        val owner = homeScreenViewModel.getUserFromFireStore(uId = pet.ownerId)
+
+                                        Log.d("Before nav", owner.toString())
+
+                                        navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                            "owner",
+                                            owner
+                                        )
+
+                                        navHostController.navigate(PetsListScreen.DetailScreen.route)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
 
@@ -112,10 +224,4 @@ fun Date.toFormattedString(): String {
     val simpleDateFormat = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
     return simpleDateFormat.format(this)
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewHomeScreen() {
-//    HomeScreen()
-//}
 
