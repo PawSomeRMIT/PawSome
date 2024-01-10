@@ -1,4 +1,4 @@
-package com.example.pawsome.presentation.kycscreen.upload
+package drawable
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
