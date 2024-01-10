@@ -153,6 +153,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.5.0")
 
-    // Stripe API
     implementation("com.stripe:stripe-android:20.36.0")
+    // Stripe API
 }
