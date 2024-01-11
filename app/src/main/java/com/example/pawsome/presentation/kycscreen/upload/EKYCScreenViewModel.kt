@@ -9,12 +9,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.data.repository.EKYCApiRepo
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
+import com.example.pawsome.model.User
 import com.example.pawsome.model.api_model.CheckLivenessBody
 import com.example.pawsome.model.api_model.CheckLivenessObject
 import com.example.pawsome.model.api_model.CheckLivenessResponse
 import com.example.pawsome.model.api_model.ExtractInfoBody
 import com.example.pawsome.model.api_model.StripeResponse
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.File
@@ -158,6 +165,47 @@ class EKYCScreenViewModel @Inject constructor(
         Log.d("EKYC", (!result.`object`.fake_liveness).toString())
 
         return (!result.`object`.fake_liveness)
+    }
+
+    suspend fun createBooking(petDetail: PetDetail) {
+        viewModelScope.launch {
+            var userData = User()
+
+            val auth = FirebaseAuth.getInstance()
+            val userID = auth.currentUser?.uid
+
+            val userRef = userID?.let {
+                Firebase.firestore.collection("user").document(it)
+            }
+
+            val booking = Booking(
+                customerId = userID!!,
+                petId = petDetail.id,
+                totalPrice = petDetail.bookingPricePerDay,
+                customerCardIdName = idName.value,
+                customerCardIdNumber = idNumber.value
+            )
+
+            val snapshot = userRef?.get()?.await()
+
+            snapshot?.let {
+                snapshot.toObject<User>()?.let {
+                    userData = it
+                }
+            }
+
+            userData.history = userData.history.plus(booking)
+
+            Log.d("AFTER PAY", userData.toString())
+
+            userRef?.set(userData)?.addOnSuccessListener {
+                Log.d("AFTER PAY", "Successfully update user")
+            }?.addOnFailureListener {
+                Log.d("AFTER PAY", "Inside_OnFailureListener")
+                Log.d("AFTER PAY", "Exception= ${it.message}")
+                Log.d("AFTER PAY", "Exception= ${it.localizedMessage}")
+            }
+        }
     }
 }
 

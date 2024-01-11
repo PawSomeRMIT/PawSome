@@ -66,6 +66,7 @@ import com.example.pawsome.data.DataViewModel
 import com.example.pawsome.domain.HomeNavGraph
 import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.FilterChipData
+import com.example.pawsome.model.User
 import com.example.pawsome.presentation.homescreen.component.BottomBar
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
 import com.google.android.gms.location.LocationCallback
@@ -73,9 +74,13 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -115,13 +120,14 @@ fun HomeScreen(
 fun HomeContent(
     navHostController: NavHostController,
     location: LatLng,
+    user: User
 //    homeScreenViewModel: HomeScreenViewModel = HomeScreenViewModel(currentLocation = location),
 ) {
-    val homeScreenViewModel: HomeScreenViewModel = viewModel(factory = viewModelFactory {
-        HomeScreenViewModel(currentLocation = location)
-    })
-
     val context = LocalContext.current
+
+    val homeScreenViewModel: HomeScreenViewModel = viewModel(factory = viewModelFactory {
+        HomeScreenViewModel(currentLocation = location, user = user)
+    })
 
     val scope = rememberCoroutineScope()
 

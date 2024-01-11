@@ -52,7 +52,8 @@ class HomeScreenViewModel (
 //    private val authRepo: AuthRepo,
 //    private val backEndRepo: BackEndRepo,
 //    private val client: ChatClient,
-    val currentLocation: LatLng
+    val currentLocation: LatLng,
+    val user: User
 ) : ViewModel(
 
 ) {
@@ -90,7 +91,7 @@ class HomeScreenViewModel (
                     viewModelScope.launch{
                         _isLoading.send(true)
 
-                        Log.d("HOMESCREEN", currentLocation.toString())
+                        Log.d("HOMESCREEN", user.toString())
 
                         for (document in documents) {
                             // Calculate distance in meter and convert to km
@@ -119,7 +120,9 @@ class HomeScreenViewModel (
                                 distance = String.format("%.2f", distance).toDouble()
                             )
 
-                            petList += pet
+                            if (pet.ownerId != user.userID) {
+                                petList += pet
+                            }
 
                             _isLoading.send(false)
                         }
