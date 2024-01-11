@@ -12,14 +12,11 @@
 
 package com.example.pawsome.presentation.searchscreen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -36,27 +33,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.pawsome.common.CommonVar
 import com.example.pawsome.common.NormalText
-import com.example.pawsome.data.DataViewModel
-import com.example.pawsome.domain.ChatScreen
-import com.example.pawsome.domain.PetsListScreen
-import com.example.pawsome.model.EventData
-import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
-import com.example.pawsome.model.nearMe
-import com.example.pawsome.model.popularEvents
-import com.example.pawsome.model.sampleEvents
 import com.example.pawsome.presentation.homescreen.HomeScreenViewModel
-import com.example.pawsome.presentation.homescreen.component.HeaderSeparator
-import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
-import com.example.pawsome.presentation.homescreen.component.PopularEvents
-import com.example.pawsome.presentation.searchscreen.component.MyLocationButton
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore

@@ -14,26 +14,32 @@
 package com.example.pawsome.presentation.homescreen
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Icon
+import android.content.pm.PackageManager
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,13 +47,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -59,8 +68,13 @@ import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.FilterChipData
 import com.example.pawsome.presentation.homescreen.component.BottomBar
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
-import com.example.pawsome.presentation.searchscreen.SearchResults
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -70,27 +84,16 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     rootNavController: NavHostController,
-    dataViewModel: DataViewModel = viewModel()
 ) {
-    val navController = rememberNavController()
+    val homeNavController = rememberNavController()
 
     // Get current user session
     val auth = FirebaseAuth.getInstance()
     val userID = auth.currentUser?.uid
 
-    // Event list for storing fetching data
-    val eventsList = dataViewModel.eventsList.value
-
-    // Get upcoming event
-    var upcomingEvent = remember {
-        mutableStateOf(eventsList.filter {
-            it.eventTime > Date().toFormattedString()
-        })
-    }
-
     Scaffold(
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = homeNavController)
                     },
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
@@ -100,21 +103,26 @@ fun HomeScreen(
     ) {
         HomeNavGraph(
             rootNavController = rootNavController,
-            navController = navController,
-            eventsList,
-            userID,
-            upcomingEvent
+            homeNavController = homeNavController,
+            userID
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun HomeContent(
     navHostController: NavHostController,
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
+    location: LatLng,
+//    homeScreenViewModel: HomeScreenViewModel = HomeScreenViewModel(currentLocation = location),
 ) {
+    val homeScreenViewModel: HomeScreenViewModel = viewModel(factory = viewModelFactory {
+        HomeScreenViewModel(currentLocation = location)
+    })
+
+    val context = LocalContext.current
+
     val scope = rememberCoroutineScope()
 
     val searchText by homeScreenViewModel.searchText.collectAsState()
@@ -131,8 +139,16 @@ fun HomeContent(
 
     var filterSelected by remember { mutableStateOf(filterOptions[0]) }
 
-    Column {
-        Column(modifier = Modifier.padding(top = 20.dp)) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)
+                .padding(top = 10.dp)
+        ) {
             TextField(
                 value = searchText,
                 onValueChange = homeScreenViewModel::onSearchTextChange,
@@ -149,7 +165,7 @@ fun HomeContent(
                     containerColor = colorResource(id = R.color.light_gray),
                     unfocusedIndicatorColor = Color.Transparent
                 ),
-                trailingIcon = {
+                leadingIcon = {
                     Icon(
                         Icons.Filled.Search, "",
                         tint = Color.Black
@@ -179,39 +195,43 @@ fun HomeContent(
             androidx.compose.material.Text(text = "Loading data...")
         }
         else {
-            Column(modifier = Modifier.padding(16.dp)) {
-                // Display filtered results based on searchText and selectedFilter
-                Column {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(displayPetsList) { pet ->
-                            //Display to the card
-                            HorizontalHomeEventCard(
-                                petDetail = pet,
-                                onEventClick = {
-                                    scope.launch {
-                                        navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                            "petDetail",
-                                            pet
-                                        )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp)
+                    .padding(bottom = 20.dp)
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    userScrollEnabled = true
+                ) {
+                    items(displayPetsList) { pet ->
+                        //Display to the card
+                        HorizontalHomeEventCard(
+                            petDetail = pet,
+                            onEventClick = {
+                                scope.launch {
+                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "petDetail",
+                                        pet
+                                    )
 
-                                        val owner = homeScreenViewModel.getUserFromFireStore(uId = pet.ownerId)
+                                    val owner = homeScreenViewModel.getUserFromFireStore(uId = pet.ownerId)
 
-                                        Log.d("Before nav", owner.toString())
+                                    Log.d("Before nav", owner.toString())
 
-                                        navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                            "owner",
-                                            owner
-                                        )
+                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "owner",
+                                        owner
+                                    )
 
-                                        navHostController.navigate(PetsListScreen.DetailScreen.route)
-                                    }
+                                    navHostController.navigate(PetsListScreen.DetailScreen.route)
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
             }
@@ -224,4 +244,9 @@ fun Date.toFormattedString(): String {
     val simpleDateFormat = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
     return simpleDateFormat.format(this)
 }
+
+inline fun viewModelFactory(crossinline f: () -> HomeScreenViewModel) =
+    object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = f() as T
+    }
 

@@ -26,7 +26,20 @@ class DetailScreenViewModel @Inject constructor(
     private val client: ChatClient,
     private val backEndRepo: BackEndRepo
 ) : ViewModel() {
-
     private val _isLoading = Channel<Boolean>()
     val isLoading = _isLoading.receiveAsFlow()
+
+    suspend fun createChannel(userID1: String, userID2: String): String {
+        _isLoading.send(true)
+
+        val requestBody = CreateChannelRequestBody(userId1 = userID1, userId2 = userID2)
+
+        val result = backEndRepo.create_channel(requestBody)
+
+        Log.d("Create Channel", result.toString())
+
+        _isLoading.send(false)
+
+        return result.response
+    }
 }
