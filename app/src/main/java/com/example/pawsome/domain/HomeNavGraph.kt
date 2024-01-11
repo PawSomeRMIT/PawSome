@@ -57,10 +57,12 @@ fun NavGraphBuilder.petsListNavGraph(
         composable(route = PetsListScreen.PetsList.route) {
             val location: LatLng? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("location")
 
-            Log.d("NAV", location.toString())
+            val user: User? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("user")
 
-            if (location != null) {
-                HomeContent(navHostController = homeNavController, location = location)
+            Log.d("NAV", user.toString())
+
+            if (location != null && user != null) {
+                HomeContent(navHostController = homeNavController, location = location, user = user)
             }
         }
 

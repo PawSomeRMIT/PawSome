@@ -67,6 +67,7 @@ import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
+import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.authentication.components.CustomTextField
 import com.example.pawsome.presentation.authentication.components.DividerComponent
@@ -76,8 +77,14 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.wait
 
 @Composable
 fun Login(
@@ -269,17 +276,41 @@ fun Login(
 
         LaunchedEffect(key1 = currentLocation.latitude) {
             if (currentLocation.latitude != 0.0 && currentLocation.longitude != 0.0) {
-                Log.d("BEFORENAV", currentLocation.toString())
+                scope.launch {
+                    var userData = User()
 
-                navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                    "location",
-                    currentLocation
-                )
+                    val auth = FirebaseAuth.getInstance()
+                    val userID = auth.currentUser?.uid
 
-                // Navigate back to the login screen
-                navHostController.navigate(Screen.HomeScreen.route) {
-                    popUpTo(Screen.LoadingScreen.route) {
-                        inclusive = true
+                    val userRef = userID?.let {
+                        Firebase.firestore.collection("user").document(it)
+                    }
+
+                    val snapshot = userRef?.get()?.await()
+
+                    snapshot?.let {
+                        snapshot.toObject<User>()?.let {
+                            userData = it
+                        }
+                    }
+
+                    Log.d("BEFORENAV", userData.toString())
+
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        "location",
+                        currentLocation
+                    )
+
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        "user",
+                        userData
+                    )
+
+                    // Navigate back to the login screen
+                    navHostController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.LoadingScreen.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }

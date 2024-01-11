@@ -2,6 +2,7 @@ package drawable
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -55,6 +58,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
 import com.example.pawsome.common.ColorButton
+import com.example.pawsome.domain.ChatScreen
+import com.example.pawsome.domain.Graph
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.presentation.kycscreen.upload.EKYCScreenViewModel
 import com.stripe.android.PaymentConfiguration
@@ -149,7 +154,8 @@ fun EKYCUploadScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(),
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
@@ -315,30 +321,48 @@ fun EKYCUploadScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
+                ColorButton(
+                    text = "Complete the payment",
+                    color = colorResource(id = R.color.yellow),
+                    icon = Icons.Outlined.Payment,
+                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 22.dp),
+                    onClick = {
+                        Log.d("PAYMENT", "Entered")
+                        val currentConfig = customerConfig
+                        val currentClientSecret = paymentIntentClientSecret
 
+                        if (currentConfig != null && currentClientSecret != null) {
+                            presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
+                        }
+                    },
+                    isEnable = ekycScreenViewModel.isVeificationCompleted.value
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            ColorButton(
-                text = "Complete the payment",
-                color = colorResource(id = R.color.yellow),
-                icon = Icons.Outlined.Payment,
-                modifier = Modifier.padding(vertical = 10.dp, horizontal = 22.dp),
-                onClick = {
-                    Log.d("PAYMENT", "Entered")
-                    val currentConfig = customerConfig
-                    val currentClientSecret = paymentIntentClientSecret
 
-                    if (currentConfig != null && currentClientSecret != null) {
-                        presentPaymentSheet(paymentSheet, currentConfig, currentClientSecret)
-                    }
-                },
-//            isEnable = ekycScreenViewModel.isVeificationCompleted.value
-            )
+
 
             if (loadingState) {
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.yellow)
                 )
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = ekycScreenViewModel.isPaymentCompleted.value) {
+        scope.launch {
+            if (ekycScreenViewModel.isPaymentCompleted.value) {
+                Toast.makeText(context, "Payment Completed!", Toast.LENGTH_SHORT).show()
+
+                ekycScreenViewModel.createBooking(petDetail = petDetail)
+
+                navHostController.navigate(Graph.PETSLIST) {
+                    popUpTo(0) {
+                    }
+                }
             }
         }
     }
