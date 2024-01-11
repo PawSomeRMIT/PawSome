@@ -40,9 +40,6 @@ fun SettingScreen(
     loginViewModel: LoginViewModel= hiltViewModel()
 ) {
     val auth = FirebaseAuth.getInstance()
-
-//    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navController))
-
     val userID = auth.currentUser?.uid
     var userData by remember(userID) { mutableStateOf(User()) }
 

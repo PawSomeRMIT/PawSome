@@ -13,6 +13,7 @@
 package com.example.pawsome.presentation.homescreen.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,50 +55,60 @@ fun HorizontalHomeEventCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(20.dp),
+            .padding(vertical = 10.dp, horizontal = 20.dp),
         elevation = 5.dp,
         shape = RoundedCornerShape(20.dp),
         onClick = onEventClick
     ) {
         Row(
             modifier = Modifier
-                .background(Color.White)
-                .padding(20.dp),
+                .background(Color.White),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 10.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = petDetail.petName,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color.Black
+                    fontSize = 22.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
-                        Icons.Default.LocationOn,
+                        Icons.Outlined.LocationOn,
                         contentDescription = "Location",
-                        tint = Color.Gray
+                        tint = Color.Black
                     )
+
                     Spacer(modifier = Modifier.width(4.dp))
+
                     Text(
-                        text = "location",
+                        text = petDetail.distance.toString() + " km",
                         color = Color.Gray
                     )
                 }
-//                DateSection(date)
             }
+
             Spacer(modifier = Modifier.width(20.dp))
+
             AsyncImage(
                 petDetail.img,
-//                 CommonVar.placeHolderImageURL,
                 contentDescription = "Description",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(100.dp)
-                    .padding(8.dp)
+                    .size(120.dp)
+                    .padding(10.dp)
                     .clip(RoundedCornerShape(10.dp))
             )
         }

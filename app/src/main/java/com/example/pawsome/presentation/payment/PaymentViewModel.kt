@@ -27,9 +27,9 @@ class PaymentViewModel @Inject constructor(
 
     var isPaymentCompleted = mutableStateOf(false)
 
-    suspend fun makePayment(context: Context): StripeResponse {
-        return backEndRepo.call_payment_sheet()
-    }
+//    suspend fun makePayment(context: Context): StripeResponse {
+////        return backEndRepo.call_payment_sheet()
+//    }
 
     fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
         when(paymentSheetResult) {

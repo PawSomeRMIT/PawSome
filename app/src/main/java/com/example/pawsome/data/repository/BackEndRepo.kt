@@ -21,8 +21,8 @@ class BackEndRepo @Inject constructor(
         return backEndApi.create_channel(requestBody)
     }
 
-    suspend fun call_payment_sheet(): StripeResponse {
-        return backEndApi.call_payment_sheet()
+    suspend fun call_payment_sheet(price: Double): StripeResponse {
+        return backEndApi.call_payment_sheet(price = price.toString())
     }
 
     suspend fun check_liveness(requestBody: CheckLivenessBody): CheckLivenessResponse {

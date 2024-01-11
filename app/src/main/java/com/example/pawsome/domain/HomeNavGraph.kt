@@ -1,5 +1,6 @@
 package com.example.pawsome.domain
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
@@ -15,63 +16,79 @@ import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsLis
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
 import com.example.pawsome.presentation.detailscreen.DetailScreen
 import com.example.pawsome.presentation.homescreen.HomeContent
-import com.example.pawsome.presentation.payment.PaymentScreen
 import com.example.pawsome.presentation.settings.SettingScreen
+import com.google.android.gms.maps.model.LatLng
+import drawable.EKYCUploadScreen
 
 @Composable
 fun HomeNavGraph(
     rootNavController: NavHostController,
-    navController: NavHostController,
-    eventsList: List<EventData>,
+    homeNavController: NavHostController,
     userID: String?,
-    upcomingEvent: MutableState<List<EventData>>
 ) {
     NavHost(
-        navController = navController,
+        navController = homeNavController,
         route = Graph.HOME,
         startDestination = Graph.PETSLIST
     ) {
-//        composable(BottomBarScreen.Home.route) {
-//            HomeContent(navHostController = navController)
-//        }
-        petsListNavGraph(navController = navController)
+        petsListNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
 
         composable(BottomBarScreen.Settings.route) {
-            SettingScreen(navController = navController, rootNavController = rootNavController)
+            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
         }
 
-        composable(BottomBarScreen.Payment.route) {
-            PaymentScreen(navController = navController)
-        }
+//        composable(BottomBarScreen.Payment.route) {
+//            PaymentScreen(navController = navController)
+//        }
 
-        channelNavGraph(navController = navController)
+        channelNavGraph(navController = homeNavController)
 
     }
 }
 
-fun NavGraphBuilder.petsListNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.petsListNavGraph(
+    rootNavController:NavHostController,
+    homeNavController: NavHostController
+) {
     navigation(
         route = Graph.PETSLIST,
         startDestination = PetsListScreen.PetsList.route
     ) {
         composable(route = PetsListScreen.PetsList.route) {
-            HomeContent(navHostController = navController)
+            val location: LatLng? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("location")
+
+            Log.d("NAV", location.toString())
+
+            if (location != null) {
+                HomeContent(navHostController = homeNavController, location = location)
+            }
         }
 
         composable(route = PetsListScreen.DetailScreen.route) {
-            val petDetail: PetDetail? = navController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
+            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
 
-            val owner: User? = navController.previousBackStackEntry?.savedStateHandle?.get("owner")
+            val owner: User? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("owner")
 
             if (petDetail != null && owner != null) {
                 DetailScreen(
                     petDetail = petDetail,
                     owner = owner,
-                    onAdoptClick = { /*TODO*/ },
                     onVideoCall = { /*TODO*/ },
                     onBackClick = {
-                        navController.popBackStack()
-                    }
+                        homeNavController.popBackStack()
+                    },
+                    navHostController = homeNavController
+                )
+            }
+        }
+
+        composable(route = PetsListScreen.EKYCCheckingScreen.route) {
+            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
+
+            if (petDetail != null) {
+                EKYCUploadScreen(
+                    navHostController = homeNavController,
+                    petDetail = petDetail
                 )
             }
         }
@@ -81,6 +98,8 @@ fun NavGraphBuilder.petsListNavGraph(navController: NavHostController) {
 sealed class PetsListScreen(val route: String) {
     object PetsList: PetsListScreen(route = "PetsListScreen")
     object DetailScreen: PetsListScreen(route = "DetailScreen")
+
+    object EKYCCheckingScreen: PetsListScreen(route = "EKYCCheckingScreen")
 }
 
 fun NavGraphBuilder.channelNavGraph(navController: NavHostController) {
@@ -89,7 +108,11 @@ fun NavGraphBuilder.channelNavGraph(navController: NavHostController) {
         startDestination = ChatScreen.ChannelsList.route
     ) {
         composable(route = ChatScreen.ChannelsList.route) {
-            ChannelsListScreen(navController = navController)
+            val channelId: String? = navController.previousBackStackEntry?.savedStateHandle?.get("channelId")
+
+            Log.d("CHECK", channelId.toString())
+
+            ChannelsListScreen(navController = navController, channelID = channelId)
         }
 
         composable(route = ChatScreen.Channel.route) {

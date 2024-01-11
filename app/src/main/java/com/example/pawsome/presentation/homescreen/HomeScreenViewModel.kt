@@ -1,19 +1,37 @@
 package com.example.pawsome.presentation.homescreen
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Looper
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.appcheck.internal.util.Logger
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.maps.android.ktx.utils.sphericalDistance
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,12 +47,15 @@ import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
-@HiltViewModel
-class HomeScreenViewModel @Inject constructor (
-    private val authRepo: AuthRepo,
-    private val backEndRepo: BackEndRepo,
-    private val client: ChatClient
-) : ViewModel() {
+//@HiltViewModel
+class HomeScreenViewModel (
+//    private val authRepo: AuthRepo,
+//    private val backEndRepo: BackEndRepo,
+//    private val client: ChatClient,
+    val currentLocation: LatLng
+) : ViewModel(
+
+) {
     private val _isLoading = Channel<Boolean>()
     val isLoading = _isLoading.receiveAsFlow()
 
@@ -69,7 +90,17 @@ class HomeScreenViewModel @Inject constructor (
                     viewModelScope.launch{
                         _isLoading.send(true)
 
+                        Log.d("HOMESCREEN", currentLocation.toString())
+
                         for (document in documents) {
+                            // Calculate distance in meter and convert to km
+                            val distance = currentLocation.sphericalDistance(
+                                LatLng(
+                                    document.get("latitude").toString().toDouble(),
+                                    document.get("longitude").toString().toDouble()
+                                )
+                            ) / 1000
+
                             val pet = PetDetail(
                                 id = document.id,
                                 petName = document.get("petName").toString(),
@@ -85,12 +116,15 @@ class HomeScreenViewModel @Inject constructor (
                                 latitude = document.get("latitude").toString().toDouble(),
                                 longitude = document.get("longitude").toString().toDouble(),
                                 img = document.get("img").toString(),
+                                distance = String.format("%.2f", distance).toDouble()
                             )
 
                             petList += pet
 
                             _isLoading.send(false)
                         }
+
+                        petList.sortBy { it.distance }
                     }
                 }
                     .await()
@@ -134,21 +168,5 @@ class HomeScreenViewModel @Inject constructor (
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-//        viewModelScope.launch {
-//            _searchText.value = text
-//            _isLoading.send(true)
-//
-//            getPetsFromFireStore()
-//
-//            if (text.isNotBlank()) {
-//                petsList = petsList.filter {
-//                    it.petName.contains(text) || it.petDescription.contains(text) || it.petBreed.contains(text)
-//                }
-//            }
-//
-//            Log.d("HOME", petsList.toString())
-//
-//            _isLoading.send(false)
-//        }
     }
 }

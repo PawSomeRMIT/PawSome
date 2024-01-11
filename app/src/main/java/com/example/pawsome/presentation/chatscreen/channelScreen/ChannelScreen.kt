@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.pawsome.domain.ChatScreen
 import io.getstream.chat.android.compose.ui.messages.MessagesScreen
 import io.getstream.chat.android.compose.ui.theme.ChatTheme
 import io.getstream.chat.android.compose.viewmodel.messages.MessagesViewModelFactory
@@ -31,7 +32,7 @@ fun ChannelScreen(
                 messageLimit = 30
             ),
             onBackPressed = {
-                navController.popBackStack()
+                navController.popBackStack(route = ChatScreen.ChannelsList.route, inclusive = false, saveState = false)
             },
         )
     }
