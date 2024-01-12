@@ -307,8 +307,6 @@ fun Login(
                         userData = result
                     }
 
-                    Log.d("BEFORENAV", userData.toString())
-
                     navHostController.currentBackStackEntry?.savedStateHandle?.set(
                         "location",
                         currentLocation

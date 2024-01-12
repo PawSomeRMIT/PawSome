@@ -68,6 +68,7 @@ import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.FilterChipData
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.homescreen.component.BottomBar
+import com.example.pawsome.presentation.homescreen.component.CenterActionButton
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
@@ -102,7 +103,7 @@ fun HomeScreen(
                     },
         isFloatingActionButtonDocked = true,
         floatingActionButton = {
-//            CenterActionButton(navController = navController)
+            CenterActionButton(navController = homeNavController)
                                },
         floatingActionButtonPosition = androidx.compose.material.FabPosition.Center,
     ) {
