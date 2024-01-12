@@ -14,6 +14,9 @@ package com.example.pawsome.presentation.homescreen.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChatBubble
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Home
@@ -23,14 +26,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.pawsome.R
 import com.example.pawsome.data.DataViewModel
 import com.example.pawsome.domain.Graph
+import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.domain.screens.BottomBarScreen
+import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -43,6 +50,7 @@ fun BottomBar(navController: NavController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.ChannelsList,
+        BottomBarScreen.Payment,
         BottomBarScreen.Settings
     )
 
@@ -51,6 +59,10 @@ fun BottomBar(navController: NavController) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route}
 
+    var currentIcon by remember {
+        mutableIntStateOf(0)
+    }
+
     if (bottomBarDestination) {
         BottomAppBar(
             cutoutShape = MaterialTheme.shapes.small.copy(
@@ -58,11 +70,30 @@ fun BottomBar(navController: NavController) {
                     percent = 50
                 )
             ),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+            contentPadding = PaddingValues(horizontal = 15.dp, vertical = 5.dp),
             backgroundColor = Color.White
         ) {
-            IconButton(onClick = { navController.navigate("home") }) {
-                Icon(Icons.Outlined.Home, contentDescription = "Home")
+            IconButton(
+                onClick = {
+//                    navController.navigate(Graph.PETSLIST)
+
+                    navController.navigate(Graph.PETSLIST) {
+                        popUpTo(0) {
+                        }
+                    }
+
+                    currentIcon = 0
+                }
+            ) {
+                Icon(
+                    Icons.Filled.Home,
+                    contentDescription = "Home",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.Home.route) R.color.yellow
+                        else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                )
 
             }
 
@@ -70,33 +101,79 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-                    navController.navigate(BottomBarScreen.Payment.route)
+//                    navController.navigate(BottomBarScreen.Payment.route)
+
+                    navController.navigate(BottomBarScreen.Payment.route) {
+                        popUpTo(BottomBarScreen.Payment.route) {
+                            inclusive = true
+                        }
+                    }
+
+                    currentIcon = 1
                 }
             ) {
-                Icon(Icons.Outlined.Map, contentDescription = "Maps")
+                Icon(
+                    Icons.Outlined.Map,
+                    contentDescription = "Maps",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.Payment.route) R.color.yellow
+                        else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                    )
             }
 
             Spacer(Modifier.weight(1f, true))
-
             Box(Modifier.size(48.dp)) // Placeholder for the FAB
             Spacer(Modifier.weight(1f, true))
 
             IconButton(
                 onClick = {
-                    navController.navigate(Graph.CHAT)
+//                    navController.navigate(Graph.CHAT)
+
+                    navController.navigate(Graph.CHAT) {
+                        popUpTo(0) {
+                        }
+                    }
+
+                    currentIcon = 2
                 }
             ) {
-                Icon(Icons.Outlined.ChatBubbleOutline, contentDescription = "Chat List")
+                Icon(
+                    Icons.Filled.ChatBubble,
+                    contentDescription = "Chat List",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.ChannelsList.route) R.color.yellow
+                        else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                    )
 
             }
 
             Spacer(Modifier.weight(1f, true))
+
             IconButton(
                 onClick = {
-                    navController.navigate(BottomBarScreen.Settings.route)
+//                    navController.navigate(BottomBarScreen.Settings.route)
+
+                    navController.navigate(BottomBarScreen.Settings.route) {
+                        popUpTo(0) {
+                        }
+                    }
+
+                    currentIcon = 3
                 }
             ) {
-                Icon(Icons.Outlined.Settings, contentDescription = "Settings")
+                Icon(
+                    Icons.Filled.Settings,
+                    contentDescription = "Settings",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.Settings.route) R.color.yellow
+                            else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                )
             }
         }
     }

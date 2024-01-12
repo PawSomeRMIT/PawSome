@@ -41,8 +41,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        requestCameraPermission()
-        requestLocationPermission()
+//        requestCameraPermission()
+//        requestLocationPermission()
 
     }
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->

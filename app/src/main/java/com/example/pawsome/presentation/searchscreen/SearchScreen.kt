@@ -12,10 +12,8 @@
 
 package com.example.pawsome.presentation.searchscreen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,60 +25,52 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.pawsome.common.CommonVar
 import com.example.pawsome.common.NormalText
-import com.example.pawsome.data.DataViewModel
-import com.example.pawsome.model.EventData
 import com.example.pawsome.model.User
-import com.example.pawsome.model.nearMe
-import com.example.pawsome.model.popularEvents
-import com.example.pawsome.model.sampleEvents
-import com.example.pawsome.presentation.homescreen.component.HeaderSeparator
-import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
-import com.example.pawsome.presentation.homescreen.component.PopularEvents
-import com.example.pawsome.presentation.searchscreen.component.MyLocationButton
+import com.example.pawsome.presentation.homescreen.HomeScreenViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
-@Composable
-fun SearchResultsScreen(
-    eventDetails: List<EventData> = sampleEvents,
-    navHostController: NavHostController) {
-    LazyColumn {
-        item {
-            MyLocationButton()
-        }
-        //Render a lít of items
-        items(eventDetails.size) { items ->
-            //Get the element of the event details
-            val res = eventDetails[items]
-            //Display to the card
-            HorizontalHomeEventCard(
-                inputImageUrl = res.imageUrl,
-                nameEvent = res.eventName,
-                location = res.location,
-                date = res.eventTime,
-                admin = res.organizerName
-            ) {
-//                navHostController.navigate(Screen.DetailScreen.route)
-            }
-        }
-    }
-}
+//@Composable
+//fun SearchResultsScreen(
+//    eventDetails: List<EventData> = sampleEvents,
+//    homeScreenViewModel: HomeScreenViewModel
+//) {
+//    LazyColumn {
+//        item {
+//            MyLocationButton()
+//        }
+//        //Render a lít of items
+//        items(eventDetails.size) { items ->
+//            //Get the element of the event details
+//            val res = eventDetails[items]
+//            //Display to the card
+//            HorizontalHomeEventCard(
+//                inputImageUrl = res.imageUrl,
+//                nameEvent = res.eventName,
+//                location = res.location,
+//                date = res.eventTime,
+//                admin = res.organizerName
+//            ) {
+////                navHostController.navigate(Screen.DetailScreen.route)
+//            }
+//        }
+//    }
+//}
 
 
 @Composable
@@ -129,87 +119,105 @@ fun SearchBar(searchText: TextFieldValue, onSearchTextChanged: (TextFieldValue) 
 fun SearchResults(
     searchText: String = "AD",
     selectedFilter: String = "",
-    navHostController: NavHostController,
-    dataViewModel: DataViewModel = viewModel()
+    homeScreenViewModel: HomeScreenViewModel,
+    navHostController: NavHostController
 ) {
-
-    // Event list for storing fetching data
-    val eventsList = dataViewModel.eventsList.value
-
-    Log.d("EventList", "${eventsList.size}")
-
     // Coroutine scope for asynchronous operations
     val coroutineScope = rememberCoroutineScope()
 
     // Check data loading
-    val isLoading = remember { mutableStateOf(false) }
+    val loadingState by homeScreenViewModel.isLoading.collectAsState(initial = false)
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        //TODO: Need a function to fetch the data and state to manage that
-        if (searchText.isNotEmpty()) {
+    if (loadingState) {
+        Text(text = "Loading data...")
+    }
+    else {
+        Column(modifier = Modifier.padding(16.dp)) {
             // Display filtered results based on searchText and selectedFilter
             Column {
                 //Have a if to check if filter is selected
                 //Have a list if filter not found
-                Text(
-                    text = "Search result for ${searchText} + filter ${selectedFilter}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = CommonVar.fontSizeSmall
-                )
-                SearchResultsScreen(navHostController = navHostController)
-            }
-            // Here you would query your data source based on the search text and selected filter
-            // and display the results.
-        } else {
-            if (isLoading.value) {
-                Text(text = "Loading data...")
-            } else {
-                LazyColumn {
-                    // Section for "Near Me" events
-                    item {
-                        HeaderSeparator(title = "Near Me")
-                    }
-                    items(nearMe.size) { index ->
-                        val event = nearMe[index]
-                        HorizontalHomeEventCard(
-                            inputImageUrl = event.imageUrl,
-                            nameEvent = event.eventName,
-                            location = event.location,
-                            date = event.eventTime,
-                            admin = event.organizerName
-                        ) {
-//                            navHostController.navigate(Screen.DetailScreen.route)
-                        }
-                    }
+//                Text(
+//                    text = "Search result for ${searchText} + filter ${selectedFilter}",
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = CommonVar.fontSizeSmall
+//                )
 
-
-                    // Section for "Popular" events with a horizontal scroll
-                    item {
-                        HeaderSeparator(title = "Popular")
-                        PopularEvents(popularEvents, navHostController)
-                    }
-
-                    // Section for general events
-                    item {
-                        HeaderSeparator(title = "Events")
-                    }
-                    items(eventsList.size) { index ->
-                        val event = eventsList[index]
-                        HorizontalHomeEventCard(
-                            inputImageUrl = event.imageUrl,
-                            nameEvent = event.eventName,
-                            location = event.location,
-                            date = event.eventTime,
-                            admin = event.organizerName
-                        ) {
-//                            navHostController.navigate(Screen.DetailScreen.route)
-                        }
-                    }
-                    item {
-                        Spacer(modifier = Modifier.padding(100.dp))
-                    }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+//                    items(homeScreenViewModel.petsList) {pet ->
+//                        //Display to the card
+//                        HorizontalHomeEventCard(
+//                            petDetail = pet,
+//                            onEventClick = {
+//                                navHostController.currentBackStackEntry?.savedStateHandle?.set("petDetail", pet)
+//
+//                                navHostController.navigate(PetsListScreen.DetailScreen.route)
+//                            }
+//                        )
+//                    }
                 }
+            }
+            //TODO: Need a function to fetch the data and state to manage that
+            if (searchText.isNotEmpty()) {
+
+                // Here you would query your data source based on the search text and selected filter
+                // and display the results.
+            } else {
+//            if (isLoading.value) {
+//                Text(text = "Loading data...")
+//            } else {
+//                LazyColumn {
+//                    // Section for "Near Me" events
+//                    item {
+//                        HeaderSeparator(title = "Near Me")
+//                    }
+//                    items(nearMe.size) { index ->
+//                        val event = nearMe[index]
+//                        HorizontalHomeEventCard(
+//                            inputImageUrl = event.imageUrl,
+//                            nameEvent = event.eventName,
+//                            location = event.location,
+//                            date = event.eventTime,
+//                            admin = event.organizerName
+//                        ) {
+////                            navHostController.navigate(Screen.DetailScreen.route)
+//                        }
+//                    }
+//
+//
+//                    // Section for "Popular" events with a horizontal scroll
+//                    item {
+//                        HeaderSeparator(title = "Popular")
+//                        PopularEvents(popularEvents, navHostController)
+//                    }
+//
+//                    // Section for general events
+//                    item {
+//                        HeaderSeparator(title = "Events")
+//                    }
+//                    items(eventsList.size) { index ->
+//                        val event = eventsList[index]
+//                        HorizontalHomeEventCard(
+//                            inputImageUrl = event.imageUrl,
+//                            nameEvent = event.eventName,
+//                            location = event.location,
+//                            date = event.eventTime,
+//                            admin = event.organizerName
+//                        ) {
+////                            navHostController.navigate(Screen.DetailScreen.route)
+//                        }
+//                    }
+//                    item {
+//                        Spacer(modifier = Modifier.padding(100.dp))
+//                    }
+//                }
+//            }
             }
         }
     }
+
 }
