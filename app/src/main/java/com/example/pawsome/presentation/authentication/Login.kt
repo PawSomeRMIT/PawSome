@@ -67,6 +67,7 @@ import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.authentication.components.CustomTextField
@@ -289,12 +290,22 @@ fun Login(
                     val snapshot = userRef?.get()?.await()
 
                     snapshot?.let {
-                        snapshot.toObject<User>()?.let {
-                            userData = it
-                        }
-                    }
+//                        snapshot.toObject<User>()?.let {
+//                            userData = it
+//                        }
 
-                    Log.d("BEFORENAV", userData.toString())
+                        val result = User(
+                            userID = it.get("userID").toString(),
+                            username = it.get("username").toString(),
+                            email = it.get("email").toString(),
+                            image = it.get("image").toString(),
+                            membership = it.get("membership").toString(),
+                            chatToken = it.get("chatToken").toString(),
+                            history = it.get("history") as List<Booking>
+                        )
+
+                        userData = result
+                    }
 
                     navHostController.currentBackStackEntry?.savedStateHandle?.set(
                         "location",

@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.Validator
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.util.Resource
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -222,7 +223,8 @@ suspend fun getUserFromFireStore(email: String) : User {
                 email = it.get("email").toString(),
                 image = it.get("image").toString(),
                 membership = it.get("membership").toString(),
-                chatToken = it.get("chatToken").toString()
+                chatToken = it.get("chatToken").toString(),
+                history = it.get("history") as List<Booking>
             )
 
             user = result

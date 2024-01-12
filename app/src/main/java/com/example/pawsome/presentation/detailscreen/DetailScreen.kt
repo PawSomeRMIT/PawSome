@@ -59,6 +59,7 @@ import com.example.pawsome.R
 import com.example.pawsome.domain.ChatScreen
 import com.example.pawsome.domain.Graph
 import com.example.pawsome.domain.PetsListScreen
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.detailscreen.components.DetailChip
@@ -97,9 +98,17 @@ fun DetailScreen(
             val snapshot = userRef.get().await()
 
             snapshot?.let {
-                snapshot.toObject<User>()?.let {
-                    userData = it
-                }
+                val result = User(
+                    userID = it.get("userID").toString(),
+                    username = it.get("username").toString(),
+                    email = it.get("email").toString(),
+                    image = it.get("image").toString(),
+                    membership = it.get("membership").toString(),
+                    chatToken = it.get("chatToken").toString(),
+                    history = it.get("history") as List<Booking>
+                )
+
+                userData = result
             }
         }
     }
