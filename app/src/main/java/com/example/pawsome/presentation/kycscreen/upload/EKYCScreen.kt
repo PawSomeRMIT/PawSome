@@ -111,7 +111,7 @@ fun EKYCUploadScreen(
 
     val idNumber by ekycScreenViewModel.idNumber.collectAsState()
 
-    // Stipe payment
+    // Stripe payment
     val paymentSheet = rememberPaymentSheet(ekycScreenViewModel::onPaymentSheetResult)
 
     var customerConfig by remember {
