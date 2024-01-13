@@ -2,6 +2,7 @@
 
 package com.example.pawsome.presentation.aboutus
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,17 +27,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
 
-@Preview
 @Composable
-fun AboutUsView(/*viewModel: AboutUsViewModel,*/ navController: NavController = rememberNavController()) {
+fun AboutUsView(viewModel: AboutUsViewModel, navController: NavController = rememberNavController()) {
     Surface(
         modifier = Modifier
             .fillMaxSize(),
@@ -53,7 +53,6 @@ fun AboutUsView(/*viewModel: AboutUsViewModel,*/ navController: NavController = 
                         Text(
                             text = "About Us"
                         )
-
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
@@ -84,23 +83,14 @@ fun AboutUsView(/*viewModel: AboutUsViewModel,*/ navController: NavController = 
                             modifier = Modifier
                                 .fillMaxWidth()
                         ){
-                            AsyncImage(
-                                model = member.memberImageUrl, // Replace with URL or local drawable resource
-                                contentDescription = "Images of member",
-                                modifier = Modifier
-                                    .size(125.dp)
-                                    .clip(CircleShape)
-                            )
-
-                            /*Image(
-                                painter = rememberAsyncImagePainter(model = member.memberImageUrl),
-                                *//*painter = painterResource(id = member.memberImageResId),*//*
+                            Image(
+                                painter = painterResource(id = member.memberImageResId),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .size(125.dp)
                                     .clip(CircleShape)
-                            )*/
+                            )
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
