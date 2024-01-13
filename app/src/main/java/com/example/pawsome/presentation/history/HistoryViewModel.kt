@@ -64,8 +64,3 @@ class HistoryViewModel : ViewModel() {
         }
     }
 }
-
-/*
-val startDate = startDateTimestamp ?: Timestamp(Date())
-val endDate = endDateTimestamp ?: Timestamp(Date())
-*/
