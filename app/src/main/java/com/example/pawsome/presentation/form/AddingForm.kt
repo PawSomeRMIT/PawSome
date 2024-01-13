@@ -42,6 +42,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,6 +64,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
+import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.data.form.FormUIEvent
 import com.example.pawsome.domain.screens.BottomBarScreen
@@ -134,236 +136,220 @@ fun Form(
 
     // ---- UI Layouts ----
 
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .padding(16.dp, 16.dp)
-            .verticalScroll(state = scrollState),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color(246,246,246)
     ) {
-        ImagePicker()
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(16.dp, 16.dp)
+                .verticalScroll(state = scrollState),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(
-                modifier = Modifier.weight(1f),
+            TitleText(value = "Add new pet")
+
+            ImagePicker()
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petname_field),
-                    painterResource(id = R.drawable.baseline_text_format_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetNameChanged(it))
-                            petName = it
-                        }
-                    },
-                    errorStatus = dataViewModel.formUIState.value.petNameError
-                )
-            }
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petGender_field),
-                    painterResource(id = R.drawable.baseline_transgender_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetGenderChanged(it))
-                            petGender = it
-                        }
-                    },
-                    errorStatus = dataViewModel.formUIState.value.petGenderError
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petBreed_field),
-                    painterResource(id = R.drawable.baseline_pets_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetBreedChanged(it))
-                            petBreed = it
-                        }
-                    },
-                    errorStatus = dataViewModel.formUIState.value.petBreedError
-                )
-            }
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petAge_field),
-                    painterResource(id = R.drawable.baseline_123_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetAgeChanged(it))
-                            petAge = it
-                        }
-                    },
-                    keyboardType = "number",
-                    errorStatus = dataViewModel.formUIState.value.petAgeError
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petType_field),
-                    painterResource(id = R.drawable.baseline_pets_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetTypeChanged(it))
-                            petAnimal = it
-                        }
-                    },
-                    errorStatus = dataViewModel.formUIState.value.petTypeError
-                )
-            }
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column(
-                modifier = Modifier.weight(1f),
-            ) {
-                CustomTextField(
-                    labelValue = stringResource(id = R.string.petColor_field),
-                    painterResource(id = R.drawable.baseline_color_lens_24),
-                    onTextChanged = {
-                        scope.launch {
-                            dataViewModel.onEvent(FormUIEvent.PetColorChanged(it))
-                            petColor = it
-                        }
-                    },
-                    errorStatus = dataViewModel.formUIState.value.petColorError
-                )
-            }
-        }
-
-        CustomTextField(
-            labelValue = stringResource(id = R.string.petLocation_field),
-            painterResource(id = R.drawable.baseline_location_24),
-            onTextChanged = {
-                scope.launch {
-                    dataViewModel.onEvent(FormUIEvent.PetLocationChanged(it))
-                    petlocation = it
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petname_field),
+                        painterResource(id = R.drawable.baseline_text_format_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetNameChanged(it))
+                                petName = it
+                            }
+                        },
+                        errorStatus = dataViewModel.formUIState.value.petNameError
+                    )
                 }
-            },
-            errorStatus = dataViewModel.formUIState.value.petlocationError
-        )
 
-        CustomTextField(
-            labelValue = stringResource(id = R.string.petDescription_field),
-            painterResource(id = R.drawable.baseline_description_24),
-            onTextChanged = {
-                scope.launch {
-                    dataViewModel.onEvent(FormUIEvent.PetDescriptionChanged(it))
-                    petDescription = it
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petGender_field),
+                        painterResource(id = R.drawable.baseline_transgender_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetGenderChanged(it))
+                                petGender = it
+                            }
+                        },
+                        errorStatus = dataViewModel.formUIState.value.petGenderError
+                    )
                 }
-            },
-            errorStatus = dataViewModel.formUIState.value.petDescriptionError
-        )
+            }
 
-        CustomTextField(
-            labelValue = stringResource(id = R.string.bookingPrice_field),
-            painterResource(id = R.drawable.baseline_attach_money_24),
-            onTextChanged = {
-                scope.launch {
-                    dataViewModel.onEvent(FormUIEvent.BookingPriceChanged(it))
-                    bookingPrice = it
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petBreed_field),
+                        painterResource(id = R.drawable.baseline_pets_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetBreedChanged(it))
+                                petBreed = it
+                            }
+                        },
+                        errorStatus = dataViewModel.formUIState.value.petBreedError
+                    )
                 }
-            },
-            keyboardType = "number",
-            lastField = true,
-            errorStatus = dataViewModel.formUIState.value.bookingPriceError
-        )
 
-        Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
-        val sdf = SimpleDateFormat("dd-MM-yyyy")
-        val currentDate = sdf.format(Date())
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petAge_field),
+                        painterResource(id = R.drawable.baseline_123_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetAgeChanged(it))
+                                petAge = it
+                            }
+                        },
+                        keyboardType = "number",
+                        errorStatus = dataViewModel.formUIState.value.petAgeError
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petType_field),
+                        painterResource(id = R.drawable.baseline_pets_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetTypeChanged(it))
+                                petAnimal = it
+                            }
+                        },
+                        errorStatus = dataViewModel.formUIState.value.petTypeError
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    CustomTextField(
+                        labelValue = stringResource(id = R.string.petColor_field),
+                        painterResource(id = R.drawable.baseline_color_lens_24),
+                        onTextChanged = {
+                            scope.launch {
+                                dataViewModel.onEvent(FormUIEvent.PetColorChanged(it))
+                                petColor = it
+                            }
+                        },
+                        errorStatus = dataViewModel.formUIState.value.petColorError
+                    )
+                }
+            }
+
+            CustomTextField(
+                labelValue = stringResource(id = R.string.petLocation_field),
+                painterResource(id = R.drawable.baseline_location_24),
+                onTextChanged = {
+                    scope.launch {
+                        dataViewModel.onEvent(FormUIEvent.PetLocationChanged(it))
+                        petlocation = it
+                    }
+                },
+                errorStatus = dataViewModel.formUIState.value.petlocationError
+            )
+
+            CustomTextField(
+                labelValue = stringResource(id = R.string.petDescription_field),
+                painterResource(id = R.drawable.baseline_description_24),
+                onTextChanged = {
+                    scope.launch {
+                        dataViewModel.onEvent(FormUIEvent.PetDescriptionChanged(it))
+                        petDescription = it
+                    }
+                },
+                errorStatus = dataViewModel.formUIState.value.petDescriptionError
+            )
+
+            CustomTextField(
+                labelValue = stringResource(id = R.string.bookingPrice_field),
+                painterResource(id = R.drawable.baseline_attach_money_24),
+                onTextChanged = {
+                    scope.launch {
+                        dataViewModel.onEvent(FormUIEvent.BookingPriceChanged(it))
+                        bookingPrice = it
+                    }
+                },
+                keyboardType = "number",
+                lastField = true,
+                errorStatus = dataViewModel.formUIState.value.bookingPriceError
+            )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            val sdf = SimpleDateFormat("dd-MM-yyyy")
+            val currentDate = sdf.format(Date())
 
 //        val addressLatLong = getLocationFromAddress(petlocation, LocalContext.current)
 
-        val context = LocalContext.current
+            val context = LocalContext.current
 
-        val newPetDetail = PetDetail(
-            petName = petName,
-            petGender = petGender,
-            petBreed = petBreed,
-            petAnimal = petAnimal,
-            petColor = petColor,
-            petStatus = "Available",
-            petAge = petAge,
-            petDescription = petDescription,
-            img = imageUri,
-            bookingPricePerDay = bookingPrice,
-            ownerId = userData.userID,
-            distance = 0.0,
-            petAddress = petlocation
-        )
+            val newPetDetail = PetDetail(
+                petName = petName,
+                petGender = petGender,
+                petBreed = petBreed,
+                petAnimal = petAnimal,
+                petColor = petColor,
+                petStatus = "Available",
+                petAge = petAge,
+                petDescription = petDescription,
+                img = imageUri,
+                bookingPricePerDay = bookingPrice,
+                ownerId = userData.userID,
+                distance = 0.0,
+                petAddress = petlocation
+            )
 
-        ButtonComponent(
-            value = "Save",
-            onButtonClicked = {
-                scope.launch {
-                    dataViewModel
-                        .saveForm(newPetDetail, context)
+            ButtonComponent(
+                value = "Save",
+                onButtonClicked = {
+                    scope.launch {
+                        dataViewModel
+                            .saveForm(newPetDetail, context)
 
-                    navHostController.navigate(BottomBarScreen.Home.route) {
-                        popUpTo(BottomBarScreen.Home.route) {
-                            inclusive = true
+                        navHostController.navigate(BottomBarScreen.Home.route) {
+                            popUpTo(BottomBarScreen.Home.route) {
+                                inclusive = true
+                            }
                         }
                     }
-                }
-            },
-            isEnabled = dataViewModel.allFormValidatePassed.value)
+                },
+                isEnabled = dataViewModel.allFormValidatePassed.value
+            )
 
-//        Button(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(56.dp),
-//            onClick = {
-//                scope.launch {
-//                    dataViewModel
-//                        .saveForm(newPetDetail, context)
-//
-//                    navHostController.navigate(BottomBarScreen.Home.route) {
-//                        popUpTo(BottomBarScreen.Home.route) {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//            },
-//            shape = MaterialTheme.shapes.large
-//        ) {
-//            Text(
-//                text = "Save",
-//                style = MaterialTheme.typography.button
-//            )
-//        }
-
-        Spacer(modifier = Modifier.padding(50.dp))
+            Spacer(modifier = Modifier.padding(50.dp))
+        }
     }
 }
 
@@ -457,7 +443,7 @@ fun ImageLayoutView(selectedImages: List<Uri?>) {
                 contentDescription = "Site image",
                 modifier = Modifier
                     .height(300.dp)
-                    .width(400.dp)
+                    .width(380.dp)
                     .clip(RoundedCornerShape(20.dp))
             )
         }

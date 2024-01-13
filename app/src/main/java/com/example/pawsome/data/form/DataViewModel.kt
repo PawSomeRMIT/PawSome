@@ -139,16 +139,24 @@ class DataViewModel: ViewModel() {
         // Create a FireStore reference
         val db = FirebaseFirestore.getInstance()
 
-        val addressLatLong = getLocationFromAddress(petDetail.petAddress, context)
+        // Create document reference
+        val documentRef = db.collection("pets").document()
 
+        // Get document ID and store it manually along with object
+        val documentID = documentRef.id
+        Log.d("Firestore", "Document ID: ${documentID}")
+        petDetail.id = documentID
+
+        // Convert address to latitude and longitude
+        // Default location (RMIT University Vietnam)
+        val addressLatLong = getLocationFromAddress(petDetail.petAddress, context)
         petDetail.latitude = addressLatLong?.latitude ?: 10.729250
         petDetail.longitude = addressLatLong?.longitude ?: 106.695520
-
         Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
 
         petDetail.img?.let {
+            // Store object image to Storage and get its public url
             val uploadURI = uploadToStorage(it, context= context)
-
             petDetail.img = uploadURI
 
             storage.putFile(it)
@@ -159,7 +167,7 @@ class DataViewModel: ViewModel() {
                                 .add(petDetail)
                                 .addOnSuccessListener {
                                     Log.d("Firestore", "Inside_OnSuccessListener")
-                                    Log.d("Firestore", "Save form successfully")
+                                    Log.d("Firestore", "Form ${petDetail.id} is saved successfully")
                                 }
                                 .addOnFailureListener{
                                     Log.d("Firestore", "Inside_OnFailureListener")
@@ -264,7 +272,7 @@ class DataViewModel: ViewModel() {
 
         val unique_image_name = "${UUID.randomUUID()}"
         var spaceRef: StorageReference
-        spaceRef = storageRef.child("$unique_image_name.jpeg")
+        spaceRef = storageRef.child("pets/$unique_image_name.jpeg")
 
         val byteArray: ByteArray? = context.contentResolver
             .openInputStream(uri)
