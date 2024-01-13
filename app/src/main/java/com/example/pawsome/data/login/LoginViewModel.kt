@@ -14,6 +14,8 @@
 package com.example.pawsome.data.login
 
 
+import android.annotation.SuppressLint
+import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -21,8 +23,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.Validator
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.util.Resource
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.Priority
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -50,6 +57,36 @@ class LoginViewModel @Inject constructor (
 
     val _signInState = Channel<SignInState>()
     val signInState = _signInState.receiveAsFlow()
+
+    val permissions = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION,
+    )
+
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+    lateinit var locationCallback: LocationCallback
+    var locationRequired: Boolean = false
+
+    @SuppressLint("MissingPermission")
+    fun startLocationUpdate() {
+        Log.d("KEOY", "Inside startLocationUpdate")
+
+        locationCallback?.let {
+            val locationRequest = LocationRequest.Builder(
+                Priority.PRIORITY_HIGH_ACCURACY, 100
+            )
+                .setWaitForAccurateLocation(false)
+                .setMinUpdateIntervalMillis(3000)
+                .setMaxUpdateDelayMillis(100)
+                .build()
+
+            fusedLocationClient?.requestLocationUpdates(
+                locationRequest,
+                it,
+                Looper.getMainLooper()
+            )
+        }
+    }
 
     suspend fun onEvent(event: LoginUIEvent) {
         when (event) {
@@ -117,54 +154,6 @@ class LoginViewModel @Inject constructor (
                 }
             }
         }
-
-//        FirebaseAuth
-//            .getInstance()
-//            .signInWithEmailAndPassword(email, password)
-//            .addOnCompleteListener {
-//                Log.d(tag,"Inside_login_success")
-//                Log.d(tag,"${it.isSuccessful}")
-//
-//                if(it.isSuccessful){
-//                    loginInProgress.value = false
-//
-//                    // Navigate to LoadingScreen
-//                    navHostController.navigate(Screen.LoadingScreen.route)
-//
-//                    // Loading for 3 seconds
-//                    CoroutineScope(Dispatchers.Main).launch {
-//                        delay(3000) // 3 seconds
-//                        // Navigate to home page after delay
-//                        navHostController.navigate(Screen.HomeScreen.route) {
-//                            popUpTo(Screen.LoadingScreen.route) {
-//                                inclusive = true
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            .addOnFailureListener {
-//                Log.d(tag,"Inside_login_failure")
-//                it.localizedMessage?.let { message -> Log.d(tag, message) }
-//
-//                val errorType = "Login Failed"
-//                val errorDesc = it.localizedMessage
-//
-//                // Navigate to LoadingScreen
-//                navHostController.navigate("${Screen.FailureScreen.route}/$errorType/$errorDesc")
-//
-//                // Loading for 3 seconds
-//                CoroutineScope(Dispatchers.Main).launch {
-//                    delay(3000) // 3 seconds
-//                    // Navigate to login page after delay
-//                    navHostController.navigate(Screen.Register.Login.route) {
-//                        popUpTo(Screen.FailureScreen.route) {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//                loginInProgress.value = false
-//            }
     }
 
     fun loginChatUser(user: User) {
@@ -174,6 +163,9 @@ class LoginViewModel @Inject constructor (
             id = user.email.split("@")[0],
             name = user.username
         )
+
+        Log.d("ABCD", user.username)
+        Log.d("ABCD", chatUser.toString())
 
         client.connectUser(
             user = chatUser,
@@ -227,11 +219,12 @@ suspend fun getUserFromFireStore(email: String) : User {
         db.collection("user").whereEqualTo("email", email).get().await().map {
             val result = User(
                 userID = it.get("userID").toString(),
-                username = it.get("name").toString(),
+                username = it.get("username").toString(),
                 email = it.get("email").toString(),
                 image = it.get("image").toString(),
                 membership = it.get("membership").toString(),
-                chatToken = it.get("chatToken").toString()
+                chatToken = it.get("chatToken").toString(),
+                history = it.get("history") as List<Booking>
             )
 
             user = result

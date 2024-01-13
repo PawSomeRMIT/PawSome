@@ -38,7 +38,10 @@ fun FilterChipsWithEmoji(
     selectedFilter: String,
     onFilterSelected: (String) -> Unit
 ) {
-    LazyRow(modifier = Modifier.padding(8.dp)) {
+    LazyRow(
+        modifier = Modifier
+            .padding(horizontal = 10.dp)
+    ) {
         item {
             filterOptions.forEach { filter ->
                 CategoryChip(

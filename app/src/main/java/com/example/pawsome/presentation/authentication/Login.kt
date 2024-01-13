@@ -13,7 +13,11 @@
 
 package com.example.pawsome.presentation.authentication
 
+import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -33,7 +37,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
@@ -58,21 +67,72 @@ import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
+import com.example.pawsome.model.Booking
+import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.authentication.components.CustomTextField
 import com.example.pawsome.presentation.authentication.components.DividerComponent
 import com.example.pawsome.presentation.authentication.components.PasswordTextField
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
+import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.wait
 
 @Composable
 fun Login(
     navHostController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
-
-//    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navHostController))
-
     val context = LocalContext.current
+
+    var currentLocation by remember {
+        mutableStateOf(LatLng(0.0, 0.0))
+    }
+
+    loginViewModel.fusedLocationClient = LocationServices.getFusedLocationProviderClient(
+        context
+    )
+
+    loginViewModel.locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            Log.d("KEOY", "Entered location Result")
+            super.onLocationResult(p0)
+
+            for (location in p0.locations) {
+                currentLocation = LatLng(location.latitude, location.longitude)
+            }
+
+            loginViewModel.locationCallback.let {
+                loginViewModel.fusedLocationClient.removeLocationUpdates(it)
+            }
+        }
+    }
+
+    val launchMultiplePermissions = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {permissionMap ->
+        val areGranted = permissionMap.values.reduce{ acc, next -> acc && next}
+
+        if (areGranted) {
+            loginViewModel.locationRequired = true
+
+            Log.d("KEOY", "Start call LocationUpdate")
+            loginViewModel.startLocationUpdate()
+            Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val scope = rememberCoroutineScope()
 
@@ -181,10 +241,6 @@ fun Login(
                     )
                 }
             }
-
-            if (loginViewModel.loginInProgress.value)
-                CircularProgressIndicator()
-
         }
     }
     else {
@@ -197,18 +253,79 @@ fun Login(
     ) {
         LaunchedEffect(key1 = state.value?.isSuccess) {
             if (state.value?.isSuccess?.isNotEmpty() == true) {
-                val success = state.value?.isSuccess
+                scope.launch {
+                    val success = state.value?.isSuccess
 
-                // Announce the success
-                Toast.makeText(context, "$success", Toast.LENGTH_SHORT).show()
+                    // Announce the success
+                    Toast.makeText(context, "$success", Toast.LENGTH_SHORT).show()
 
-                // Navigate back to the login screen
-                navHostController.navigate(Screen.HomeScreen.route) {
-                    popUpTo(Screen.LoadingScreen.route) {
-                        inclusive = true
+                    if (loginViewModel.permissions.all {
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                it
+                            ) == PackageManager.PERMISSION_GRANTED
+                        }) {
+                        // Get location
+                        loginViewModel.startLocationUpdate()
+
+                    } else {
+                        launchMultiplePermissions.launch(loginViewModel.permissions)
                     }
                 }
             }
+        }
+
+        LaunchedEffect(key1 = currentLocation.latitude) {
+            if (currentLocation.latitude != 0.0 && currentLocation.longitude != 0.0) {
+                scope.launch {
+                    var userData = User()
+
+                    val auth = FirebaseAuth.getInstance()
+                    val userID = auth.currentUser?.uid
+
+                    val userRef = userID?.let {
+                        Firebase.firestore.collection("user").document(it)
+                    }
+
+                    val snapshot = userRef?.get()?.await()
+
+                    snapshot?.let {
+//                        snapshot.toObject<User>()?.let {
+//                            userData = it
+//                        }
+
+                        val result = User(
+                            userID = it.get("userID").toString(),
+                            username = it.get("username").toString(),
+                            email = it.get("email").toString(),
+                            image = it.get("image").toString(),
+                            membership = it.get("membership").toString(),
+                            chatToken = it.get("chatToken").toString(),
+                            history = it.get("history") as List<Booking>
+                        )
+
+                        userData = result
+                    }
+
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        "location",
+                        currentLocation
+                    )
+
+                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                        "user",
+                        userData
+                    )
+
+                    // Navigate back to the login screen
+                    navHostController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.LoadingScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+
         }
 
         LaunchedEffect(key1 = state.value?.isError) {

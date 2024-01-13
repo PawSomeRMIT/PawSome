@@ -21,9 +21,12 @@ interface BackEndApi {
         @Body requestBody: CreateChannelRequestBody
     ): Response
 
+    @Headers(
+        "Content-Type: application/json"
+    )
     @POST("payment-sheet")
     suspend fun call_payment_sheet(
-
+        @Body price: String
     ): StripeResponse
 
     @Headers(

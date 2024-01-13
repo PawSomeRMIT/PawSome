@@ -18,3 +18,10 @@ data class Booking(
     val totalPrice: Float,
     val ownerId: String
 )
+
+    /*val customerId: String,
+    val petId: String,
+    val totalPrice: Double,
+    val customerCardIdNumber: String,
+    val customerCardIdName: String
+    )*/

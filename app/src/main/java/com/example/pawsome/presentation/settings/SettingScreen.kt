@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.settings.components.Profile
@@ -40,9 +41,6 @@ fun SettingScreen(
     loginViewModel: LoginViewModel= hiltViewModel()
 ) {
     val auth = FirebaseAuth.getInstance()
-
-//    val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(navHostController = navController))
-
     val userID = auth.currentUser?.uid
     var userData by remember(userID) { mutableStateOf(User()) }
 
@@ -56,9 +54,17 @@ fun SettingScreen(
             val snapshot = userRef.get().await()
 
             snapshot?.let {
-                snapshot.toObject<User>()?.let {
-                    userData = it
-                }
+                val result = User(
+                    userID = it.get("userID").toString(),
+                    username = it.get("username").toString(),
+                    email = it.get("email").toString(),
+                    image = it.get("image").toString(),
+                    membership = it.get("membership").toString(),
+                    chatToken = it.get("chatToken").toString(),
+                    history = it.get("history") as List<Booking>
+                )
+
+                userData = result
             }
         }
     }

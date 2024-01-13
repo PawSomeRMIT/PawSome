@@ -4,7 +4,7 @@ sealed class BottomBarScreen (
     val route: String
 ) {
     object Home : BottomBarScreen(
-        route = "Home"
+        route = "PetsListScreen"
     )
 
     object ChannelsList : BottomBarScreen(
