@@ -182,34 +182,33 @@ fun BottomBar(navController: NavController) {
 @Composable
 fun CenterActionButton(navController: NavController,
                        dataViewModel: DataViewModel = viewModel()) {
-    var userRole: String = ""
-    val context = LocalContext.current
-    val auth = FirebaseAuth.getInstance()
-    val userID = auth.currentUser?.uid
-    var userData by remember(userID) {
-        mutableStateOf(User())
-    }
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.ChannelsList,
+        BottomBarScreen.Payment,
+        BottomBarScreen.Settings
+    )
 
-    LaunchedEffect(userID) {
-        if (userID != null) {
-            val userRef = Firebase.firestore.collection("user").document(userID)
-            val snapshot = userRef.get().await()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-            snapshot?.let {
-                snapshot.toObject<User>()?.let {
-                    userData = it
-                    userRole = it.membership
-                }
+    val bottomBarDestination = screens.any { it.route == currentDestination?.route}
+
+    if (bottomBarDestination) {
+        FloatingActionButton(
+            backgroundColor = colorResource(id = R.color.yellow),
+            onClick = {
+//                navController.navigate("addBooking")
             }
+        ) {
+            Icon(
+                Icons.Outlined.Add,
+                contentDescription = "Add Booking",
+                tint = Color.White
+            )
         }
     }
 
-
-    FloatingActionButton(onClick = {
-        navController.navigate("addBooking")
-    }) {
-        Icon(Icons.Outlined.Add, contentDescription = "Add Booking")
-    }
 }
 
 @Composable
