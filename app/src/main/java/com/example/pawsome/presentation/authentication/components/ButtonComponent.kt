@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,7 +47,7 @@ fun ButtonComponent(
     Button(
         modifier = modifier,
         contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(Color(49,109,246)),
+        colors = ButtonDefaults.buttonColors(Color(232,192,19)),
         shape = shape,
         enabled = isEnabled,
         onClick = { onButtonClicked.invoke() }
@@ -61,8 +60,8 @@ fun ButtonComponent(
                     if (isEnabled) {
                         if (value.lowercase() != "logout" && value.lowercase() != "sign out") {
                             listOf(
-                                Color(49,109,246),
-                                Color(49,109,246),
+                                Color(232,192,19),
+                                Color(232,192,19),
                             )
                         } else {
                             listOf(
@@ -72,8 +71,8 @@ fun ButtonComponent(
                         }
                     } else {
                         listOf(
-                            Color(150, 181, 250, 255),
-                            Color(150, 181, 250, 255)
+                            Color(227,210,141),
+                            Color(227,210,141)
                         )
                     }
                 )

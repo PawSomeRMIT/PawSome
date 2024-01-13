@@ -21,4 +21,13 @@
 
     <string name="api_key">yuh454u249qa</string>
     <string name="jwt_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiVGh1YyJ9.ble-Rru6LcmuM80IvoNrJyALCafucx2j49t7cIdxKRI</string>
+    <string name="petname_field">Pet name</string>
+    <string name="petBreed_field">Breed</string>
+    <string name="petAge_field">Age</string>
+    <string name="petColor_field">Color</string>
+    <string name="petLocation_field">Location</string>
+    <string name="petDescription_field">Describe about your pet...</string>
+    <string name="bookingPrice_field">How much rent per day?</string>
+    <string name="petGender_field">Gender</string>
+    <string name="petType_field">Dog/ Cat</string>
 </resources>

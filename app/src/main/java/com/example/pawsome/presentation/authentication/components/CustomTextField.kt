@@ -20,10 +20,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
@@ -31,11 +31,16 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -47,12 +52,15 @@ import com.example.pawsome.R
 @Composable
 fun CustomTextField(
     labelValue: String,
-    painterResource: Painter,
+    painterResource: Painter = painterResource(id = R.drawable.ic_launcher_foreground),
+    icon: ImageVector? = Icons.Outlined.AddCircle,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false,
     color: TextFieldColors? = null,
     readOnly: Boolean? = null,
     modifier: Modifier? = null,
+    keyboardType: String? = "text",
+    lastField: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null) {
 
     val textValue = remember {
@@ -67,17 +75,28 @@ fun CustomTextField(
             .clip(RoundedCornerShape(2.dp)),
         colors = color
             ?: TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = Color(0,136,204),
-                focusedBorderColor = Color(0,136,204),
-                cursorColor = Color(0,136,204),
+                focusedLabelColor = Color(232,192,19),
+                focusedBorderColor = Color(232,192,19),
+                cursorColor = Color(232,192,19),
             ),
         // Enter to move to next field
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardOptions = if (keyboardType == "text") {
+            KeyboardOptions(imeAction = if (lastField) ImeAction.Done else ImeAction.Next)
+        } else {
+            KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = if (lastField) ImeAction.Done else ImeAction.Next)
+        },
         singleLine = true,
         maxLines = 1,
         onValueChange = { it:String ->
-            textValue.value = it
-            onTextChanged(it)
+            if (keyboardType == "number") {
+                if (it.all { it.isDigit() }) {
+                    textValue.value = it
+                    onTextChanged(it)
+                }
+            } else {
+                textValue.value = it
+                onTextChanged(it)
+            }
         },
         isError = !errorStatus,
         readOnly = readOnly?: false,
@@ -91,15 +110,18 @@ fun CustomTextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordTextField(
     labelValue: String,
     painterResource: Painter,
+    lastField: Boolean = false,
     onTextSelected: (String) -> Unit,
     errorStatus: Boolean = false
 ) {
     val localFocus = LocalFocusManager.current
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val password = remember {
         mutableStateOf("")
@@ -116,16 +138,21 @@ fun PasswordTextField(
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp)),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = Color(0,136,204),
-            focusedBorderColor = Color(0,136,204),
-            cursorColor = Color(0,136,204),
+            focusedLabelColor = Color(232,192,19),
+            focusedBorderColor = Color(232,192,19),
+            cursorColor = Color(232,192,19),
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions {
-            localFocus.clearFocus()
-        },
+            imeAction = if (lastField) ImeAction.Done else ImeAction.Next),
+        keyboardActions = KeyboardActions(
+            onDone = { keyboardController?.hide() },
+            onNext = {
+                if (!lastField) {
+                    localFocus.moveFocus(FocusDirection.Down)
+                }
+            }
+        ),
         onValueChange = { it:String ->
             password.value = it
             onTextSelected(it)

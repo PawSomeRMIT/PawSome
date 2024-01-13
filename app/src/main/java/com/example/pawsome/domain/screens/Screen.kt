@@ -31,6 +31,6 @@ sealed class Screen(val route: String) {
 //    object Setting : Screen("settings")
 //    object StatScreen : Screen("dashboard")
 //    object MapScreen : Screen("maps")
-//    object AddSiteScreen : Screen("addBooking")
+    object FormScreen : Screen("form")
 //    object AboutUsView : Screen("aboutus")
 }

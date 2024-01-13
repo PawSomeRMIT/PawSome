@@ -169,7 +169,7 @@ fun Signup(
                     val annotatedString = buildAnnotatedString {
                         append("Already have an account? ")
                         withStyle(style = SpanStyle(
-                            color = Color(49,109,246),
+                            color = Color(232,192,19),
                             fontWeight = FontWeight.Bold
                         )) {
                             pushStringAnnotation(tag = "Login", annotation = "Login")
