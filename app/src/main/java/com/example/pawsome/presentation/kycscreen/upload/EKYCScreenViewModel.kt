@@ -13,8 +13,6 @@ import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.example.pawsome.model.api_model.CheckLivenessBody
-import com.example.pawsome.model.api_model.CheckLivenessObject
-import com.example.pawsome.model.api_model.CheckLivenessResponse
 import com.example.pawsome.model.api_model.ExtractInfoBody
 import com.example.pawsome.model.api_model.StripeResponse
 import com.google.firebase.Firebase
@@ -31,9 +29,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import java.io.File
-import java.net.URI
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +50,7 @@ class EKYCScreenViewModel @Inject constructor(
     var idNumber = _idNumber.asStateFlow()
 
     suspend fun makePayment(context: Context, petDetail: PetDetail): StripeResponse {
-        return backEndRepo.call_payment_sheet(petDetail.bookingPricePerDay)
+        return backEndRepo.call_payment_sheet(petDetail.bookingPricePerDay.toDouble())
     }
 
     fun onPaymentSheetResult(paymentSheetResult: PaymentSheetResult) {
@@ -180,8 +176,8 @@ class EKYCScreenViewModel @Inject constructor(
 
             val booking = Booking(
                 customerId = userID!!,
-                petId = petDetail.id,
-                totalPrice = petDetail.bookingPricePerDay,
+                petId = petDetail.id!!,
+                totalPrice = petDetail.bookingPricePerDay.toDouble(),
                 customerCardIdName = idName.value,
                 customerCardIdNumber = idNumber.value
             )

@@ -1,28 +1,23 @@
 package com.example.pawsome.model
 
-import com.google.android.gms.maps.model.LatLng
+import android.net.Uri
 import java.io.Serializable
-import java.sql.Timestamp
-import java.util.Random
-import java.util.UUID.randomUUID
 
 data class PetDetail(
-    val petName: String,
-    val petGender: String,
-    val petBreed: String,
-    val petAnimal:String,
-    val petColor:String,
-    val petStatus: String,
-    val petAge: String,
-    val petDescription: String,
-    val bookingPricePerDay: Double,
-//    val startDate: Timestamp,
-//    val endDate: Timestamp,
-    val id: String,
-    val latitude: Double,
-    val img: String,
-    val longitude: Double,
-    val ownerId: String,
-    val distance: Double
-//    val bookingList: List<Booking> = emptyList()
+    var petName: String,
+    var petGender: String,
+    var petBreed: String,
+    var petAnimal:String,
+    var petColor:String,
+    var petStatus: String,
+    var petAge: String,
+    var petDescription: String,
+    var petAddress: String,
+    var bookingPricePerDay: String,
+    var id: String? = "",
+    var latitude: Double = 10.729250,
+    var img: Uri?,
+    var longitude: Double = 106.695520,
+    var ownerId: String,
+    var distance: Double
 ) : Serializable

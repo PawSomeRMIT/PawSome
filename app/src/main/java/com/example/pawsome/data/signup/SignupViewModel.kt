@@ -20,8 +20,8 @@ import androidx.lifecycle.ViewModel
 import com.example.pawsome.data.Validator
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
-import com.example.pawsome.model.api_model.RequestBody
 import com.example.pawsome.model.User
+import com.example.pawsome.model.api_model.RequestBody
 import com.example.pawsome.util.Resource
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -78,6 +78,8 @@ class SignupViewModel @Inject constructor(
                 signUp()
                 Log.d("Inside OnEvent", "Finish SignUp")
             }
+
+            else -> {}
         }
         validateDataWithRules()
     }
@@ -130,6 +132,8 @@ class SignupViewModel @Inject constructor(
                     Log.d("Register response", result.toString())
                     _signUpState.send(SignUpState(isError = result.message))
                 }
+
+                else -> {}
             }
         }
     }
