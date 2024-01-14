@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +26,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pawsome.R
 import com.example.pawsome.model.FilterChipData
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -47,7 +50,9 @@ fun FilterChipsWithEmoji(
                 CategoryChip(
                     text = filter.category,
                     emoji = filter.emoji,
-                    onChipClick = { onFilterSelected(it) },
+                    onChipClick = {
+                        onFilterSelected(it)
+                                  },
                     isSelected = selectedFilter == filter.category
                 )
             }
@@ -65,8 +70,8 @@ fun CategoryChip(
 ) {
     Chip(
         onClick = { onChipClick(text) },
-        border = BorderStroke(1.dp, Color.Gray),
-//        colors = ChipDefaults.chipColors(backgroundColor = if (isSelected) Color.LightGray else MaterialTheme.colors.surface),
+        border = BorderStroke(1.dp,  Color.Gray),
+        colors = ChipDefaults.chipColors(backgroundColor = if (isSelected) colorResource(id = R.color.yellow) else Color.LightGray),
         modifier = Modifier
             .padding(8.dp)
             .clip(RectangleShape)
@@ -81,31 +86,5 @@ fun CategoryChip(
             modifier = Modifier.clipToBounds()
         )
     }
-}
-
-// Utility function to get emoji for each category (you need to implement this)
-fun getEmojiForCategory(category: String): String {
-    // Return the appropriate emoji for the category
-    return when (category) {
-        // Example cases
-        "News" -> "📰"
-        "Events" -> "🎉"
-        "Articles" -> "📝"
-        else -> "🔍"
-    }
-}
-
-//You need to use lazy row for this
-@Preview(showBackground = true)
-@Composable
-fun CategoryChipsExample() {
-    val categories = listOf(
-        FilterChipData("📚", "Education"),
-        FilterChipData("🌤️", "Environment"),
-        FilterChipData("🎭", "Arts")
-    )
-    FilterChipsWithEmoji(
-        categories, "Education", {}
-    )
 }
 
