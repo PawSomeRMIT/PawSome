@@ -36,7 +36,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.pawsome.common.Avatar
 import com.example.pawsome.common.CommonVar
@@ -48,8 +47,6 @@ fun VerticalHomeEventCard(
     inputProfileURI: String,
     admin: String,
     name: String,
-    attendee: String,
-    countJoin: String,
     actionClickHandler: () -> Unit
 ) {
     Card(
@@ -91,20 +88,6 @@ fun VerticalHomeEventCard(
                     fontWeight = FontWeight.Bold
                 ) // Use 'organizerName' parameter
             }
-            Column(modifier = Modifier.padding(3.dp)) {
-                Text(
-                    name, // Use 'eventName' parameter
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                Text(
-                    attendee, // Use 'eventTime' parameter
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-            inputImage(inputProfileURI, countJoin, actionClickHandler)
         }
     }
 }
@@ -148,8 +131,6 @@ fun VerticalEventCardPreview() {
         inputImageAddressURI = "",
         inputProfileURI = "",
         admin = "Altaniagsdgasto Salami",
-        name = "Cleaningu",
-        attendee = "FRI 27 May, 10:00",
-        countJoin = "+15"
+        name = "Cleaningu"
     ) { /* Handle action click */ }
 }

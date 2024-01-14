@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,16 +75,13 @@ import com.example.pawsome.presentation.authentication.components.PasswordTextFi
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.wait
 
 @Composable
 fun Login(
@@ -189,6 +185,7 @@ fun Login(
                                 loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
                             }
                         },
+                        lastField = true,
                         errorStatus = loginViewModel.loginUIState.value.passwordError
                     )
 
@@ -215,7 +212,7 @@ fun Login(
                     val annotatedString = buildAnnotatedString {
                         append(authenText)
                         withStyle(style = SpanStyle(
-                            color = Color(49,109,246),
+                            color = Color(232,192,19),
                             fontWeight = FontWeight.Bold
                         )) {
                             pushStringAnnotation(tag = "Signup", annotation = "Signup")
@@ -290,10 +287,6 @@ fun Login(
                     val snapshot = userRef?.get()?.await()
 
                     snapshot?.let {
-//                        snapshot.toObject<User>()?.let {
-//                            userData = it
-//                        }
-
                         val result = User(
                             userID = it.get("userID").toString(),
                             username = it.get("username").toString(),

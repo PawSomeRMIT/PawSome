@@ -11,39 +11,40 @@
  */
 
 package com.example.pawsome.presentation.homescreen.component
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.pawsome.R
-import com.example.pawsome.data.DataViewModel
+import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.domain.Graph
-import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.domain.screens.BottomBarScreen
-import com.example.pawsome.domain.screens.Screen
-import com.example.pawsome.model.User
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun BottomBar(navController: NavController) {
@@ -59,9 +60,7 @@ fun BottomBar(navController: NavController) {
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route}
 
-    var currentIcon by remember {
-        mutableIntStateOf(0)
-    }
+    var currentIcon by remember { mutableIntStateOf(0) }
 
     if (bottomBarDestination) {
         BottomAppBar(
@@ -198,17 +197,25 @@ fun CenterActionButton(navController: NavController,
         FloatingActionButton(
             backgroundColor = colorResource(id = R.color.yellow),
             onClick = {
-//                navController.navigate("addBooking")
+                navController.navigate(BottomBarScreen.FormScreen.route)
             }
         ) {
             Icon(
                 Icons.Outlined.Add,
-                contentDescription = "Add Booking",
+                contentDescription = "Add new pet detail",
                 tint = Color.White
             )
         }
     }
 
+
+//    FloatingActionButton(
+//        onClick = {
+//            navController.navigate(BottomBarScreen.FormScreen.route)
+//        }
+//    ) {
+//        Icon(Icons.Outlined.Add, contentDescription = "Add new pet detail")
+//    }
 }
 
 @Composable
@@ -221,16 +228,3 @@ fun NavigationGraph(navController: NavHostController) {
         composable("refresh") { /* ... */ }
     }
 }
-
-//@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-//@Preview
-//@Composable
-//fun NavPreview() {
-//    val navController = rememberNavController()
-//    Scaffold(
-//        bottomBar = { NavBar(navController = navController) },
-//        floatingActionButton = { CenterActionButton(navController = navController) },
-//        floatingActionButtonPosition = FabPosition.Center,
-//        isFloatingActionButtonDocked = true
-//    ){}
-//}

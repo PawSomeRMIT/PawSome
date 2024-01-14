@@ -18,4 +18,7 @@ sealed class BottomBarScreen (
     object Payment: BottomBarScreen(
         route = "Payment"
     )
+    object FormScreen: BottomBarScreen(
+        route = "form"
+    )
 }

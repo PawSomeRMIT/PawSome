@@ -122,6 +122,7 @@ fun SearchResults(
     homeScreenViewModel: HomeScreenViewModel,
     navHostController: NavHostController
 ) {
+
     // Coroutine scope for asynchronous operations
     val coroutineScope = rememberCoroutineScope()
 

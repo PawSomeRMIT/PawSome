@@ -56,7 +56,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
-import com.example.pawsome.domain.ChatScreen
 import com.example.pawsome.domain.Graph
 import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.Booking
@@ -162,7 +161,7 @@ fun DetailScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 AsyncImage(
-                    model = Uri.parse(petDetail.img),
+                    model = petDetail.img,
                     contentDescription = "Pet Image",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
@@ -304,7 +303,7 @@ fun DetailScreen(
 
                     Box(modifier = Modifier.fillMaxWidth()) {
                         PriceAdoptButton(
-                            price = petDetail.bookingPricePerDay
+                            price = petDetail.bookingPricePerDay.toDouble()
                         ) {
                             navHostController.currentBackStackEntry?.savedStateHandle?.set(
                                 "petDetail",

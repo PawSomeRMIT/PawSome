@@ -2,16 +2,15 @@ package com.example.pawsome.domain
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.pawsome.domain.screens.BottomBarScreen
-import com.example.pawsome.model.EventData
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
+import com.example.pawsome.presentation.add_form.Form
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
 import com.example.pawsome.presentation.detailscreen.DetailScreen
@@ -66,6 +65,11 @@ fun NavGraphBuilder.petsListNavGraph(
             }
         }
 
+        composable(BottomBarScreen.FormScreen.route) {
+            Form(navHostController = homeNavController)
+        }
+
+        channelNavGraph(navController = homeNavController)
         composable(route = PetsListScreen.DetailScreen.route) {
             val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
 

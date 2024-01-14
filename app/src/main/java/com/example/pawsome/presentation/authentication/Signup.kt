@@ -70,7 +70,6 @@ fun Signup(
     navHostController: NavHostController,
     signupViewModel: SignupViewModel = hiltViewModel()
 ) {
-//    val signupViewModel: SignupViewModel = viewModel(factory = SignupViewModelFactory(navHostController = navHostController))
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
@@ -169,7 +168,7 @@ fun Signup(
                     val annotatedString = buildAnnotatedString {
                         append("Already have an account? ")
                         withStyle(style = SpanStyle(
-                            color = Color(49,109,246),
+                            color = Color(232,192,19),
                             fontWeight = FontWeight.Bold
                         )) {
                             pushStringAnnotation(tag = "Login", annotation = "Login")

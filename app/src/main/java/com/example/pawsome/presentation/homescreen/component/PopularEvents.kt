@@ -15,21 +15,19 @@ package com.example.pawsome.presentation.homescreen.component
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.example.pawsome.model.EventData
+import com.example.pawsome.model.PetDetail
 
 @Composable
-fun PopularEvents(eventsList: List<EventData>,
+fun PopularEvents(petDetailList: List<PetDetail>,
                   navHostController: NavHostController) {
     LazyRow {
-        items(eventsList.size) { i ->
-            val currentEvent = eventsList[i]
+        items(petDetailList.size) { i ->
+            val currentPet = petDetailList[i]
             VerticalHomeEventCard(
-                inputImageAddressURI = currentEvent.imageUrl,
+                inputImageAddressURI = currentPet.img.toString(),
                 inputProfileURI = "",
-                admin = currentEvent.organizerName,
-                name = currentEvent.eventName,
-                attendee = currentEvent.eventTime,
-                countJoin = currentEvent.attendeeCount.toString()
+                admin = currentPet.ownerId,
+                name = currentPet.petName
             ) {
 //                navHostController.navigate(Screen.DetailScreen.route)
             }
