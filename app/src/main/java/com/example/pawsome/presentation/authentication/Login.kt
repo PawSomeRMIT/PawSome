@@ -287,10 +287,6 @@ fun Login(
                     val snapshot = userRef?.get()?.await()
 
                     snapshot?.let {
-//                        snapshot.toObject<User>()?.let {
-//                            userData = it
-//                        }
-
                         val result = User(
                             userID = it.get("userID").toString(),
                             username = it.get("username").toString(),

@@ -41,70 +41,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-//        requestCameraPermission()
-//        requestLocationPermission()
 
-    }
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission is granted. Continue the action or workflow in your app.
-            Log.i("kilo", "Permission granted")
-        } else {
-            // Explain to the user that the feature is unavailable because the
-            // features requires a permission that the user has denied.
-            Log.i("kilo", "Permission denied")
-        }
-    }
-
-    private fun requestCameraPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.i("kilo", "Permission previously granted")
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                android.Manifest.permission.CAMERA
-            ) -> Log.i("kilo", "Show camera permissions dialog")
-
-            else -> requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-        }
-    }
-
-    private val requestPermissionLauncherMap = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission is granted. Get the location.
-            getLocation()
-        } else {
-            // Explain why the permission is needed.
-        }
-    }
-
-    private fun requestLocationPermission() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // Permission is already granted; get the location.
-                getLocation()
-            }
-
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) -> {
-                // Show an explanation to the user.
-            }
-
-            else -> {
-                // No explanation needed; request the permission.
-                requestPermissionLauncherMap.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-        }
     }
 
 

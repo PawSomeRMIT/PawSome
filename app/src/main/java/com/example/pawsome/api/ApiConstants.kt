@@ -1,7 +1,7 @@
 package com.example.pawsome.api
 
 object ApiConstants {
-    const val BASE_URL = "https://7277-14-187-96-231.ngrok-free.app/"
+    const val BASE_URL = "https://8960-113-173-238-168.ngrok-free.app/"
 
     const val EKYC_DOMAIN = "https://api.idg.vnpt.vn/"
     const val EKYC_TOKEN_ID = "0e317c65-d49d-7f29-e063-63199f0a2656"
