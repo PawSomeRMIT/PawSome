@@ -145,18 +145,18 @@ fun HistoryScreen(
                                             .fillMaxWidth()
                                             .padding(8.dp)
                                     )
-                                    Text(
-                                        text = "Start Date: ${booking.startDate.toDate()}",
-                                        modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                    )
-                                    Text(
-                                        text = "End Date: ${booking.endDate.toDate()}",
-                                        modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                    )
+//                                    Text(
+//                                        text = "Start Date: ${booking.startDate.toDate()}",
+//                                        modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .padding(8.dp)
+//                                    )
+//                                    Text(
+//                                        text = "End Date: ${booking.endDate.toDate()}",
+//                                        modifier = Modifier
+//                                        .fillMaxWidth()
+//                                        .padding(8.dp)
+//                                    )
                                     Text(
                                         text = "Total Price: ${booking.totalPrice}",
                                         modifier = Modifier
@@ -166,7 +166,7 @@ fun HistoryScreen(
                                 }
                                 Button(
                                     onClick = {
-                                        navController.navigate("chat/${booking.ownerId}")
+//                                        navController.navigate("chat/${booking.ownerId}")
                                     },
                                     modifier = Modifier
                                         .padding(top = 8.dp)

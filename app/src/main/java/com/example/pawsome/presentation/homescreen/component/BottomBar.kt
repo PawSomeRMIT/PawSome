@@ -197,23 +197,25 @@ fun CenterActionButton(navController: NavController,
         FloatingActionButton(
             backgroundColor = colorResource(id = R.color.yellow),
             onClick = {
-//                navController.navigate("addBooking")
+                navController.navigate(BottomBarScreen.FormScreen.route)
             }
         ) {
             Icon(
                 Icons.Outlined.Add,
-                contentDescription = "Add Booking",
+                contentDescription = "Add new pet detail",
                 tint = Color.White
             )
         }
     }
 
 
-    FloatingActionButton(onClick = {
-        navController.navigate(BottomBarScreen.FormScreen.route)
-    }) {
-        Icon(Icons.Outlined.Add, contentDescription = "Add new pet detail")
-    }
+//    FloatingActionButton(
+//        onClick = {
+//            navController.navigate(BottomBarScreen.FormScreen.route)
+//        }
+//    ) {
+//        Icon(Icons.Outlined.Add, contentDescription = "Add new pet detail")
+//    }
 }
 
 @Composable

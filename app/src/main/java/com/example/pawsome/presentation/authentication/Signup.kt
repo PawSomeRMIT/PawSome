@@ -70,7 +70,6 @@ fun Signup(
     navHostController: NavHostController,
     signupViewModel: SignupViewModel = hiltViewModel()
 ) {
-//    val signupViewModel: SignupViewModel = viewModel(factory = SignupViewModelFactory(navHostController = navHostController))
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()

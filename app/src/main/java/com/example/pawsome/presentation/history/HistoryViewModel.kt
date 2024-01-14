@@ -45,15 +45,23 @@ class HistoryViewModel : ViewModel() {
                     val endDate = endDateTimestamp ?: Timestamp(Date())
 
                     val booking = Booking(
-                        customerCardIdName,
-                        customerCardIdNumber,
-                        customerId,
-                        petId,
-                        startDate,
-                        endDate,
-                        totalPrice.toFloat(),
-                        ownerId
+                        customerId = customerId,
+                        petId = petId,
+                        totalPrice = totalPrice,
+                        customerCardIdNumber = customerCardIdNumber,
+                        customerCardIdName = customerCardIdName
                     )
+
+//                    val booking = Booking(
+//                        customerCardIdName,
+//                        customerCardIdNumber,
+////                        customerId,
+//                        petId,
+////                        startDate,
+////                        endDate,
+//                        totalPrice.toDouble(),
+////                        ownerId
+//                    )
                     bookingList.add(booking)
                 }
 

@@ -68,6 +68,7 @@ import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.data.form.FormUIEvent
 import com.example.pawsome.domain.screens.BottomBarScreen
+import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
@@ -127,9 +128,17 @@ fun Form(
             val snapshot = userRef.get().await()
 
             snapshot?.let {
-                snapshot.toObject<User>()?.let {
-                    userData = it
-                }
+                val result = User(
+                    userID = it.get("userID").toString(),
+                    username = it.get("username").toString(),
+                    email = it.get("email").toString(),
+                    image = it.get("image").toString(),
+                    membership = it.get("membership").toString(),
+                    chatToken = it.get("chatToken").toString(),
+                    history = it.get("history") as List<Booking>
+                )
+
+                userData = result
             }
         }
     }
@@ -355,8 +364,12 @@ fun Form(
 
 @Composable
 fun ImagePicker(maxSelection: Int = 1) {
-    var selectedImages by remember {
-        mutableStateOf<List<Uri?>>(emptyList())
+//    var selectedImages by remember {
+//        mutableStateOf<List<Uri?>>(emptyList())
+//    }
+
+    var selectedImages by remember{
+        mutableStateOf<Uri?>(Uri.parse(""))
     }
 
     val context = LocalContext.current
@@ -369,21 +382,21 @@ fun ImagePicker(maxSelection: Int = 1) {
 
     val singleImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> selectedImages = listOf(uri) }
+        onResult = { uri -> selectedImages = uri }
     )
 
-    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(
-            maxItems = if (maxSelection > 1) maxSelection else 2
-        ),
-        onResult = { uris -> selectedImages = uris }
-    )
+//    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.PickMultipleVisualMedia(
+//            maxItems = if (maxSelection > 1) maxSelection else 2
+//        ),
+//        onResult = { uris -> selectedImages = uris }
+//    )
 
     fun launchPhotoPicker() {
         if (maxSelection > 1) {
-            multipleImagePickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
+//            multipleImagePickerLauncher.launch(
+//                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+//            )
         } else {
             singleImagePickerLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -395,10 +408,21 @@ fun ImagePicker(maxSelection: Int = 1) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ImageLayoutView(selectedImages = selectedImages)
+//        ImageLayoutView(selectedImages = selectedImages)
+
+        AsyncImage(
+            model = selectedImages,
+            contentDescription = "Site image",
+            modifier = Modifier
+                .height(300.dp)
+                .width(380.dp)
+                .clip(RoundedCornerShape(20.dp))
+        )
 
         Button(
-            onClick = { launchPhotoPicker() },
+            onClick = {
+                launchPhotoPicker()
+                      },
             modifier = Modifier.width(200.dp),
             elevation = ButtonDefaults.buttonElevation(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -411,12 +435,13 @@ fun ImagePicker(maxSelection: Int = 1) {
             Text(selectBtn)
         }
         Column {
-            selectedImages.forEach { uri ->
-                uri?.let {
-                    imageUri = it
-                    Text(text = context.getImageName(it))
-                }
-            }
+//            selectedImages.forEach { uri ->
+//                uri?.let {
+//                    imageUri = it
+//                    Text(text = context.getImageName(it))
+//                }
+//            }
+
         }
     }
 }
