@@ -20,6 +20,8 @@ import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.example.pawsome.model.getLocationFromAddress
@@ -30,6 +32,8 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
@@ -39,6 +43,10 @@ class DataViewModel: ViewModel() {
 
     // List for storing fetch data
     val petDetailList: State<List<PetDetail>> = tempFetchData
+
+    // Check loading state
+    private val _isLoading = Channel<Boolean>()
+    val isLoading = _isLoading.receiveAsFlow()
 
     init {
         getAllPets { dataList ->
@@ -132,7 +140,7 @@ class DataViewModel: ViewModel() {
         Log.d(tag, formUIState.value.toString())
     }
 
-    suspend fun saveForm(petDetail: PetDetail, context: Context) {
+    suspend fun saveForm(petDetail: PetDetail, context: Context, navHostController: NavHostController) {
         // Create a storage reference
         val storage = FirebaseStorage.getInstance().reference.child("pets/${UUID.randomUUID()}.jpg")
 
@@ -150,10 +158,19 @@ class DataViewModel: ViewModel() {
         // Convert address to latitude and longitude
         // Default location (RMIT University Vietnam)
         val addressLatLong = getLocationFromAddress(petDetail.petAddress, context)
-        petDetail.latitude = addressLatLong?.latitude ?: 10.729250
-        petDetail.longitude = addressLatLong?.longitude ?: 106.695520
-        Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
 
+        if (addressLatLong != null) {
+            petDetail.latitude = addressLatLong?.latitude ?: 10.729250
+            petDetail.longitude = addressLatLong?.longitude ?: 106.695520
+            Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
+
+//            _isLoading.send(true)
+
+            petDetail.img?.let {
+
+                // Store object image to Storage and get its public url
+                val uploadURI = uploadToStorage(it, context= context)
+                petDetail.img = uploadURI
         petDetail.img?.let {
             // Store object image to Storage and get its public url
             val uploadURI = uploadToStorage(Uri.parse(it), context= context)
@@ -177,8 +194,40 @@ class DataViewModel: ViewModel() {
                         }
                     } else {
                         Log.d("Storage", "Upload failed: ${task.exception?.message}")
+                storage.putFile(it)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            storage.downloadUrl.addOnSuccessListener { uri ->
+                                db.collection("pets")
+                                    .add(petDetail)
+                                    .addOnSuccessListener {
+
+                                        // Back to home screen
+                                        navHostController.navigate(BottomBarScreen.Home.route) {
+                                            popUpTo(BottomBarScreen.Home.route) {
+                                                inclusive = true
+                                            }
+                                        }
+
+                                        Log.d("Firestore", "Inside_OnSuccessListener")
+                                        Log.d("Firestore", "Form ${petDetail.id} is saved successfully")
+                                    }
+                                    .addOnFailureListener{
+                                        Log.d("Firestore", "Inside_OnFailureListener")
+                                        Log.d("Firestore", "Exception= ${it.message}")
+                                        Log.d("Firestore", "Exception= ${it.localizedMessage}")
+                                    }
+                            }
+                        } else {
+                            Log.d("Storage", "Upload failed: ${task.exception?.message}")
+                        }
                     }
-                }
+            }
+
+//            _isLoading.send(false)
+
+        } else {
+            Toast.makeText(context, "Invalid address. Try again!", Toast.LENGTH_SHORT).show()
         }
     }
 

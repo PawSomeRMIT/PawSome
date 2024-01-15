@@ -11,16 +11,13 @@
  */
 
 package com.example.pawsome.common
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun NormalText(value: String, textAlign: TextAlign = TextAlign.Center) {
@@ -34,8 +31,7 @@ fun NormalText(value: String, textAlign: TextAlign = TextAlign.Center) {
 @Composable
 fun TitleText(value: String) {
     Text(text = value,
-        modifier = Modifier
-            .heightIn(min = 50.dp),
+        fontSize = 32.sp,
         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
         textAlign = TextAlign.Center
     )
