@@ -6,3 +6,4 @@ data class Member(
     val studentID: String,
     val memberMajor: String,
 )
+

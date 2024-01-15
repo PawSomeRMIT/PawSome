@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.pawsome.R
 import com.example.pawsome.model.Member
 
+
 @Composable
 @Preview(showBackground = true)
 fun AboutUsScreen(onClickBack : () -> Unit = {}) {
