@@ -169,32 +169,10 @@ class DataViewModel: ViewModel() {
             petDetail.img?.let {
 
                 // Store object image to Storage and get its public url
-                val uploadURI = uploadToStorage(it, context= context)
-                petDetail.img = uploadURI
-        petDetail.img?.let {
-            // Store object image to Storage and get its public url
-            val uploadURI = uploadToStorage(Uri.parse(it), context= context)
-            petDetail.img = uploadURI.toString()
+                val uploadURI = uploadToStorage(Uri.parse(it), context= context)
+                petDetail.img = uploadURI.toString()
 
-            storage.putFile(Uri.parse(it))
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        storage.downloadUrl.addOnSuccessListener { uri ->
-                            db.collection("pets")
-                                .add(petDetail)
-                                .addOnSuccessListener {
-                                    Log.d("Firestore", "Inside_OnSuccessListener")
-                                    Log.d("Firestore", "Form ${petDetail.id} is saved successfully")
-                                }
-                                .addOnFailureListener{
-                                    Log.d("Firestore", "Inside_OnFailureListener")
-                                    Log.d("Firestore", "Exception= ${it.message}")
-                                    Log.d("Firestore", "Exception= ${it.localizedMessage}")
-                                }
-                        }
-                    } else {
-                        Log.d("Storage", "Upload failed: ${task.exception?.message}")
-                storage.putFile(it)
+                storage.putFile(Uri.parse(it))
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             storage.downloadUrl.addOnSuccessListener { uri ->
