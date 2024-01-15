@@ -164,7 +164,7 @@ class DataViewModel: ViewModel() {
             petDetail.longitude = addressLatLong?.longitude ?: 106.695520
             Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
 
-            _isLoading.send(true)
+//            _isLoading.send(true)
 
             petDetail.img?.let {
 
@@ -202,7 +202,7 @@ class DataViewModel: ViewModel() {
                     }
             }
 
-            _isLoading.send(false)
+//            _isLoading.send(false)
 
         } else {
             Toast.makeText(context, "Invalid address. Try again!", Toast.LENGTH_SHORT).show()
