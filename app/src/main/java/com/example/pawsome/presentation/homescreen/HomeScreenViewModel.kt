@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.repository.AuthRepo
 import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.model.Booking
+import com.example.pawsome.model.FilterChipData
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.google.android.gms.maps.model.LatLng
@@ -33,18 +34,47 @@ class HomeScreenViewModel (
 ) : ViewModel(
 
 ) {
+    var filterOptions = listOf(
+        FilterChipData("\uD83C\uDF08", "All"),
+        FilterChipData("\uD83D\uDC31", "Cat"),
+        FilterChipData("\uD83D\uDC36️", "Dog"),
+        FilterChipData("\uD83D\uDC2D", "Mouse"),
+        FilterChipData("\uD83D\uDC37️", "Pig"),
+        FilterChipData("\uD83D\uDC32️", "Dragon"),
+    )
+
     private val _isLoading = Channel<Boolean>()
     val isLoading = _isLoading.receiveAsFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
+    private val _filterType = MutableStateFlow("All")
+    val filterType = _filterType.asStateFlow()
+
     var petsList = MutableStateFlow(getPetsFromFireStore())
-    val matchedPets = searchText
-        .combine(petsList) {text, pets ->
+    val matchedPets = petsList.asStateFlow()
+        .combine(searchText) {pets, text ->
             if (text.isNotBlank()) {
                 pets.filter {
-                    it.petName.contains(text) || it.petDescription.contains(text) || it.petBreed.contains(text)
+                    it.petName.lowercase().contains(text.lowercase()) || it.petDescription.contains(text) || it.petBreed.contains(text)
+                }
+            }
+            else {
+                pets
+            }
+        }
+        .combine(filterType) {pets, type ->
+            Log.d("TEST", type)
+
+            if (type.contains("Cat")) {
+                pets.filter {
+                    it.petAnimal.contains("Cat")
+                }
+            }
+            else if (type.contains("Dog")) {
+                pets.filter {
+                    it.petAnimal.contains("Dog")
                 }
             }
             else {
@@ -149,5 +179,11 @@ class HomeScreenViewModel (
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
+    }
+
+    fun onFilterTypeChange(filterType: String) {
+        Log.d("TEST", filterType)
+
+        _filterType.value = filterType
     }
 }
