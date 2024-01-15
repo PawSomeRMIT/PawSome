@@ -5,5 +5,6 @@ data class Booking(
     val petId: String,
     val totalPrice: Double,
     val customerCardIdNumber: String,
-    val customerCardIdName: String
-)
+    val customerCardIdName: String,
+    val petDetail: PetDetail?
+    )

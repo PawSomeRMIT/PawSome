@@ -16,7 +16,7 @@ data class PetDetail(
     var bookingPricePerDay: String,
     var id: String? = "",
     var latitude: Double = 10.729250,
-    var img: Uri?,
+    var img: String,
     var longitude: Double = 106.695520,
     var ownerId: String,
     var distance: Double

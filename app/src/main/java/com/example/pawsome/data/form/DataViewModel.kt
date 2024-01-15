@@ -169,10 +169,10 @@ class DataViewModel: ViewModel() {
             petDetail.img?.let {
 
                 // Store object image to Storage and get its public url
-                val uploadURI = uploadToStorage(it, context= context)
-                petDetail.img = uploadURI
+                val uploadURI = uploadToStorage(Uri.parse(it), context= context)
+                petDetail.img = uploadURI.toString()
 
-                storage.putFile(it)
+                storage.putFile(Uri.parse(it))
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             storage.downloadUrl.addOnSuccessListener { uri ->

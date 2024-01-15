@@ -17,7 +17,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -120,13 +122,6 @@ fun HomeContent(
     // Check data loading
     val loadingState by homeScreenViewModel.isLoading.collectAsState(initial = false)
 
-//    var filterOptions = listOf(
-//        FilterChipData("\uD83D\uDC31", "Cat"),
-//        FilterChipData("\uD83D\uDC36️", "Dog"),
-//    )
-//
-//    var filterSelected by remember { mutableStateOf(filterOptions[0]) }
-
     val filterSelected by homeScreenViewModel.filterType.collectAsState()
 
     Column(
@@ -224,6 +219,10 @@ fun HomeContent(
                                 }
                             }
                         )
+
+                        if (pet == displayPetsList[displayPetsList.size-1]) {
+                            Spacer(modifier = Modifier.fillMaxWidth().height(40.dp))
+                        }
                     }
                 }
             }

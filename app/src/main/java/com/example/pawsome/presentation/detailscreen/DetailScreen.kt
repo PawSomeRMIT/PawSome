@@ -31,6 +31,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.EventAvailable
+import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -246,19 +248,55 @@ fun DetailScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row (
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Icon(
+                            Icons.Outlined.Pets,
+                            contentDescription = "Pet",
+                            modifier = Modifier.height(30.dp)
+                        )
+
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        Text(
+                            text = "About ${petDetail.petName}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        item { DetailChip(text = "Gender: ${petDetail.petGender}") }
-                        item { DetailChip(text = "Breed: ${petDetail.petBreed}") }
-                        item { DetailChip(text = "Color: ${petDetail.petColor}") }
-                        item { DetailChip(text = "Animal: ${petDetail.petAnimal}") }
+                        item {
+                            DetailChip(
+                                title = "Gender",
+                                info = petDetail.petGender
+                            )
+                        }
+                        item {
+                            DetailChip(
+                                title = "Breed",
+                                info = petDetail.petBreed
+                            )
+                        }
+                        item {
+                            DetailChip(
+                                title = "Color",
+                                info = petDetail.petColor
+                            )
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
 
                     Column(
                         modifier = Modifier
@@ -266,15 +304,30 @@ fun DetailScreen(
                     ) {
                         UserProfile(user = owner)
 
-                        Row(
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        Row (
+                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.Start
                         ) {
-                            Text("Avaiable: ")
-                            Text("Feb 25, 2022")
+                            Icon(
+                                Icons.Outlined.EventAvailable,
+                                contentDescription = "Pet",
+                                modifier = Modifier.height(30.dp),
+                                tint = Color.Green
+                            )
+
+                            Spacer(modifier = Modifier.width(5.dp))
+
+                            Text(
+                                text = "Avaiable",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(15.dp))
 
                         // Description
                         Text(

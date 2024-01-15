@@ -15,8 +15,8 @@ sealed class BottomBarScreen (
         route = "Setting"
     )
 
-    object Payment: BottomBarScreen(
-        route = "Payment"
+    object BookingHistory: BottomBarScreen(
+        route = "Booking History"
     )
     object FormScreen: BottomBarScreen(
         route = "form"
