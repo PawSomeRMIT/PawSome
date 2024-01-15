@@ -120,12 +120,14 @@ fun HomeContent(
     // Check data loading
     val loadingState by homeScreenViewModel.isLoading.collectAsState(initial = false)
 
-    var filterOptions = listOf(
-        FilterChipData("\uD83D\uDC31", "Cat"),
-        FilterChipData("\uD83D\uDC36️", "Dog"),
-    )
+//    var filterOptions = listOf(
+//        FilterChipData("\uD83D\uDC31", "Cat"),
+//        FilterChipData("\uD83D\uDC36️", "Dog"),
+//    )
+//
+//    var filterSelected by remember { mutableStateOf(filterOptions[0]) }
 
-    var filterSelected by remember { mutableStateOf(filterOptions[0]) }
+    val filterSelected by homeScreenViewModel.filterType.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -173,11 +175,13 @@ fun HomeContent(
         }
 
         FilterChipsWithEmoji(
-            filterOptions = filterOptions,
-            selectedFilter = filterSelected.category
+            filterOptions = homeScreenViewModel.filterOptions,
+            selectedFilter = filterSelected
         ) {
-            filterSelected.category = it
+//            filterSelected.category = it
+            homeScreenViewModel.onFilterTypeChange(filterType = it)
         }
+
 
         if (loadingState) {
             androidx.compose.material.Text(text = "Loading data...")
