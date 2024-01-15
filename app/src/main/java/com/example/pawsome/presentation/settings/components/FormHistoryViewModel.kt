@@ -19,10 +19,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class FormHistoryViewModel(
-    val currentLocation: LatLng,
     val user: User
 ): ViewModel() {
-
     private val _isLoading = Channel<Boolean>()
     val isLoading = _isLoading.receiveAsFlow()
 
@@ -36,19 +34,11 @@ class FormHistoryViewModel(
             viewModelScope.launch {
                 db.collection("pets").get().addOnSuccessListener { documents ->
                     viewModelScope.launch{
-//                        _isLoading.send(true)
+                        _isLoading.send(true)
 
                         Log.d("CURRENT_USER", user.toString())
 
                         for (document in documents) {
-                            // Calculate distance in meter and convert to km
-                            val distance = currentLocation.sphericalDistance(
-                                LatLng(
-                                    document.get("latitude").toString().toDouble(),
-                                    document.get("longitude").toString().toDouble()
-                                )
-                            ) / 1000
-
                             val pet = PetDetail(
                                 id = document.id,
                                 petName = document.get("petName").toString(),
@@ -64,16 +54,14 @@ class FormHistoryViewModel(
                                 latitude = document.get("latitude").toString().toDouble(),
                                 longitude = document.get("longitude").toString().toDouble(),
                                 img = document.get("img").toString(),
-                                distance = String.format("%.2f", distance).toDouble(),
+                                distance = 0.0,
                                 petAddress = document.get("petAddress").toString()
                             )
 
                             if (pet.ownerId == user.userID) petList.add(pet)
 
-//                            _isLoading.send(false)
+                            _isLoading.send(false)
                         }
-
-                        petList.sortBy { it.distance }
                     }
                 }
                     .await()

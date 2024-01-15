@@ -6,18 +6,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
+import com.example.pawsome.model.api_model.CreateChannelRequestBody
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-
+    private val backEndRepo: BackEndRepo
 ) : ViewModel() {
     private val _bookings = MutableLiveData<List<Booking>>()
     val bookings: LiveData<List<Booking>> get() = _bookings
@@ -26,6 +30,23 @@ class HistoryViewModel @Inject constructor(
     val petDetail: LiveData<PetDetail> get() = _petDetail
 
     private val db = FirebaseFirestore.getInstance()
+
+    private val _isLoading = Channel<Boolean>()
+    val isLoading = _isLoading.receiveAsFlow()
+
+    suspend fun createChannel(userID1: String, userID2: String): String {
+        _isLoading.send(true)
+
+        val requestBody = CreateChannelRequestBody(userId1 = userID1, userId2 = userID2)
+
+        val result = backEndRepo.create_channel(requestBody)
+
+        Log.d("Create Channel", result.toString())
+
+        _isLoading.send(false)
+
+        return result.response
+    }
 
     fun fetchBookings() {
         viewModelScope.launch {

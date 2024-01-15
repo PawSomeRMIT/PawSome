@@ -12,15 +12,11 @@ sealed class BottomBarScreen (
     )
 
     object Settings : BottomBarScreen(
-        route = "Setting"
+        route = "SettingMenu"
     )
 
     object BookingHistory: BottomBarScreen(
         route = "Booking History"
-    )
-
-    object FormHistory: BottomBarScreen(
-        route = "Form History"
     )
 
     object FormScreen: BottomBarScreen(

@@ -13,18 +13,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,39 +52,47 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
             horizontalArrangement = Arrangement.Start
         ) {
             IconButton(onClick = { onClickBack()}, modifier = Modifier.padding(top = 10.dp, start = 0.dp)) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Go back"
+                androidx.compose.material.Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    contentDescription = "Back",
+                    tint = Color.Black
                 )
             }
-            Image(
-                modifier = Modifier
-                    .width(250.dp)
-                    .padding(top = 10.dp),
-                painter = painterResource(id = R.drawable.pawsome),
-                contentDescription = "Pawsome"
-            )
-            Spacer(modifier = Modifier.width(200.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Image(
+                    modifier = Modifier
+                        .width(250.dp),
+                    painter = painterResource(id = R.drawable.pawsome),
+                    contentDescription = "Pawsome"
+                )
+            }
         }
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize().padding(5.dp)
+                .fillMaxSize()
+                .padding(5.dp)
         ) {
             item {
                 Text(text = "About PawSome 📚", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 Text(
                     modifier = Modifier.padding(20.dp),
-                    style = MaterialTheme.typography.body1,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(id = R.color.text_gray),
                     text = "PawSome is an innovative pet booking app designed for animal lovers seeking the joy of pet companionship without long-term commitments. It offers a user-friendly platform where users can easily browse and book time with a variety of pets, catering to their preferences and schedules. With PawSome, you can experience the delightful moments of pet ownership, whether it's a cozy cuddle session, a playful afternoon, or a peaceful walk in the park"
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-
+                Spacer(modifier = Modifier.height(10.dp))
             }
+
             item {
                 Text(text = "Technologies 📱", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
             }
+
             items(AboutUsData().technology.size){ index ->
                 val technology: Member = AboutUsData().technology[index]
                 Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -108,7 +121,12 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(16.dp),
+                    elevation = CardDefaults.cardElevation(5.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    shape = RoundedCornerShape(20.dp)
                 ) {
                     Row(
                         modifier = Modifier

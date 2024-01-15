@@ -81,7 +81,7 @@ fun CategoryChip(
         Text(
             text = text,
             fontSize = 16.sp,
-            color = Color.Black,
+            color = if (isSelected) Color.White else Color.Black,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.clipToBounds()
         )

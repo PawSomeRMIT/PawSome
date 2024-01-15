@@ -30,6 +30,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.EventAvailable
 import androidx.compose.material.icons.outlined.Pets
@@ -258,14 +259,14 @@ fun DetailScreen(
                         Icon(
                             Icons.Outlined.Pets,
                             contentDescription = "Pet",
-                            modifier = Modifier.height(30.dp)
+                            modifier = Modifier.height(35.dp)
                         )
 
                         Spacer(modifier = Modifier.width(5.dp))
 
                         Text(
                             text = "About ${petDetail.petName}",
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -312,7 +313,7 @@ fun DetailScreen(
                             horizontalArrangement = Arrangement.Start
                         ) {
                             Icon(
-                                Icons.Outlined.EventAvailable,
+                                Icons.Filled.EventAvailable,
                                 contentDescription = "Pet",
                                 modifier = Modifier.height(30.dp),
                                 tint = Color.Green

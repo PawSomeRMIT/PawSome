@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
+import com.example.pawsome.presentation.aboutus.AboutUsScreen
 import com.example.pawsome.presentation.add_form.Form
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
@@ -17,7 +18,7 @@ import com.example.pawsome.presentation.detailscreen.DetailScreen
 import com.example.pawsome.presentation.history.HistoryScreen
 import com.example.pawsome.presentation.homescreen.HomeContent
 import com.example.pawsome.presentation.settings.SettingScreen
-import com.example.pawsome.presentation.settings.components.FormCreatedHistory
+import com.example.pawsome.presentation.settings.components.MyPetListScreen
 import com.google.android.gms.maps.model.LatLng
 import drawable.EKYCUploadScreen
 
@@ -38,25 +39,18 @@ fun HomeNavGraph(
             SettingScreen(navController = homeNavController, rootNavController = rootNavController)
         }
 
-        composable(BottomBarScreen.FormHistory.route) {
-
-            val location: LatLng? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("location")
-
-            val user: User? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("user")
-
-            Log.d("NAV", user.toString())
-
-            if (location != null && user != null) {
-                FormCreatedHistory(navHostController = homeNavController, location = location, user = user)
-            }
-        }
-
         composable(BottomBarScreen.BookingHistory.route) {
             HistoryScreen(navController = homeNavController)
         }
 
         channelNavGraph(navController = homeNavController)
 
+
+//        composable(BottomBarScreen.Settings.route) {
+//            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
+//        }
+
+        settingNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
     }
 }
 
@@ -152,4 +146,43 @@ fun NavGraphBuilder.channelNavGraph(navController: NavHostController) {
 sealed class ChatScreen(val route: String) {
     object ChannelsList: ChatScreen(route = "ChannelsList")
     object Channel: ChatScreen(route = "Channel")
+}
+
+fun NavGraphBuilder.settingNavGraph(
+    rootNavController:NavHostController,
+    homeNavController: NavHostController
+) {
+    navigation(
+        route = Graph.SETTING,
+        startDestination = SettingScreen.SettingMenu.route
+    ) {
+        composable(route = SettingScreen.SettingMenu.route) {
+            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
+        }
+
+        composable(route = SettingScreen.AboutUs.route) {
+            AboutUsScreen(
+                onClickBack = {
+                    homeNavController.popBackStack()
+                }
+            )
+        }
+
+        composable(route = SettingScreen.MyPetList.route) {
+            val user: User? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("user")
+
+            if (user != null) {
+                MyPetListScreen(navHostController = homeNavController, user = user)
+            }
+        }
+    }
+}
+
+sealed class SettingScreen(val route: String) {
+    object SettingMenu: SettingScreen(route = "SettingMenu")
+    object AboutUs: SettingScreen(route = "AboutUs")
+
+    object MyPetList: SettingScreen(
+        route = "MyPetList"
+    )
 }

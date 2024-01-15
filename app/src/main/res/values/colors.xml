@@ -13,5 +13,6 @@
     <color name="text_gray">#FFA1A1A1</color>
     <color name="yellow">#FFE8BE13</color>
     <color name="light_yellow">#FFE3D28D</color>
+    <color name="gray_800">#FF48434B</color>
 
 </resources>
