@@ -18,6 +18,11 @@ sealed class BottomBarScreen (
     object BookingHistory: BottomBarScreen(
         route = "Booking History"
     )
+
+    object FormHistory: BottomBarScreen(
+        route = "Form History"
+    )
+
     object FormScreen: BottomBarScreen(
         route = "form"
     )

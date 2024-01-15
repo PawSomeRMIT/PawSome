@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ManageHistory
 import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -108,6 +109,28 @@ fun BottomBar(navController: NavController) {
                     contentDescription = "Booking History",
                     tint = colorResource(
                         id = if (currentDestination?.route == BottomBarScreen.BookingHistory.route) R.color.yellow
+                        else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                    )
+            }
+
+            Spacer(Modifier.weight(1f, true))
+
+            IconButton(
+                onClick = {
+                    navController.navigate(BottomBarScreen.FormHistory.route) {
+                        popUpTo(BottomBarScreen.FormHistory.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Icon(
+                    Icons.Outlined.Pets,
+                    contentDescription = "My pets",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.FormHistory.route) R.color.yellow
                         else R.color.gray
                     ),
                     modifier = Modifier.size(35.dp)
