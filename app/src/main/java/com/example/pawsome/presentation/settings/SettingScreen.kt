@@ -2,6 +2,7 @@ package com.example.pawsome.presentation.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.pawsome.R
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
@@ -27,6 +29,7 @@ import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.settings.components.Profile
+import com.example.pawsome.presentation.settings.components.SquareCard
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
