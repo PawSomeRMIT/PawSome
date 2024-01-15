@@ -13,18 +13,22 @@ fun getLocationFromAddress(strAddress: String?, context: Context): GeoPoint? {
     var p1: GeoPoint? = null
     try {
         address = coder.getFromLocationName(strAddress!!, 5)
-        if (address == null) {
-            return null
+        Log.d("ADDRESS", "${address?.size ?: 0}")
+
+        if (address == null) return null
+        if (address.isEmpty()) return null
+
+        address.let {
+            val location: Address = address[0]
+            p1 = GeoPoint(
+                location.latitude,
+                location.longitude
+            )
+            Log.d("Latlong", "${p1!!.latitude} ${p1!!.longitude}")
+            return p1
         }
-        val location: Address = address[0]
-        location.getLatitude()
-        location.getLongitude()
-        p1 = GeoPoint(
-            location.getLatitude(),
-            location.getLongitude()
-        )
-        Log.d("Latlong", "${p1.latitude} ${p1.longitude}")
-        return p1
+
+        return null
     } catch (e: IOException) {
         e.printStackTrace()
     }

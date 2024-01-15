@@ -88,15 +88,8 @@ fun CustomTextField(
         singleLine = true,
         maxLines = 1,
         onValueChange = { it:String ->
-            if (keyboardType == "number") {
-                if (it.all { it.isDigit() }) {
-                    textValue.value = it
-                    onTextChanged(it)
-                }
-            } else {
-                textValue.value = it
-                onTextChanged(it)
-            }
+            textValue.value = it
+            onTextChanged(it)
         },
         isError = !errorStatus,
         readOnly = readOnly?: false,

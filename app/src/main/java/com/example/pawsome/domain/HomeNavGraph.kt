@@ -66,7 +66,10 @@ fun NavGraphBuilder.petsListNavGraph(
         }
 
         composable(BottomBarScreen.FormScreen.route) {
-            Form(navHostController = homeNavController)
+            Form(navHostController = homeNavController,
+                onBackClick = {
+                    homeNavController.popBackStack()
+                })
         }
 
         channelNavGraph(navController = homeNavController)
