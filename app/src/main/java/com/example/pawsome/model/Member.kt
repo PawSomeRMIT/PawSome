@@ -1,4 +1,4 @@
-package com.example.pawsome.presentation.aboutus
+package com.example.pawsome.model
 
 data class Member(
     val memberImageResId: Int,

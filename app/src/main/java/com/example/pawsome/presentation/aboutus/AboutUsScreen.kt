@@ -35,7 +35,7 @@ import com.example.pawsome.model.Member
 
 @Composable
 @Preview(showBackground = true)
-fun AboutUsScreen() {
+fun AboutUsScreen(onClickBack : () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,7 +45,7 @@ fun AboutUsScreen() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
-            IconButton(onClick = { }, modifier = Modifier.padding(top = 10.dp, start = 0.dp)) {
+            IconButton(onClick = { onClickBack()}, modifier = Modifier.padding(top = 10.dp, start = 0.dp)) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Go back"
