@@ -31,13 +31,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,7 +67,6 @@ import com.example.pawsome.R
 import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.data.form.FormUIEvent
-import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
@@ -76,7 +75,6 @@ import com.example.pawsome.presentation.authentication.components.CustomTextFiel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.DateFormatSymbols
@@ -92,7 +90,8 @@ var imageUri: Uri? = null
 @Composable
 fun Form(
     navHostController: NavHostController,
-    dataViewModel: DataViewModel = viewModel()
+    dataViewModel: DataViewModel = viewModel(),
+    onBackClick: () -> Unit
 ) {
     // Pet details
     var petName by rememberSaveable { mutableStateOf("") }
@@ -156,7 +155,16 @@ fun Form(
                 .verticalScroll(state = scrollState),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TitleText(value = "Add new pet")
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.Black)
+                }
+                TitleText(value = "Add new pet")
+            }
 
             ImagePicker()
 
@@ -310,7 +318,7 @@ fun Form(
                         bookingPrice = it
                     }
                 },
-                keyboardType = "number",
+                keyboardType = "text",
                 lastField = true,
                 errorStatus = dataViewModel.formUIState.value.bookingPriceError
             )
@@ -345,13 +353,7 @@ fun Form(
                 onButtonClicked = {
                     scope.launch {
                         dataViewModel
-                            .saveForm(newPetDetail, context)
-
-                        navHostController.navigate(BottomBarScreen.Home.route) {
-                            popUpTo(BottomBarScreen.Home.route) {
-                                inclusive = true
-                            }
-                        }
+                            .saveForm(newPetDetail, context, navHostController)
                     }
                 },
                 isEnabled = dataViewModel.allFormValidatePassed.value
@@ -364,11 +366,7 @@ fun Form(
 
 @Composable
 fun ImagePicker(maxSelection: Int = 1) {
-//    var selectedImages by remember {
-//        mutableStateOf<List<Uri?>>(emptyList())
-//    }
-
-    var selectedImages by remember{
+    var selectedImage by remember{
         mutableStateOf<Uri?>(Uri.parse(""))
     }
 
@@ -382,7 +380,7 @@ fun ImagePicker(maxSelection: Int = 1) {
 
     val singleImagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri -> selectedImages = uri }
+        onResult = { uri -> selectedImage = uri }
     )
 
 //    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
@@ -393,36 +391,19 @@ fun ImagePicker(maxSelection: Int = 1) {
 //    )
 
     fun launchPhotoPicker() {
-        if (maxSelection > 1) {
-//            multipleImagePickerLauncher.launch(
-//                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-//            )
-        } else {
-            singleImagePickerLauncher.launch(
-                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-            )
-        }
+        singleImagePickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        ImageLayoutView(selectedImages = selectedImages)
-
-        AsyncImage(
-            model = selectedImages,
-            contentDescription = "Site image",
-            modifier = Modifier
-                .height(300.dp)
-                .width(380.dp)
-                .clip(RoundedCornerShape(20.dp))
-        )
+        ImageLayoutView(selectedImages = selectedImage)
 
         Button(
-            onClick = {
-                launchPhotoPicker()
-                      },
+            onClick = { launchPhotoPicker() },
             modifier = Modifier.width(200.dp),
             elevation = ButtonDefaults.buttonElevation(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -435,13 +416,15 @@ fun ImagePicker(maxSelection: Int = 1) {
             Text(selectBtn)
         }
         Column {
-//            selectedImages.forEach { uri ->
-//                uri?.let {
-//                    imageUri = it
-//                    Text(text = context.getImageName(it))
-//                }
-//            }
+            LaunchedEffect(key1 = selectedImage) {
+                selectedImage?.let {
+                    imageUri = it
+                }
+            }
 
+            if (selectedImage != null) {
+                Text(text = context.getImageName(selectedImage!!))
+            }
         }
     }
 }
@@ -460,19 +443,15 @@ fun Context.getImageName(uri: Uri): String {
 
 
 @Composable
-fun ImageLayoutView(selectedImages: List<Uri?>) {
-    LazyRow {
-        items(selectedImages) { uri ->
-            AsyncImage(
-                model = uri,
-                contentDescription = "Site image",
-                modifier = Modifier
-                    .height(300.dp)
-                    .width(380.dp)
-                    .clip(RoundedCornerShape(20.dp))
-            )
-        }
-    }
+fun ImageLayoutView(selectedImages: Uri?) {
+    AsyncImage(
+        model = selectedImages,
+        contentDescription = "Site image",
+        modifier = Modifier
+            .height(300.dp)
+            .width(380.dp)
+            .clip(RoundedCornerShape(20.dp))
+    )
 }
 
 fun Int.toMonthName(): String {

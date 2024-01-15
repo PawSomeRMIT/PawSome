@@ -59,7 +59,7 @@ object FormValidator {
 
     fun validateBookingPrice(bookingPrice: String) : ValidationResult {
         return ValidationResult(
-            (!bookingPrice.isNullOrEmpty() && bookingPrice.toInt() < 1000)
+            (!bookingPrice.isNullOrEmpty() && bookingPrice.toFloat() < 100)
         )
     }
 }
