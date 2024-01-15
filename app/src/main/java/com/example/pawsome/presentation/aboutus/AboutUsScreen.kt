@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -51,9 +52,10 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
             horizontalArrangement = Arrangement.Start
         ) {
             IconButton(onClick = { onClickBack()}, modifier = Modifier.padding(top = 10.dp, start = 0.dp)) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Go back"
+                androidx.compose.material.Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    contentDescription = "Back",
+                    tint = Color.Black
                 )
             }
             Row(
@@ -67,7 +69,6 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
                     contentDescription = "Pawsome"
                 )
             }
-//            Spacer(modifier = Modifier.width(200.dp))
         }
 
         LazyColumn(
@@ -79,7 +80,8 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
                 Text(text = "About PawSome 📚", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                 Text(
                     modifier = Modifier.padding(20.dp),
-                    style = MaterialTheme.typography.body1,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
                     color = colorResource(id = R.color.text_gray),
                     text = "PawSome is an innovative pet booking app designed for animal lovers seeking the joy of pet companionship without long-term commitments. It offers a user-friendly platform where users can easily browse and book time with a variety of pets, catering to their preferences and schedules. With PawSome, you can experience the delightful moments of pet ownership, whether it's a cozy cuddle session, a playful afternoon, or a peaceful walk in the park"
                 )

@@ -18,7 +18,7 @@ import com.example.pawsome.presentation.detailscreen.DetailScreen
 import com.example.pawsome.presentation.history.HistoryScreen
 import com.example.pawsome.presentation.homescreen.HomeContent
 import com.example.pawsome.presentation.settings.SettingScreen
-import com.example.pawsome.presentation.settings.components.FormCreatedHistory
+import com.example.pawsome.presentation.settings.components.MyPetListScreen
 import com.google.android.gms.maps.model.LatLng
 import drawable.EKYCUploadScreen
 
@@ -37,19 +37,6 @@ fun HomeNavGraph(
 
         composable(BottomBarScreen.Settings.route) {
             SettingScreen(navController = homeNavController, rootNavController = rootNavController)
-        }
-
-        composable(BottomBarScreen.FormHistory.route) {
-
-            val location: LatLng? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("location")
-
-            val user: User? = rootNavController.previousBackStackEntry?.savedStateHandle?.get("user")
-
-            Log.d("NAV", user.toString())
-
-            if (location != null && user != null) {
-                FormCreatedHistory(navHostController = homeNavController, location = location, user = user)
-            }
         }
 
         composable(BottomBarScreen.BookingHistory.route) {
@@ -180,10 +167,22 @@ fun NavGraphBuilder.settingNavGraph(
                 }
             )
         }
+
+        composable(route = SettingScreen.MyPetList.route) {
+            val user: User? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("user")
+
+            if (user != null) {
+                MyPetListScreen(navHostController = homeNavController, user = user)
+            }
+        }
     }
 }
 
 sealed class SettingScreen(val route: String) {
     object SettingMenu: SettingScreen(route = "SettingMenu")
     object AboutUs: SettingScreen(route = "AboutUs")
+
+    object MyPetList: SettingScreen(
+        route = "MyPetList"
+    )
 }

@@ -1,13 +1,11 @@
 package com.example.pawsome.presentation.settings
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,22 +38,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
-import com.example.pawsome.common.ColorButton
-import com.example.pawsome.R
 import com.example.pawsome.data.login.LoginUIEvent
 import com.example.pawsome.data.login.LoginViewModel
-import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.domain.SettingScreen
 import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.settings.components.Profile
-import com.example.pawsome.presentation.settings.components.SquareCard
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -123,14 +116,14 @@ fun SettingScreen(
                     imageVector = Icons.Outlined.Groups,
                     contentDescription = "Icon description",
                     modifier = Modifier.size(40.dp),
-                    tint = Color.Black
+                    tint = colorResource(id = R.color.gray_800)
                 )
 
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(modifier = Modifier.width(40.dp))
 
                 Text(
                     text = "About Us",
-                    color = Color.Black,
+                    color = colorResource(id = R.color.gray_800),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 25.sp,
                 )
@@ -138,13 +131,18 @@ fun SettingScreen(
 
             Spacer(modifier = Modifier
                 .fillMaxWidth()
-                .height(20.dp))
+                .height(40.dp))
 
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        navController.navigate(SettingScreen.AboutUs.route)
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "user",
+                            userData
+                        )
+
+                        navController.navigate(SettingScreen.MyPetList.route)
                     },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -153,14 +151,14 @@ fun SettingScreen(
                     imageVector = Icons.Outlined.Pets,
                     contentDescription = "Icon description",
                     modifier = Modifier.size(40.dp),
-                    tint = Color.Black
+                    tint = colorResource(id = R.color.gray_800)
                 )
 
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(modifier = Modifier.width(40.dp))
 
                 Text(
                     text = "My Pets",
-                    color = Color.Black,
+                    color = colorResource(id = R.color.gray_800),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 25.sp,
                 )
@@ -169,10 +167,13 @@ fun SettingScreen(
 
             Spacer(modifier = Modifier
                 .fillMaxWidth()
-                .height(20.dp))
+                .height(50.dp))
 
             ButtonComponent(
                 value = "Sign out",
+                modifier = Modifier
+                    .height(48.dp)
+                    .padding(horizontal = 40.dp),
                 onButtonClicked = {
                     scope.launch {
                         // Sign out the current user

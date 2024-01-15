@@ -117,26 +117,6 @@ fun BottomBar(navController: NavController) {
 
             Spacer(Modifier.weight(1f, true))
 
-            IconButton(
-                onClick = {
-                    navController.navigate(BottomBarScreen.FormHistory.route) {
-                        popUpTo(BottomBarScreen.FormHistory.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-            ) {
-                Icon(
-                    Icons.Outlined.Pets,
-                    contentDescription = "My pets",
-                    tint = colorResource(
-                        id = if (currentDestination?.route == BottomBarScreen.FormHistory.route) R.color.yellow
-                        else R.color.gray
-                    ),
-                    modifier = Modifier.size(35.dp)
-                    )
-            }
-
             Spacer(Modifier.weight(1f, true))
             Box(Modifier.size(48.dp)) // Placeholder for the FAB
             Spacer(Modifier.weight(1f, true))
