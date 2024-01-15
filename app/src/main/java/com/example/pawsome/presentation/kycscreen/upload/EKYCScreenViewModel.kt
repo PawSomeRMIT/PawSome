@@ -17,6 +17,7 @@ import com.example.pawsome.model.api_model.ExtractInfoBody
 import com.example.pawsome.model.api_model.StripeResponse
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import com.stripe.android.paymentsheet.PaymentSheetResult
@@ -164,7 +165,11 @@ class EKYCScreenViewModel @Inject constructor(
     }
 
     suspend fun createBooking(petDetail: PetDetail) {
+        Log.d("EKYC", "CReateing")
+
         viewModelScope.launch {
+            val db = FirebaseFirestore.getInstance()
+
             var userData = User()
 
             val auth = FirebaseAuth.getInstance()
@@ -179,20 +184,36 @@ class EKYCScreenViewModel @Inject constructor(
                 petId = petDetail.id!!,
                 totalPrice = petDetail.bookingPricePerDay.toDouble(),
                 customerCardIdName = idName.value,
-                customerCardIdNumber = idNumber.value
+                customerCardIdNumber = idNumber.value,
+                petDetail = null
             )
 
             val snapshot = userRef?.get()?.await()
 
             snapshot?.let {
-                snapshot.toObject<User>()?.let {
-                    userData = it
-                }
+                userData = User(
+                    userID = it.get("userID").toString(),
+                    username = it.get("username").toString(),
+                    email = it.get("email").toString(),
+                    image = it.get("image").toString(),
+                    membership = it.get("membership").toString(),
+                    chatToken = it.get("chatToken").toString(),
+                    history = it.get("history") as List<Booking>
+                )
             }
 
             userData.history = userData.history.plus(booking)
 
             Log.d("AFTER PAY", userData.toString())
+
+            val updatePetDetail = petDetail
+
+            updatePetDetail.petStatus = "Not Available"
+
+            val petSnapshot = db.collection("pets")
+                .document(petDetail.id!!)
+                .set(updatePetDetail)
+                .await()
 
             userRef?.set(userData)?.addOnSuccessListener {
                 Log.d("AFTER PAY", "Successfully update user")

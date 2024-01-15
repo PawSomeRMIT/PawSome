@@ -67,18 +67,27 @@ class HomeScreenViewModel (
         .combine(filterType) {pets, type ->
             Log.d("TEST", type)
 
-            if (type.contains("Cat")) {
-                pets.filter {
-                    it.petAnimal.contains("Cat")
-                }
-            }
-            else if (type.contains("Dog")) {
-                pets.filter {
-                    it.petAnimal.contains("Dog")
-                }
+//            if (type.contains("Cat")) {
+//                pets.filter {
+//                    it.petAnimal.contains("Cat")
+//                }
+//            }
+//            else if (type.contains("Dog")) {
+//                pets.filter {
+//                    it.petAnimal.contains("Dog")
+//                }
+//            }
+//            else {
+//                pets
+
+
+            if (type == "All") {
+                pets
             }
             else {
-                pets
+                pets.filter {
+                    it.petAnimal.contains(type)
+                }
             }
         }
         .stateIn(
@@ -122,12 +131,12 @@ class HomeScreenViewModel (
                                 ownerId = document.get("ownerId").toString(),
                                 latitude = document.get("latitude").toString().toDouble(),
                                 longitude = document.get("longitude").toString().toDouble(),
-                                img = Uri.parse(document.get("img").toString()),
+                                img = document.get("img").toString(),
                                 distance = String.format("%.2f", distance).toDouble(),
                                 petAddress = document.get("petAddress").toString()
                             )
 
-                            if (pet.ownerId != user.userID) {
+                            if (pet.ownerId != user.userID && pet.petStatus == "Available") {
                                 petList += pet
                             }
 

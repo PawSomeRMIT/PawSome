@@ -333,7 +333,7 @@ fun Form(
                 petStatus = "Available",
                 petAge = petAge,
                 petDescription = petDescription,
-                img = imageUri,
+                img = imageUri.toString(),
                 bookingPricePerDay = bookingPrice,
                 ownerId = userData.userID,
                 distance = 0.0,

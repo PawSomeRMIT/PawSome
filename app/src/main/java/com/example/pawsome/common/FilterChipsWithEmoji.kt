@@ -70,7 +70,7 @@ fun CategoryChip(
 ) {
     Chip(
         onClick = { onChipClick(text) },
-        border = BorderStroke(1.dp,  Color.Gray),
+        border = BorderStroke(1.dp,  if (isSelected) Color.Yellow else Color.Gray),
         colors = ChipDefaults.chipColors(backgroundColor = if (isSelected) colorResource(id = R.color.yellow) else Color.LightGray),
         modifier = Modifier
             .padding(8.dp)

@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.ManageHistory
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,7 +52,7 @@ fun BottomBar(navController: NavController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.ChannelsList,
-        BottomBarScreen.Payment,
+        BottomBarScreen.BookingHistory,
         BottomBarScreen.Settings
     )
 
@@ -59,8 +60,6 @@ fun BottomBar(navController: NavController) {
     val currentDestination = navBackStackEntry?.destination
 
     val bottomBarDestination = screens.any { it.route == currentDestination?.route}
-
-    var currentIcon by remember { mutableIntStateOf(0) }
 
     if (bottomBarDestination) {
         BottomAppBar(
@@ -74,14 +73,10 @@ fun BottomBar(navController: NavController) {
         ) {
             IconButton(
                 onClick = {
-//                    navController.navigate(Graph.PETSLIST)
-
                     navController.navigate(Graph.PETSLIST) {
                         popUpTo(0) {
                         }
                     }
-
-                    currentIcon = 0
                 }
             ) {
                 Icon(
@@ -100,22 +95,18 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-//                    navController.navigate(BottomBarScreen.Payment.route)
-
-                    navController.navigate(BottomBarScreen.Payment.route) {
-                        popUpTo(BottomBarScreen.Payment.route) {
+                    navController.navigate(BottomBarScreen.BookingHistory.route) {
+                        popUpTo(BottomBarScreen.BookingHistory.route) {
                             inclusive = true
                         }
                     }
-
-                    currentIcon = 1
                 }
             ) {
                 Icon(
-                    Icons.Outlined.Map,
-                    contentDescription = "Maps",
+                    Icons.Outlined.ManageHistory,
+                    contentDescription = "Booking History",
                     tint = colorResource(
-                        id = if (currentDestination?.route == BottomBarScreen.Payment.route) R.color.yellow
+                        id = if (currentDestination?.route == BottomBarScreen.BookingHistory.route) R.color.yellow
                         else R.color.gray
                     ),
                     modifier = Modifier.size(35.dp)
@@ -128,14 +119,10 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-//                    navController.navigate(Graph.CHAT)
-
                     navController.navigate(Graph.CHAT) {
                         popUpTo(0) {
                         }
                     }
-
-                    currentIcon = 2
                 }
             ) {
                 Icon(
@@ -154,14 +141,10 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-//                    navController.navigate(BottomBarScreen.Settings.route)
-
                     navController.navigate(BottomBarScreen.Settings.route) {
                         popUpTo(0) {
                         }
                     }
-
-                    currentIcon = 3
                 }
             ) {
                 Icon(
@@ -179,12 +162,14 @@ fun BottomBar(navController: NavController) {
 }
 
 @Composable
-fun CenterActionButton(navController: NavController,
-                       dataViewModel: DataViewModel = viewModel()) {
+fun CenterActionButton(
+    navController: NavController,
+                       dataViewModel: DataViewModel = viewModel()
+) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.ChannelsList,
-        BottomBarScreen.Payment,
+        BottomBarScreen.BookingHistory,
         BottomBarScreen.Settings
     )
 
@@ -207,15 +192,6 @@ fun CenterActionButton(navController: NavController,
             )
         }
     }
-
-
-//    FloatingActionButton(
-//        onClick = {
-//            navController.navigate(BottomBarScreen.FormScreen.route)
-//        }
-//    ) {
-//        Icon(Icons.Outlined.Add, contentDescription = "Add new pet detail")
-//    }
 }
 
 @Composable

@@ -60,6 +60,7 @@ import com.example.pawsome.R
 import com.example.pawsome.common.ColorButton
 import com.example.pawsome.domain.ChatScreen
 import com.example.pawsome.domain.Graph
+import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.presentation.kycscreen.upload.EKYCScreenViewModel
 import com.stripe.android.PaymentConfiguration
@@ -136,19 +137,27 @@ fun EKYCUploadScreen(
             val publishableKey = result.publishableKey
 
             PaymentConfiguration.init(context, publishableKey)
+
+            Log.d("EKYC", petDetail.toString())
         }
     }
 
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        IconButton(
-            onClick = {
-                navHostController.popBackStack()
-            }
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.Black)
+            IconButton(
+                onClick = {
+                navHostController.popBackStack()
+                }
+            ) {
+                Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.Black)
+            }
         }
 
         Column(
@@ -225,6 +234,8 @@ fun EKYCUploadScreen(
                 icon = Icons.Outlined.AddPhotoAlternate,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 20.dp),
                 onClick = {
+                    Log.d("EKYC", petDetail.toString())
+
                     photoPicker1.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
@@ -360,7 +371,8 @@ fun EKYCUploadScreen(
                 ekycScreenViewModel.createBooking(petDetail = petDetail)
 
                 navHostController.navigate(Graph.PETSLIST) {
-                    popUpTo(0) {
+                    popUpTo(Graph.PETSLIST) {
+                        inclusive = true
                     }
                 }
             }

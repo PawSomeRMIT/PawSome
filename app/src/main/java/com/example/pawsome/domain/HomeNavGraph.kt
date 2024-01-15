@@ -14,6 +14,7 @@ import com.example.pawsome.presentation.add_form.Form
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
 import com.example.pawsome.presentation.detailscreen.DetailScreen
+import com.example.pawsome.presentation.history.HistoryScreen
 import com.example.pawsome.presentation.homescreen.HomeContent
 import com.example.pawsome.presentation.settings.SettingScreen
 import com.google.android.gms.maps.model.LatLng
@@ -36,9 +37,9 @@ fun HomeNavGraph(
             SettingScreen(navController = homeNavController, rootNavController = rootNavController)
         }
 
-//        composable(BottomBarScreen.Payment.route) {
-//            PaymentScreen(navController = navController)
-//        }
+        composable(BottomBarScreen.BookingHistory.route) {
+            HistoryScreen(navController = homeNavController)
+        }
 
         channelNavGraph(navController = homeNavController)
 
