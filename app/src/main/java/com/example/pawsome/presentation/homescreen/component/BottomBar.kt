@@ -74,7 +74,8 @@ fun BottomBar(navController: NavController) {
             IconButton(
                 onClick = {
                     navController.navigate(Graph.PETSLIST) {
-                        popUpTo(0) {
+                        popUpTo(Graph.PETSLIST) {
+                            inclusive = true
                         }
                     }
                 }
@@ -120,7 +121,8 @@ fun BottomBar(navController: NavController) {
             IconButton(
                 onClick = {
                     navController.navigate(Graph.CHAT) {
-                        popUpTo(0) {
+                        popUpTo(Graph.CHAT) {
+                            inclusive = true
                         }
                     }
                 }
@@ -141,8 +143,9 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-                    navController.navigate(BottomBarScreen.Settings.route) {
-                        popUpTo(0) {
+                    navController.navigate(Graph.SETTING) {
+                        popUpTo(Graph.SETTING) {
+                            inclusive = true
                         }
                     }
                 }

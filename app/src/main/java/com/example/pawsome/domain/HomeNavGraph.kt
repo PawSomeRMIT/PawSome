@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
+import com.example.pawsome.presentation.aboutus.AboutUsScreen
 import com.example.pawsome.presentation.add_form.Form
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
@@ -33,16 +34,18 @@ fun HomeNavGraph(
     ) {
         petsListNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
 
-        composable(BottomBarScreen.Settings.route) {
-            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
-        }
-
         composable(BottomBarScreen.BookingHistory.route) {
             HistoryScreen(navController = homeNavController)
         }
 
         channelNavGraph(navController = homeNavController)
 
+
+//        composable(BottomBarScreen.Settings.route) {
+//            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
+//        }
+
+        settingNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
     }
 }
 
@@ -138,4 +141,31 @@ fun NavGraphBuilder.channelNavGraph(navController: NavHostController) {
 sealed class ChatScreen(val route: String) {
     object ChannelsList: ChatScreen(route = "ChannelsList")
     object Channel: ChatScreen(route = "Channel")
+}
+
+fun NavGraphBuilder.settingNavGraph(
+    rootNavController:NavHostController,
+    homeNavController: NavHostController
+) {
+    navigation(
+        route = Graph.SETTING,
+        startDestination = SettingScreen.SettingMenu.route
+    ) {
+        composable(route = SettingScreen.SettingMenu.route) {
+            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
+        }
+
+        composable(route = SettingScreen.AboutUs.route) {
+            AboutUsScreen(
+                onClickBack = {
+                    homeNavController.popBackStack()
+                }
+            )
+        }
+    }
+}
+
+sealed class SettingScreen(val route: String) {
+    object SettingMenu: SettingScreen(route = "SettingMenu")
+    object AboutUs: SettingScreen(route = "AboutUs")
 }

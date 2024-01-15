@@ -75,4 +75,5 @@ object Graph {
     const val HOME = "home_graph"
     const val CHAT = "chat_graph"
     const val PETSLIST = "petList_graph"
+    const val SETTING = "setting_graph"
 }

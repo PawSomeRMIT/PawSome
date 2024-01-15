@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -31,84 +32,78 @@ import coil.compose.AsyncImage
 import com.example.pawsome.R
 import com.example.pawsome.common.NormalText
 import com.example.pawsome.common.TitleText
+import com.example.pawsome.model.User
 
 @Composable
 fun Profile(
-    inputImageUrl: String?,
-    name: String,
-    tier: String
+    userData: User
 ) {
     Row(
         modifier = Modifier
-            .background(Color(248, 248, 248, 255))
-            .padding(6.dp)
+            .padding(horizontal = 10.dp, vertical = 20.dp)
             .fillMaxWidth()
     ) {
         AsyncImage(
-            if (!inputImageUrl.isNullOrEmpty()) inputImageUrl else R.drawable.default_avatar_profile_icon,
+            userData.image,
             contentDescription = "Description",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(155.dp)
+                .size(140.dp)
                 .clip(CircleShape)
         )
 
         Spacer(modifier = Modifier.width(20.dp))
 
         Column {
-            TitleText(value = name)
+            TitleText(value = userData.username)
+
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "3",
+                    Text(
+                        text = userData.history.size.toString(),
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
                     )
+
                     NormalText(value = "bookings")
-                }
-
-                Spacer(modifier = Modifier.width(20.dp))
-
-
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "3",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
-                    )
-                    NormalText(value = "forms created")
                 }
             }
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Row {
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
                 Image(
                     painter = painterResource(
-                        id = if (tier.lowercase() == "gold") R.drawable.gold_tier_icon else R.drawable.normal_tier_icon
+                        id = if (userData.membership.lowercase() == "gold") R.drawable.gold_tier_icon else R.drawable.normal_tier_icon
                     ),
-                    contentDescription = "Tier icon")
+                    contentDescription = "Tier icon",
+                    modifier = Modifier.size(30.dp)
+                )
+
                 Spacer(modifier = Modifier.width(5.dp))
-                Text(tier)
+
+                Text(
+                    text = userData.membership,
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp,
+                    )
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProfile() {
-    Profile(inputImageUrl = "https://i.postimg.cc/7hjg2wZm/836.jpg",
-        name = "John Doe",
-        tier = "Gold")
 }
