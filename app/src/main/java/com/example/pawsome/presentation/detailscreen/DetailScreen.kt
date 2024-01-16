@@ -30,7 +30,9 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.outlined.EventAvailable
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.CircularProgressIndicator
@@ -58,6 +60,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
+import com.example.pawsome.common.TitleText
 import com.example.pawsome.domain.Graph
 import com.example.pawsome.domain.PetsListScreen
 import com.example.pawsome.model.Booking
@@ -258,14 +261,14 @@ fun DetailScreen(
                         Icon(
                             Icons.Outlined.Pets,
                             contentDescription = "Pet",
-                            modifier = Modifier.height(30.dp)
+                            modifier = Modifier.height(35.dp)
                         )
 
                         Spacer(modifier = Modifier.width(5.dp))
 
                         Text(
                             text = "About ${petDetail.petName}",
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -312,7 +315,7 @@ fun DetailScreen(
                             horizontalArrangement = Arrangement.Start
                         ) {
                             Icon(
-                                Icons.Outlined.EventAvailable,
+                                Icons.Filled.EventAvailable,
                                 contentDescription = "Pet",
                                 modifier = Modifier.height(30.dp),
                                 tint = Color.Green
@@ -387,11 +390,28 @@ fun UserProfile(user: User) {
         Spacer(modifier = Modifier.width(20.dp))
 
         Column {
-            Text(
-                user.username,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    user.username,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (user.membership == "Subscribed") {
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Filled.VerifiedUser,
+                        contentDescription = "Icon description",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Green
+                    )
+                }
+            }
 
             Text(
                 "Owner",

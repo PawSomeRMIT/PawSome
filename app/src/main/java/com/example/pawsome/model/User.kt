@@ -19,7 +19,7 @@ data class User (
     val username: String = "",
     val email: String = "",
     val image: String = "",
-    val membership: String = "normal",
+    var membership: String = "normal",
     val chatToken: String = "",
     var history: List <Booking> = emptyList()
 ): Serializable
