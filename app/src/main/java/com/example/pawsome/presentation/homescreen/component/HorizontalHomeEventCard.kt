@@ -26,12 +26,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,17 +44,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.common.CommonVar
+import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HorizontalHomeEventCard(
     petDetail: PetDetail,
+    editable: Boolean? = false,
     modifier: Modifier = Modifier,
-    onEventClick: () -> Unit = {}
+    navHostController: NavHostController? = null,
+    onEventClick: () -> Unit = {},
+    onEditButtonClick:() -> Unit = {}
 ) {
+    val scope = rememberCoroutineScope()
+
+    // Get current user session
+    val userID = FirebaseAuth.getInstance().currentUser?.uid
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -111,6 +126,20 @@ fun HorizontalHomeEventCard(
                     .padding(10.dp)
                     .clip(RoundedCornerShape(10.dp))
             )
+
+            if (editable != null) {
+                if (editable) {
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    IconButton(
+                        onClick = onEditButtonClick,
+                    ) {
+                        Icon(imageVector = Icons.Filled.Edit,
+                            contentDescription = "Edit icon",
+                            tint = Color.Black)
+                    }
+                }
+            }
         }
     }
 }

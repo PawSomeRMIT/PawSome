@@ -89,6 +89,7 @@ var imageUri: Uri? = null
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Form(
+    petDetail: PetDetail? = null,
     navHostController: NavHostController,
     dataViewModel: DataViewModel = viewModel(),
     onBackClick: () -> Unit
@@ -103,7 +104,6 @@ fun Form(
     var petDescription by rememberSaveable { mutableStateOf("") }
     var petlocation by rememberSaveable { mutableStateOf("") }
     var bookingPrice by rememberSaveable { mutableStateOf("") }
-
     var isExpanded by remember { mutableStateOf(false) }
 
     // Remember scroll state
@@ -163,10 +163,12 @@ fun Form(
                 IconButton(onClick = onBackClick) {
                     Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.Black)
                 }
-                TitleText(value = "Add new pet")
+                TitleText(value = if (petDetail != null) "Update pet detail" else "Add new pet")
             }
 
-            ImagePicker()
+            // Don't allow user to update image
+            if (petDetail == null)
+                ImagePicker()
 
             Spacer(modifier = Modifier.padding(8.dp))
 
@@ -177,12 +179,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petname_field),
+                        labelValue = petDetail?.petName ?: stringResource(id = R.string.petname_field),
                         painterResource(id = R.drawable.baseline_text_format_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetNameChanged(it))
-                                petName = it
+                                if (petDetail != null) {
+                                    petDetail.petName = it
+                                } else {
+                                    petName = it
+                                }
                             }
                         },
                         errorStatus = dataViewModel.formUIState.value.petNameError
@@ -195,12 +201,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petGender_field),
+                        labelValue = petDetail?.petGender ?: stringResource(id = R.string.petGender_field),
                         painterResource(id = R.drawable.baseline_transgender_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetGenderChanged(it))
-                                petGender = it
+                                if (petDetail != null) {
+                                    petDetail.petGender = it
+                                } else {
+                                    petGender = it
+                                }
                             }
                         },
                         errorStatus = dataViewModel.formUIState.value.petGenderError
@@ -215,12 +225,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petBreed_field),
+                        labelValue = petDetail?.petBreed ?: stringResource(id = R.string.petBreed_field),
                         painterResource(id = R.drawable.baseline_pets_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetBreedChanged(it))
-                                petBreed = it
+                                if (petDetail != null) {
+                                    petDetail.petBreed = it
+                                } else {
+                                    petBreed = it
+                                }
                             }
                         },
                         errorStatus = dataViewModel.formUIState.value.petBreedError
@@ -233,12 +247,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petAge_field),
+                        labelValue = petDetail?.petAge ?: stringResource(id = R.string.petAge_field),
                         painterResource(id = R.drawable.baseline_123_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetAgeChanged(it))
-                                petAge = it
+                                if (petDetail != null) {
+                                    petDetail.petAge = it
+                                } else {
+                                    petAge = it
+                                }
                             }
                         },
                         keyboardType = "number",
@@ -254,12 +272,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petType_field),
+                        labelValue = petDetail?.petAnimal ?: stringResource(id = R.string.petType_field),
                         painterResource(id = R.drawable.baseline_pets_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetTypeChanged(it))
-                                petAnimal = it
+                                if (petDetail != null) {
+                                    petDetail.petAnimal = it
+                                } else {
+                                    petAnimal = it
+                                }
                             }
                         },
                         errorStatus = dataViewModel.formUIState.value.petTypeError
@@ -272,12 +294,16 @@ fun Form(
                     modifier = Modifier.weight(1f),
                 ) {
                     CustomTextField(
-                        labelValue = stringResource(id = R.string.petColor_field),
+                        labelValue = petDetail?.petColor ?: stringResource(id = R.string.petColor_field),
                         painterResource(id = R.drawable.baseline_color_lens_24),
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetColorChanged(it))
-                                petColor = it
+                                if (petDetail != null) {
+                                    petDetail.petColor = it
+                                } else {
+                                    petColor = it
+                                }
                             }
                         },
                         errorStatus = dataViewModel.formUIState.value.petColorError
@@ -291,7 +317,11 @@ fun Form(
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.PetLocationChanged(it))
-                        petlocation = it
+                        if (petDetail != null) {
+                            petDetail.petAddress = it
+                        } else {
+                            petlocation = it
+                        }
                     }
                 },
                 errorStatus = dataViewModel.formUIState.value.petlocationError
@@ -303,7 +333,11 @@ fun Form(
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.PetDescriptionChanged(it))
-                        petDescription = it
+                        if (petDetail != null) {
+                            petDetail.petDescription = it
+                        } else {
+                            petDescription = it
+                        }
                     }
                 },
                 errorStatus = dataViewModel.formUIState.value.petDescriptionError
@@ -315,7 +349,11 @@ fun Form(
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.BookingPriceChanged(it))
-                        bookingPrice = it
+                        if (petDetail != null) {
+                            petDetail.bookingPricePerDay = it
+                        } else {
+                            bookingPrice = it
+                        }
                     }
                 },
                 keyboardType = "text",
@@ -332,28 +370,50 @@ fun Form(
 
             val context = LocalContext.current
 
-            val newPetDetail = PetDetail(
-                petName = petName,
-                petGender = petGender,
-                petBreed = petBreed,
-                petAnimal = petAnimal,
-                petColor = petColor,
-                petStatus = "Available",
-                petAge = petAge,
-                petDescription = petDescription,
-                img = imageUri.toString(),
-                bookingPricePerDay = bookingPrice,
-                ownerId = userData.userID,
-                distance = 0.0,
-                petAddress = petlocation
-            )
+            val newPetDetail: PetDetail
+
+            if (petDetail != null) {
+                newPetDetail = PetDetail(
+                    petName = petDetail.petName,
+                    petGender = petDetail.petGender,
+                    petBreed = petDetail.petBreed,
+                    petAnimal =petDetail. petAnimal,
+                    petColor = petDetail.petColor,
+                    petStatus = "Available",
+                    petAge = petDetail.petAge,
+                    petDescription = petDetail.petDescription,
+                    img = imageUri.toString(),
+                    bookingPricePerDay =petDetail.bookingPricePerDay,
+                    ownerId = userData.userID,
+                    distance = 0.0,
+                    petAddress = petDetail.petAddress
+                )
+            } else {
+                newPetDetail = PetDetail(
+                    petName = petName,
+                    petGender = petGender,
+                    petBreed = petBreed,
+                    petAnimal = petAnimal,
+                    petColor = petColor,
+                    petStatus = "Available",
+                    petAge = petAge,
+                    petDescription = petDescription,
+                    img = imageUri.toString(),
+                    bookingPricePerDay = bookingPrice,
+                    ownerId = userData.userID,
+                    distance = 0.0,
+                    petAddress = petlocation
+                )
+            }
 
             ButtonComponent(
                 value = "Save",
                 onButtonClicked = {
                     scope.launch {
-                        dataViewModel
-                            .saveForm(newPetDetail, context, navHostController)
+                        if (petDetail != null)
+                            dataViewModel.updatePetDetails(petDetail.id, petDetail, context, navHostController)
+                        else
+                            dataViewModel.saveForm(newPetDetail, context, navHostController)
                     }
                 },
                 isEnabled = dataViewModel.allFormValidatePassed.value

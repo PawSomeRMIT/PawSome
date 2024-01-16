@@ -61,6 +61,7 @@ fun CustomTextField(
     modifier: Modifier? = null,
     keyboardType: String? = "text",
     lastField: Boolean = false,
+    placeholder: String? = "",
     trailingIcon: @Composable (() -> Unit)? = null) {
 
     val textValue = remember {
@@ -93,6 +94,7 @@ fun CustomTextField(
         },
         isError = !errorStatus,
         readOnly = readOnly?: false,
+        placeholder = { Text(placeholder?:"") },
         leadingIcon = {
             Icon(
                 painter = painterResource,

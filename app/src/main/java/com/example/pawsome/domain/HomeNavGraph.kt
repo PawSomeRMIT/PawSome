@@ -81,10 +81,18 @@ fun NavGraphBuilder.petsListNavGraph(
         }
 
         composable(BottomBarScreen.FormScreen.route) {
-            Form(navHostController = homeNavController,
-                onBackClick = {
-                    homeNavController.popBackStack()
-                })
+
+            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
+
+            if (petDetail != null) {
+                Form(
+                    petDetail = petDetail,
+                    onBackClick = {
+                        homeNavController.popBackStack()
+                    },
+                    navHostController = homeNavController
+                )
+            }
         }
 
         channelNavGraph(navController = homeNavController)
