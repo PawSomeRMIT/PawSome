@@ -25,9 +25,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +35,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,7 +48,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.pawsome.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
     labelValue: String,
@@ -75,10 +74,10 @@ fun CustomTextField(
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp)),
         colors = color
-            ?: TextFieldDefaults.outlinedTextFieldColors(
-                focusedLabelColor = Color(232,192,19),
-                focusedBorderColor = Color(232,192,19),
-                cursorColor = Color(232,192,19),
+            ?: OutlinedTextFieldDefaults.colors(
+                cursorColor = colorResource(id = R.color.yellow),
+                focusedBorderColor = colorResource(id = R.color.yellow),
+                focusedLabelColor = colorResource(id = R.color.yellow),
             ),
         // Enter to move to next field
         keyboardOptions = if (keyboardType == "text") {
@@ -132,10 +131,10 @@ fun PasswordTextField(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp)),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = Color(232,192,19),
-            focusedBorderColor = Color(232,192,19),
-            cursorColor = Color(232,192,19),
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = colorResource(id = R.color.yellow),
+            focusedBorderColor = colorResource(id = R.color.yellow),
+            focusedLabelColor = colorResource(id = R.color.yellow),
         ),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,

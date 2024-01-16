@@ -28,12 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pawsome.R
 
 @Composable
 fun ButtonComponent(
@@ -47,7 +46,7 @@ fun ButtonComponent(
     Button(
         modifier = modifier,
         contentPadding = PaddingValues(),
-        colors = ButtonDefaults.buttonColors(Color(232,192,19)),
+        colors = ButtonDefaults.buttonColors(colorResource(id = R.color.yellow)),
         shape = shape,
         enabled = isEnabled,
         onClick = { onButtonClicked.invoke() }
@@ -60,19 +59,19 @@ fun ButtonComponent(
                     if (isEnabled) {
                         if (value.lowercase() != "logout" && value.lowercase() != "sign out") {
                             listOf(
-                                Color(232,192,19),
-                                Color(232,192,19),
+                                colorResource(id = R.color.yellow),
+                                colorResource(id = R.color.yellow)
                             )
                         } else {
                             listOf(
-                                Color.Red,
-                                Color.Red
+                                colorResource(id = R.color.red),
+                                colorResource(id = R.color.red)
                             )
                         }
                     } else {
                         listOf(
-                            Color(227,210,141),
-                            Color(227,210,141)
+                            colorResource(id = R.color.light_yellow),
+                            colorResource(id = R.color.light_yellow)
                         )
                     }
                 )
@@ -84,20 +83,4 @@ fun ButtonComponent(
         }
 
     }
-}
-
-
-@Composable
-fun TextButton(value: String) {
-    Text(text = value,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(40.dp),
-        style = TextStyle(
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.DarkGray),
-        textAlign = TextAlign.End,
-        textDecoration = TextDecoration.Underline
-    )
 }
