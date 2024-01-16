@@ -17,6 +17,7 @@ package com.example.pawsome.presentation.authentication
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,11 +27,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -150,6 +159,133 @@ fun Signup(
                         },
                         errorStatus = signupViewModel.signupUIState.value.confirmedPasswordError
                     )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Column(
+                        modifier = Modifier
+
+                            .background(
+                                colorResource(id = R.color.light_gray),
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                            .padding(8.dp)
+                            .fillMaxWidth(),
+                    ) {
+                        Text(text = "Account must satisfies following:",
+                            color = colorResource(id = R.color.gray),    
+                            fontWeight = FontWeight.Bold)
+                        
+                        Spacer(modifier = Modifier.height(6.dp))
+                        
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "1. Password has at least 4 characters.",
+                                style = TextStyle(
+                                    color = if (!signupViewModel.signupUIState.value.passwordError)
+                                        Color.Red else colorResource(
+                                        id = R.color.green
+                                    ),
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Icon(imageVector =
+                                if (!signupViewModel.signupUIState.value.passwordError)
+                                    Icons.Filled.Error else
+                                    Icons.Filled.CheckCircle,
+                                contentDescription = "Password satisfaction icon",
+                                tint = if (!signupViewModel.signupUIState.value.passwordError)
+                                    colorResource(id = R.color.red) else
+                                    colorResource(id = R.color.green)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "2. Confirmed password matched",
+                                style = TextStyle(
+                                    color = if (!signupViewModel.signupUIState.value.confirmedPasswordError)
+                                        colorResource(id = R.color.red) else
+                                        colorResource(id = R.color.green),
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Icon(imageVector =
+                                if (!signupViewModel.signupUIState.value.confirmedPasswordError)
+                                    Icons.Filled.Error else
+                                    Icons.Filled.CheckCircle,
+                                contentDescription = "Confirmed password satisfaction icon",
+                                tint = if (!signupViewModel.signupUIState.value.confirmedPasswordError)
+                                    colorResource(id = R.color.red) else
+                                    colorResource(id = R.color.green)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "3. Username has been filled",
+                                style = TextStyle(
+                                    color = if (!signupViewModel.signupUIState.value.usernameError)
+                                        colorResource(id = R.color.red) else
+                                        colorResource(id = R.color.green),
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Icon(imageVector =
+                                if (!signupViewModel.signupUIState.value.usernameError)
+                                    Icons.Filled.Error else
+                                    Icons.Filled.CheckCircle,
+                                contentDescription = "Username satisfaction icon",
+                                tint = if (!signupViewModel.signupUIState.value.usernameError)
+                                    colorResource(id = R.color.red) else
+                                    colorResource(id = R.color.green)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "4. Email has been filled.",
+                                style = TextStyle(
+                                    color = if (!signupViewModel.signupUIState.value.emailError)
+                                        colorResource(id = R.color.red) else
+                                        colorResource(id = R.color.green),
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            Icon(imageVector =
+                                if (!signupViewModel.signupUIState.value.emailError)
+                                    Icons.Filled.Error else
+                                    Icons.Filled.CheckCircle,
+                                contentDescription = "Email satisfaction icon",
+                                tint = if (!signupViewModel.signupUIState.value.emailError)
+                                    colorResource(id = R.color.red) else
+                                    colorResource(id = R.color.green)
+                            )
+                        }
+                    }
+
 
                     Spacer(modifier = Modifier.height(20.dp))
 
