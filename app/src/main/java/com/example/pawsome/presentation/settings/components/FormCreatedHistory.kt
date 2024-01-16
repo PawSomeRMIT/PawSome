@@ -98,24 +98,24 @@ fun MyPetListScreen(
                             petDetail = pet,
                             editable = true,
                             onEventClick = {
-                                scope.launch {
-                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                        "petDetail",
-                                        pet
-                                    )
-
-                                    val owner =
-                                        formHistoryViewModel.getUserFromFireStore(uId = pet.ownerId)
-
-                                    Log.d("Before nav", owner.toString())
-
-                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                        "owner",
-                                        owner
-                                    )
-
-                                    navHostController.navigate(PetsListScreen.DetailScreen.route)
-                                }
+//                                scope.launch {
+//                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+//                                        "petDetail",
+//                                        pet
+//                                    )
+//
+//                                    val owner =
+//                                        formHistoryViewModel.getUserFromFireStore(uId = pet.ownerId)
+//
+//                                    Log.d("Before nav", owner.toString())
+//
+//                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+//                                        "owner",
+//                                        owner
+//                                    )
+//
+//                                    navHostController.navigate(PetsListScreen.DetailScreen.route)
+//                                }
                             },
                             onEditButtonClick = {
                                 scope.launch {
