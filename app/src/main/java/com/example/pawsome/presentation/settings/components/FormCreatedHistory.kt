@@ -33,8 +33,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
 import com.example.pawsome.domain.PetsListScreen
+import com.example.pawsome.domain.screens.BottomBarScreen
+import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -91,6 +94,7 @@ fun MyPetListScreen(
                     //Display to the card
                     HorizontalHomeEventCard(
                         petDetail = pet,
+                        editable = true,
                         onEventClick = {
                             scope.launch {
                                 navHostController.currentBackStackEntry?.savedStateHandle?.set(
@@ -109,12 +113,24 @@ fun MyPetListScreen(
 
                                 navHostController.navigate(PetsListScreen.DetailScreen.route)
                             }
+                        },
+                        onEditButtonClick = {
+                            scope.launch {
+                                navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                    "petDetail",
+                                    pet
+                                )
+
+                                navHostController.navigate(BottomBarScreen.FormScreen.route)
+                            }
                         }
                     )
 
                     // Add spacing at last form displayed
                     if (pet == myPetList[myPetList.size-1])
-                        Spacer(modifier = Modifier.fillMaxWidth().height(40.dp))
+                        Spacer(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp))
                 }
             }
         }

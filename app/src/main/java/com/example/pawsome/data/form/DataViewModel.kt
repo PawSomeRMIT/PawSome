@@ -209,61 +209,45 @@ class DataViewModel: ViewModel() {
         }
     }
 
-
-    fun getUserDetails(): User? {
-        val auth = FirebaseAuth.getInstance()
-        val userID = auth.currentUser?.uid
-
+    fun updatePetDetails(
+        formID: String?,
+        petDetail: PetDetail,
+        context: Context,
+        navHostController: NavHostController
+    ) {
+        val tag = "Firestore"
         val db = Firebase.firestore
 
-        val tag = "Firestore"
-        var userData: User? = null
+        // Convert address to latitude and longitude
+        // Default location (RMIT University Vietnam)
+        val addressLatLong = getLocationFromAddress(petDetail.petAddress, context)
 
-        if (userID != null) {
-            val userDocument = db.collection("user").document(userID)
-            userDocument
-                .get()
+        if (addressLatLong != null) {
+            petDetail.latitude = addressLatLong?.latitude ?: 10.729250
+            petDetail.longitude = addressLatLong?.longitude ?: 106.69552
+            Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
+
+            db.collection("pets").document(formID.toString())
+                .set(petDetail)
                 .addOnSuccessListener {
-                    if (it.exists()) {
-                        userData = it.toObject(User::class.java)
-                    } else
-                        userData = null
+                    Log.d(tag, "Form $formID is updated")
+
+                    // Back to home screen
+                    navHostController.navigate(BottomBarScreen.Home.route) {
+                        popUpTo(BottomBarScreen.Home.route) {
+                            inclusive = true
+                        }
+                    }
+
+                    Toast.makeText(context, "Update success", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener {
-                    Log.e(tag, "Failed to retrieve user.")
+                    Toast.makeText(context, "Update failed", Toast.LENGTH_SHORT).show()
                 }
-
-            return userData
+        } else {
+            Toast.makeText(context, "Invalid address. Try again!", Toast.LENGTH_SHORT).show()
         }
-
-        return null
     }
-
-
-//    fun updateUserDetails() {
-//        val auth = FirebaseAuth.getInstance()
-//        val userID = auth.currentUser?.uid
-//
-//        val db = Firebase.firestore
-//
-//        val tag = "Firestore"
-//
-//        if (userID != null) {
-//            val userDocument = db.collection("user").document(userID)
-//            userDocument
-//                .get()
-//                .addOnSuccessListener {
-//                    if (it.exists()) {
-//
-//                    } else {
-//                        Log.e(tag, "No user found")
-//                    }
-//                }
-//                .addOnFailureListener {
-//                    Log.e(tag, "Failed to retrieve user $userID")
-//                }
-//        }
-//    }
 
 
     fun getAllPets(
