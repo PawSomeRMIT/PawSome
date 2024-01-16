@@ -180,6 +180,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petName ?: stringResource(id = R.string.petname_field),
                         painterResource(id = R.drawable.baseline_text_format_24),
+                        value = petDetail?.petName,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetNameChanged(it))
@@ -202,6 +203,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petGender ?: stringResource(id = R.string.petGender_field),
                         painterResource(id = R.drawable.baseline_transgender_24),
+                        value = petDetail?.petGender,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetGenderChanged(it))
@@ -226,6 +228,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petBreed ?: stringResource(id = R.string.petBreed_field),
                         painterResource(id = R.drawable.baseline_pets_24),
+                        value = petDetail?.petBreed,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetBreedChanged(it))
@@ -248,6 +251,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petAge ?: stringResource(id = R.string.petAge_field),
                         painterResource(id = R.drawable.baseline_123_24),
+                        value = petDetail?.petAge,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetAgeChanged(it))
@@ -273,6 +277,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petAnimal ?: stringResource(id = R.string.petType_field),
                         painterResource(id = R.drawable.baseline_pets_24),
+                        value = petDetail?.petAnimal,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetTypeChanged(it))
@@ -295,6 +300,7 @@ fun FormScreen(
                     CustomTextField(
                         labelValue = petDetail?.petColor ?: stringResource(id = R.string.petColor_field),
                         painterResource(id = R.drawable.baseline_color_lens_24),
+                        value = petDetail?.petColor,
                         onTextChanged = {
                             scope.launch {
                                 dataViewModel.onEvent(FormUIEvent.PetColorChanged(it))
@@ -313,6 +319,7 @@ fun FormScreen(
             CustomTextField(
                 labelValue = stringResource(id = R.string.petLocation_field),
                 painterResource(id = R.drawable.baseline_location_24),
+                value = petDetail?.petAddress,
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.PetLocationChanged(it))
@@ -329,6 +336,7 @@ fun FormScreen(
             CustomTextField(
                 labelValue = stringResource(id = R.string.petDescription_field),
                 painterResource(id = R.drawable.baseline_description_24),
+                value = petDetail?.petDescription,
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.PetDescriptionChanged(it))
@@ -345,6 +353,7 @@ fun FormScreen(
             CustomTextField(
                 labelValue = stringResource(id = R.string.bookingPrice_field),
                 painterResource(id = R.drawable.baseline_attach_money_24),
+                value = petDetail?.bookingPricePerDay,
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.BookingPriceChanged(it))
@@ -415,7 +424,7 @@ fun FormScreen(
                             dataViewModel.saveForm(newPetDetail, context, navHostController)
                     }
                 },
-                isEnabled = dataViewModel.allFormValidatePassed.value
+                isEnabled = if (petDetail != null) true else dataViewModel.allFormValidatePassed.value
             )
 
             Spacer(modifier = Modifier.padding(50.dp))

@@ -52,6 +52,7 @@ import com.example.pawsome.R
 fun CustomTextField(
     labelValue: String,
     painterResource: Painter = painterResource(id = R.drawable.ic_launcher_foreground),
+    value: String? = null,
     icon: ImageVector? = Icons.Outlined.AddCircle,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false,
@@ -69,7 +70,7 @@ fun CustomTextField(
 
     OutlinedTextField(
         label = { Text(text = labelValue)},
-        value = textValue.value,
+        value = value ?: textValue.value,
         modifier = modifier?: Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(2.dp)),
