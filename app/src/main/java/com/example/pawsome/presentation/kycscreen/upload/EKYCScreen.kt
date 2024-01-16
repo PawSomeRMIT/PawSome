@@ -220,7 +220,7 @@ fun EKYCUploadScreen(
                     text = "Please upload two photos of your ID card (front and back face). The area of the ID card in the picture needs to occupy a minimum of 1/3 and a maximum of 4/5 of the total area of the photo. Please ensure that there is only one photo of your ID card/CCCD in the photo, with no other documents, including documents with text. The photo must have a complete ID card/CCCD with no missing edges. Also, please ensure that the photos are not blurry or glare.",
                     color = colorResource(id = R.color.text_gray),
                     fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
             }
