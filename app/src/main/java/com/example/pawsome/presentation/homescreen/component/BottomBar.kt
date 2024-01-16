@@ -188,6 +188,11 @@ fun CenterActionButton(
         FloatingActionButton(
             backgroundColor = colorResource(id = R.color.yellow),
             onClick = {
+                navController.navigate(Graph.SETTING) {
+                    popUpTo(Graph.SETTING) {
+                        inclusive = true
+                    }
+                }
                 navController.navigate(BottomBarScreen.FormScreen.route)
             }
         ) {

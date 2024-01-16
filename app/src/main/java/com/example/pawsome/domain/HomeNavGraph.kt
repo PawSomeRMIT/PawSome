@@ -11,7 +11,7 @@ import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.aboutus.AboutUsScreen
-import com.example.pawsome.presentation.add_form.Form
+import com.example.pawsome.presentation.add_form.FormScreen
 import com.example.pawsome.presentation.chatscreen.channelListScreen.ChannelsListScreen
 import com.example.pawsome.presentation.chatscreen.channelScreen.ChannelScreen
 import com.example.pawsome.presentation.detailscreen.DetailScreen
@@ -35,20 +35,20 @@ fun HomeNavGraph(
     ) {
         petsListNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
 
-        composable(BottomBarScreen.Settings.route) {
-            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
-        }
-
         composable(BottomBarScreen.BookingHistory.route) {
             HistoryScreen(navController = homeNavController)
         }
 
+        composable(BottomBarScreen.FormScreen.route) {
+            FormScreen(
+                navHostController = homeNavController,
+                onBackClick = {
+                    homeNavController.popBackStack()
+                }
+            )
+        }
+
         channelNavGraph(navController = homeNavController)
-
-
-//        composable(BottomBarScreen.Settings.route) {
-//            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
-//        }
 
         settingNavGraph(rootNavController = rootNavController, homeNavController = homeNavController)
     }
@@ -74,22 +74,23 @@ fun NavGraphBuilder.petsListNavGraph(
             }
         }
 
-        composable(BottomBarScreen.FormScreen.route) {
-
-            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
-
-            if (petDetail != null) {
-                Form(
-                    petDetail = petDetail,
-                    onBackClick = {
-                        homeNavController.popBackStack()
-                    },
-                    navHostController = homeNavController
-                )
-            }
-        }
+//        composable(BottomBarScreen.FormScreen.route) {
+//
+//            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
+//
+//            if (petDetail != null) {
+//                Form(
+//                    petDetail = petDetail,
+//                    onBackClick = {
+//                        homeNavController.popBackStack()
+//                    },
+//                    navHostController = homeNavController
+//                )
+//            }
+//        }
 
         channelNavGraph(navController = homeNavController)
+
         composable(route = PetsListScreen.DetailScreen.route) {
             val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
 
@@ -183,6 +184,20 @@ fun NavGraphBuilder.settingNavGraph(
                 MyPetListScreen(navHostController = homeNavController, user = user)
             }
         }
+
+        composable(route = SettingScreen.EditPet.route) {
+            val petDetail: PetDetail? = homeNavController.previousBackStackEntry?.savedStateHandle?.get("petDetail")
+
+            if (petDetail != null) {
+                FormScreen(
+                    navHostController = homeNavController,
+                    petDetail = petDetail,
+                    onBackClick = {
+                        homeNavController.popBackStack()
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -192,5 +207,9 @@ sealed class SettingScreen(val route: String) {
 
     object MyPetList: SettingScreen(
         route = "MyPetList"
+    )
+
+    object EditPet: SettingScreen(
+        route = "EditPet"
     )
 }

@@ -88,7 +88,7 @@ var imageUri: Uri? = null
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Form(
+fun FormScreen(
     petDetail: PetDetail? = null,
     navHostController: NavHostController,
     dataViewModel: DataViewModel = viewModel(),
@@ -155,7 +155,6 @@ fun Form(
                 .verticalScroll(state = scrollState),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
