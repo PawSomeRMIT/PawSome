@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
 import com.example.pawsome.domain.PetsListScreen
+import com.example.pawsome.domain.SettingScreen
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
@@ -83,55 +84,65 @@ fun MyPetListScreen(
                 }
             }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                userScrollEnabled = true
-            ) {
-                items(myPetList) { pet ->
-                    //Display to the card
-                    HorizontalHomeEventCard(
-                        petDetail = pet,
-                        editable = true,
-                        onEventClick = {
-                            scope.launch {
-                                navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                    "petDetail",
-                                    pet
-                                )
+            if (myPetList.size > 0) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    userScrollEnabled = true
+                ) {
+                    items(myPetList) { pet ->
+                        //Display to the card
+                        HorizontalHomeEventCard(
+                            petDetail = pet,
+                            editable = true,
+                            onEventClick = {
+                                scope.launch {
+                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "petDetail",
+                                        pet
+                                    )
 
-                                val owner = formHistoryViewModel.getUserFromFireStore(uId = pet.ownerId)
+                                    val owner =
+                                        formHistoryViewModel.getUserFromFireStore(uId = pet.ownerId)
 
-                                Log.d("Before nav", owner.toString())
+                                    Log.d("Before nav", owner.toString())
 
-                                navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                    "owner",
-                                    owner
-                                )
+                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "owner",
+                                        owner
+                                    )
 
-                                navHostController.navigate(PetsListScreen.DetailScreen.route)
+                                    navHostController.navigate(PetsListScreen.DetailScreen.route)
+                                }
+                            },
+                            onEditButtonClick = {
+                                scope.launch {
+                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                        "petDetail",
+                                        pet
+                                    )
+
+                                    navHostController.navigate(SettingScreen.EditPet.route)
+                                }
                             }
-                        },
-                        onEditButtonClick = {
-                            scope.launch {
-                                navHostController.currentBackStackEntry?.savedStateHandle?.set(
-                                    "petDetail",
-                                    pet
-                                )
+                        )
 
-                                navHostController.navigate(BottomBarScreen.FormScreen.route)
-                            }
-                        }
-                    )
-
-                    // Add spacing at last form displayed
-                    if (pet == myPetList[myPetList.size-1])
-                        Spacer(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp))
+                        // Add spacing at last form displayed
+                        if (pet == myPetList[myPetList.size - 1])
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(40.dp)
+                            )
+                    }
                 }
+            }
+            else {
+                Text(
+                    text = "Empty List"
+                )
             }
         }
     }
