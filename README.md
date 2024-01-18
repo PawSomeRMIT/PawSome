@@ -73,6 +73,15 @@ We are actively working to address these limitations and hope to provide updates
 ![Alt text](https://private-user-images.githubusercontent.com/72547907/297799000-78e494e9-1439-4aad-8c5a-f157fab47edb.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDU1OTMwMjEsIm5iZiI6MTcwNTU5MjcyMSwicGF0aCI6Ii83MjU0NzkwNy8yOTc3OTkwMDAtNzhlNDk0ZTktMTQzOS00YWFkLThjNWEtZjE1N2ZhYjQ3ZWRiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAxMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMTE4VDE1NDUyMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTFjYzUyMTRmZmUxNzljYWYzMWFlZDVlYjYwNDFjNDE3YWQ4ODhkODU3OWVmMmIwNDMwMTZlM2M2MDEzZDM3ZjgmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.t79KQgdWqDsy8gtBGB-UnMDtzWVKlDUgNfXFYnOdR9o "Optional title")
 ![Alt text](https://private-user-images.githubusercontent.com/72547907/297799067-8cc9bc82-e47b-4379-b598-1dec27a613d1.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDU1OTMwMjEsIm5iZiI6MTcwNTU5MjcyMSwicGF0aCI6Ii83MjU0NzkwNy8yOTc3OTkwNjctOGNjOWJjODItZTQ3Yi00Mzc5LWI1OTgtMWRlYzI3YTYxM2QxLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAxMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMTE4VDE1NDUyMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTYyYmIxYTljYTQwNmQ2ODNiN2U1OTA1ZGE2ZTY5YzI5ZjkwMjg1ZjZlNzBhMzgxODJlMzZhYTFhMTI1N2FlZjAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.J1oFAzG6BYGZOoIMtxjT3IosPKtzwd8SR2N7gpI3z5U "Optional title")
 
+## Team Work Distribution
+| Team Member  | Main Features                             | Extra Features         | Contribution |
+|--------------|-------------------------------------------|------------------------|--------------|
+| Nhat Bui     | History, Pet Detail (50%)                 | Authentication         | 25%          |
+| Thuc Thieu   | Recommendation, Pet Detail (50%)          | ID card verification   | 25%          |
+| Tri Lai      | Booking, Membership                       |                        | 25%          |
+| Ngan Phan    | Payment, Setting (UI completion), Notification |                    | 25%          |
+
+
 ## References 
 - [1] “Happy homes for stray, abandoned animals in Hanoi,” THE VOICE OF VIETNAM, https://vovworld.vn/en-US/sunday-show/happy-homes-for-strayabandoned-
 animals-in-hanoi-1211834.vov (accessed Jan. 9, 2024).
