@@ -65,7 +65,7 @@ Our application strives to provide a seamless and intuitive user experience. How
 
 - **Manual Granting Required**: Some features of the app require permissions that need to be manually granted in the device settings. These permissions are necessary for the app to function correctly and access certain device capabilities.
 
-We are actively working to address these limitations and hope to provide updates that enhance the application's capabilities without compromising on ease of use and security. For guidance on how to navigate these limitations, please refer to the 'Troubleshooting' section of our documentation.
+We are actively working to address these limitations and hope to provide updates that enhance the application's capabilities without compromising on ease of use and security.
 
 ## Screenshot
 ![Alt text](https://private-user-images.githubusercontent.com/72547907/297799083-76a6fe14-d393-4c68-bf84-250dd5bebe40.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDU1OTMwMjEsIm5iZiI6MTcwNTU5MjcyMSwicGF0aCI6Ii83MjU0NzkwNy8yOTc3OTkwODMtNzZhNmZlMTQtZDM5My00YzY4LWJmODQtMjUwZGQ1YmViZTQwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAxMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMTE4VDE1NDUyMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTE5OWZhYjM2ZDFjN2EwOTRkMzViMzQ3NWUzZTA4MjAyNGMxYzE0MmY4NjA1NWJjY2NjOGY5ZjMzYjJhZDQ4NDImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.hFcCCAByPxXAjL1eQtGDt87f5Z-JhmQIN4P01SucKEk "Pawsome UI 1")
