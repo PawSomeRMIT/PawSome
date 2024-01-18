@@ -180,37 +180,6 @@ fun SettingScreen(
                     .height(40.dp))
             }
 
-            // About US
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(SettingScreen.AboutUs.route)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Groups,
-                    contentDescription = "Icon description",
-                    modifier = Modifier.size(40.dp),
-                    tint = colorResource(id = R.color.gray_800)
-                )
-
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = "About Us",
-                    color = colorResource(id = R.color.gray_800),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 25.sp,
-                )
-            }
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp))
-
             // Uploaded pets
             Row (
                 modifier = Modifier
@@ -247,6 +216,37 @@ fun SettingScreen(
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp))
+
+            // About US
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        navController.navigate(SettingScreen.AboutUs.route)
+                    },
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Groups,
+                    contentDescription = "Icon description",
+                    modifier = Modifier.size(40.dp),
+                    tint = colorResource(id = R.color.gray_800)
+                )
+
+                Spacer(modifier = Modifier.width(40.dp))
+
+                Text(
+                    text = "About Us",
+                    color = colorResource(id = R.color.gray_800),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 25.sp,
+                )
+            }
+
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp))
 
             ButtonComponent(
                 value = "Sign out",
