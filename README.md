@@ -15,14 +15,15 @@ Pawsome is easy to use and has two types of accounts: customer and fosterer. As 
 
 ## Tech Stack
 
-**Firebase**: Authentication, Realtime Database, FireStore, Storage
-**Payment process**: Stripe API
-**Language**: Kotlin
-**UI toolkit**: Jetpack Compose
-**Dependency Injection**: Dagger-Hilt
-**Map service**: Google Maps API
-**Identity verification**: VNPT eKYC
-**Chat service**: Stream Chat
+- **Firebase**: Authentication, Realtime Database, FireStore, Storage
+- **Payment process**: Stripe API
+- **Language**: Kotlin
+- **UI toolkit**: Jetpack Compose
+- **Dependency Injection**: Dagger-Hilt
+- **Map service**: Google Maps API
+- **Identity verification**: VNPT eKYC
+- **Chat service**: Stream Chat
+
 ![Alt text](https://github.com/PawSomeRMIT/PawsomePublic/assets/72547907/ce0bf8c1-84fe-404e-a604-a03659e6b97e "Optional title")
 
 ## Feature Overview
