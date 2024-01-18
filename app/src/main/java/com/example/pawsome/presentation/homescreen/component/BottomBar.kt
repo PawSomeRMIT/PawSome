@@ -11,6 +11,7 @@
  */
 
 package com.example.pawsome.presentation.homescreen.component
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -25,26 +26,16 @@ import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.ManageHistory
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.Pets
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.pawsome.R
-import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.domain.Graph
 import com.example.pawsome.domain.screens.BottomBarScreen
 
@@ -53,7 +44,7 @@ fun BottomBar(navController: NavController) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.ChannelsList,
-        BottomBarScreen.BookingHistory,
+        BottomBarScreen.AboutUs,
         BottomBarScreen.Settings
     )
 
@@ -97,32 +88,6 @@ fun BottomBar(navController: NavController) {
 
             IconButton(
                 onClick = {
-                    navController.navigate(BottomBarScreen.BookingHistory.route) {
-                        popUpTo(BottomBarScreen.BookingHistory.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-            ) {
-                Icon(
-                    Icons.Outlined.ManageHistory,
-                    contentDescription = "Booking History",
-                    tint = colorResource(
-                        id = if (currentDestination?.route == BottomBarScreen.BookingHistory.route) R.color.yellow
-                        else R.color.gray
-                    ),
-                    modifier = Modifier.size(35.dp)
-                    )
-            }
-
-            Spacer(Modifier.weight(1f, true))
-
-            Spacer(Modifier.weight(1f, true))
-            Box(Modifier.size(48.dp)) // Placeholder for the FAB
-            Spacer(Modifier.weight(1f, true))
-
-            IconButton(
-                onClick = {
                     navController.navigate(Graph.CHAT) {
                         popUpTo(Graph.CHAT) {
                             inclusive = true
@@ -138,8 +103,34 @@ fun BottomBar(navController: NavController) {
                         else R.color.gray
                     ),
                     modifier = Modifier.size(35.dp)
-                    )
+                )
 
+            }
+
+            Spacer(Modifier.weight(1f, true))
+
+            Spacer(Modifier.weight(1f, true))
+            Box(Modifier.size(48.dp)) // Placeholder for the FAB
+            Spacer(Modifier.weight(1f, true))
+
+            IconButton(
+                onClick = {
+                    navController.navigate(BottomBarScreen.AboutUs.route) {
+                        popUpTo(BottomBarScreen.AboutUs.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Icon(
+                    Icons.Outlined.Info,
+                    contentDescription = "Booking History",
+                    tint = colorResource(
+                        id = if (currentDestination?.route == BottomBarScreen.AboutUs.route) R.color.yellow
+                        else R.color.gray
+                    ),
+                    modifier = Modifier.size(35.dp)
+                )
             }
 
             Spacer(Modifier.weight(1f, true))
@@ -167,51 +158,4 @@ fun BottomBar(navController: NavController) {
     }
 }
 
-@Composable
-fun CenterActionButton(
-    navController: NavController,
-                       dataViewModel: DataViewModel = viewModel()
-) {
-    val screens = listOf(
-        BottomBarScreen.Home,
-        BottomBarScreen.ChannelsList,
-        BottomBarScreen.BookingHistory,
-        BottomBarScreen.Settings
-    )
 
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    val bottomBarDestination = screens.any { it.route == currentDestination?.route}
-
-    if (bottomBarDestination) {
-        FloatingActionButton(
-            backgroundColor = colorResource(id = R.color.yellow),
-            onClick = {
-                navController.navigate(Graph.SETTING) {
-                    popUpTo(Graph.SETTING) {
-                        inclusive = true
-                    }
-                }
-                navController.navigate(BottomBarScreen.FormScreen.route)
-            }
-        ) {
-            Icon(
-                Icons.Outlined.Add,
-                contentDescription = "Add new pet detail",
-                tint = Color.White
-            )
-        }
-    }
-}
-
-@Composable
-fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = "home") {
-        composable("home") { /* ... */ }
-        composable("profile") { /* ... */ }
-        composable("favorites") { /* ... */ }
-        composable("settings") { /* ... */ }
-        composable("refresh") { /* ... */ }
-    }
-}

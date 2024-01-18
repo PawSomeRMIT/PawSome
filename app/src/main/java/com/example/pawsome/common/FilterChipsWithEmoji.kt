@@ -2,11 +2,14 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
@@ -28,13 +31,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pawsome.R
 import com.example.pawsome.model.FilterChipData
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FilterChipsWithEmoji(
     filterOptions: List<FilterChipData>,

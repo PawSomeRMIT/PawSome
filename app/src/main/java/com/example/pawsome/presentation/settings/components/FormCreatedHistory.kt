@@ -1,7 +1,20 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.settings.components
 
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,14 +22,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,20 +35,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.pawsome.R
-import com.example.pawsome.domain.PetsListScreen
-import com.example.pawsome.domain.SettingScreen
-import com.example.pawsome.domain.screens.BottomBarScreen
-import com.example.pawsome.presentation.authentication.components.ButtonComponent
+import com.example.pawsome.domain.screens.SettingScreen
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
-import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,7 +58,7 @@ fun MyPetListScreen(
 
     val myPetList by formHistoryViewModel.petsList.collectAsState()
 
-    var scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     if (loadingState) {
         Text(text = "Loading data...")
@@ -98,24 +101,6 @@ fun MyPetListScreen(
                             petDetail = pet,
                             editable = true,
                             onEventClick = {
-//                                scope.launch {
-//                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
-//                                        "petDetail",
-//                                        pet
-//                                    )
-//
-//                                    val owner =
-//                                        formHistoryViewModel.getUserFromFireStore(uId = pet.ownerId)
-//
-//                                    Log.d("Before nav", owner.toString())
-//
-//                                    navHostController.currentBackStackEntry?.savedStateHandle?.set(
-//                                        "owner",
-//                                        owner
-//                                    )
-//
-//                                    navHostController.navigate(PetsListScreen.DetailScreen.route)
-//                                }
                             },
                             onEditButtonClick = {
                                 scope.launch {

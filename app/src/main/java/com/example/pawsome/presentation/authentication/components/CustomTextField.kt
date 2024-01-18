@@ -2,14 +2,16 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
-
 
 package com.example.pawsome.presentation.authentication.components
 
@@ -20,8 +22,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
@@ -53,7 +52,6 @@ fun CustomTextField(
     labelValue: String,
     painterResource: Painter = painterResource(id = R.drawable.ic_launcher_foreground),
     value: String? = null,
-    icon: ImageVector? = Icons.Outlined.AddCircle,
     onTextChanged: (String) -> Unit,
     errorStatus: Boolean = false,
     color: TextFieldColors? = null,
@@ -105,7 +103,7 @@ fun CustomTextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordTextField(
     labelValue: String,
@@ -157,7 +155,6 @@ fun PasswordTextField(
                 contentDescription = "Person icon")},
         trailingIcon = {
             val iconImage = if (passwordVisible.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-            var description = if (passwordVisible.value) R.string.hide_password else R.string.show_password
             IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
                 Icon(imageVector = iconImage, contentDescription = "Password visibility")
             }

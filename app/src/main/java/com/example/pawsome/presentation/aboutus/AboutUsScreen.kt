@@ -1,3 +1,18 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.aboutus
 
 import androidx.compose.foundation.Image
@@ -14,15 +29,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,13 +60,6 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Start
         ) {
-            IconButton(onClick = { onClickBack()}, modifier = Modifier.padding(top = 10.dp, start = 0.dp)) {
-                androidx.compose.material.Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "Back",
-                    tint = Color.Black
-                )
-            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -182,8 +184,14 @@ fun AboutUsScreen(onClickBack : () -> Unit = {}) {
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
+            }
+
+            item {
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp))
             }
         }
 

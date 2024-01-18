@@ -1,6 +1,5 @@
 package com.example.pawsome.presentation.settings
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,8 +16,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.ManageAccounts
+import androidx.compose.material.icons.outlined.ManageHistory
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -42,13 +41,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
 import com.example.pawsome.data.login.LoginUIEvent
-import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.Graph
-import com.example.pawsome.domain.SettingScreen
 import com.example.pawsome.domain.screens.Screen
+import com.example.pawsome.domain.screens.SettingScreen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.authentication.components.ButtonComponent
+import com.example.pawsome.presentation.authentication.login.LoginViewModel
 import com.example.pawsome.presentation.settings.components.Profile
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -63,7 +62,7 @@ import kotlinx.coroutines.tasks.await
 fun SettingScreen(
     navController: NavHostController,
     rootNavController: NavHostController,
-    loginViewModel: LoginViewModel= hiltViewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
     settingViewModel: SettingViewModel = hiltViewModel()
 ) {
     val auth = FirebaseAuth.getInstance()
@@ -108,7 +107,7 @@ fun SettingScreen(
 
     LaunchedEffect(key1 = context) {
         scope.launch {
-            val result = settingViewModel.makePayment(context, 19.99)
+            val result = settingViewModel.makePayment(19.99)
 
             paymentIntentClientSecret = result.paymentIntent
 
@@ -180,6 +179,37 @@ fun SettingScreen(
                     .height(40.dp))
             }
 
+            // About US
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        navController.navigate(SettingScreen.BookingHistory.route)
+                    },
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ManageHistory,
+                    contentDescription = "Icon description",
+                    modifier = Modifier.size(40.dp),
+                    tint = colorResource(id = R.color.gray_800)
+                )
+
+                Spacer(modifier = Modifier.width(40.dp))
+
+                Text(
+                    text = "Booking History",
+                    color = colorResource(id = R.color.gray_800),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 25.sp,
+                )
+            }
+
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp))
+
             // Uploaded pets
             Row (
                 modifier = Modifier
@@ -212,37 +242,6 @@ fun SettingScreen(
                 )
             }
 
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp))
-
-            // About US
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(SettingScreen.AboutUs.route)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Groups,
-                    contentDescription = "Icon description",
-                    modifier = Modifier.size(40.dp),
-                    tint = colorResource(id = R.color.gray_800)
-                )
-
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = "About Us",
-                    color = colorResource(id = R.color.gray_800),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 25.sp,
-                )
-            }
 
             Spacer(modifier = Modifier
                 .fillMaxWidth()

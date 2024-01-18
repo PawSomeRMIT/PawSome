@@ -1,3 +1,18 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.pawsome.presentation.history
@@ -6,21 +21,21 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.ContactSupport
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,8 +74,6 @@ fun HistoryScreen(
     historyViewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val bookings by historyViewModel.bookings.observeAsState(initial = emptyList())
-
-    val petDetail by historyViewModel.petDetail.observeAsState(initial = null)
 
     LaunchedEffect(key1 = Unit) {
         historyViewModel.fetchBookings()
@@ -89,16 +103,37 @@ fun HistoryScreen(
                 .padding(bottom = 30.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    IconButton(
+                        onClick = {
+                             navController.popBackStack()
+                        }
+                        , modifier = Modifier.padding(top = 10.dp, start = 0.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBackIosNew,
+                            contentDescription = "Back",
+                            tint = Color.Black
+                        )
+                    }
+
+                    Column (
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         Text(
                             text = "Booking History",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 25.sp
+                            fontSize = 25.sp,
+                            textAlign = TextAlign.Center
                         )
-                    },
-                    scrollBehavior = scrollBehavior
-                )
+                    }
+                }
             }
         ) { paddingValues ->
             LazyColumn(
@@ -254,12 +289,6 @@ fun HistoryScreen(
 
 
                             }
-                        }
-
-                        if (index == bookings.size-1) {
-                            Spacer(modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp))
                         }
                     }
                 }

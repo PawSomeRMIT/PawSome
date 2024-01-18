@@ -2,16 +2,18 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-
-package com.example.pawsome.data.login
+package com.example.pawsome.presentation.authentication.login
 
 
 import android.annotation.SuppressLint
@@ -21,8 +23,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pawsome.data.Validator
+import com.example.pawsome.data.login.LoginUIEvent
+import com.example.pawsome.data.login.LoginUIState
+import com.example.pawsome.data.login.SignInState
 import com.example.pawsome.data.repository.AuthRepo
-import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
 import com.example.pawsome.util.Resource
@@ -39,23 +43,19 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 
 @HiltViewModel
 class LoginViewModel @Inject constructor (
-//    private val navHostController: NavHostController
     private val authRepo: AuthRepo,
-    private val backEndRepo: BackEndRepo,
     private val client: ChatClient
 ) : ViewModel() {
-    private val tag = LoginViewModel::class.simpleName
     var loginUIState = mutableStateOf(LoginUIState())
     var allValidationsPassed = mutableStateOf(false)
-    var loginInProgress = mutableStateOf(false)
+    private var loginInProgress = mutableStateOf(false)
 
-    val _signInState = Channel<SignInState>()
+    private val _signInState = Channel<SignInState>()
     val signInState = _signInState.receiveAsFlow()
 
     val permissions = arrayOf(
@@ -156,7 +156,7 @@ class LoginViewModel @Inject constructor (
         }
     }
 
-    fun loginChatUser(user: User) {
+    private fun loginChatUser(user: User) {
         Log.d("Got User", "Enter loginchat")
 
         val chatUser = io.getstream.chat.android.models.User(
@@ -181,7 +181,7 @@ class LoginViewModel @Inject constructor (
     }
 
 
-    private suspend fun logout() {
+    private fun logout() {
         val firebaseAuth = FirebaseAuth.getInstance()
 
         firebaseAuth.signOut()
@@ -238,10 +238,3 @@ suspend fun getUserFromFireStore(email: String) : User {
 
     return user
 }
-
-
-//class LoginViewModelFactory(private val navHostController: NavHostController): ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        return LoginViewModel(navHostController = navHostController) as T
-//    }
-//}

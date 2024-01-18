@@ -2,20 +2,20 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
-
 
 package com.example.pawsome.data.signup
 
 data class SignupUIState(
-//    var firstName: String = "",
-//    var lastName: String = "",
     var email: String = "",
     var password: String = "",
     var confirmedPassword: String = "",
@@ -23,9 +23,6 @@ data class SignupUIState(
     var image: String = "",
     val membership: String = "normal",
 
-
-//    var firstNameError: Boolean = false,
-//    var lastNameError: Boolean = false,
     var emailError: Boolean = false,
     var passwordError: Boolean = false,
     var confirmedPasswordError: Boolean = false,

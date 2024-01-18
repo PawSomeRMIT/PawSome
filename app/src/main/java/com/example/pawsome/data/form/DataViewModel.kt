@@ -2,14 +2,16 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
-
 
 package com.example.pawsome.data.form
 
@@ -23,10 +25,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
-import com.example.pawsome.model.User
 import com.example.pawsome.model.getLocationFromAddress
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
@@ -60,7 +60,7 @@ class DataViewModel: ViewModel() {
     var formUIState = mutableStateOf(FormUIState())
     var allFormValidatePassed = mutableStateOf(false)
 
-    suspend fun onEvent(e: FormUIEvent) {
+    fun onEvent(e: FormUIEvent) {
         when (e) {
             is FormUIEvent.PetNameChanged -> {
                 formUIState.value = formUIState.value.copy(
@@ -124,12 +124,6 @@ class DataViewModel: ViewModel() {
                 )
                 printState()
             }
-
-//            is FormUIEvent.SaveButtonClicked -> {
-//                saveForm()
-//            }
-
-            else -> {}
         }
 
         vailidateForm()
@@ -163,8 +157,6 @@ class DataViewModel: ViewModel() {
             petDetail.latitude = addressLatLong?.latitude ?: 10.729250
             petDetail.longitude = addressLatLong?.longitude ?: 106.695520
             Log.d("LatLong", "${petDetail.latitude} ${petDetail.longitude}")
-
-//            _isLoading.send(true)
 
             petDetail.img?.let {
 
@@ -201,8 +193,6 @@ class DataViewModel: ViewModel() {
                         }
                     }
             }
-
-//            _isLoading.send(false)
 
         } else {
             Toast.makeText(context, "Invalid address. Try again!", Toast.LENGTH_SHORT).show()
@@ -250,7 +240,7 @@ class DataViewModel: ViewModel() {
     }
 
 
-    fun getAllPets(
+    private fun getAllPets(
         onResult: (List<PetDetail>) -> Unit
     ) {
         // Create a FireStore reference
@@ -275,15 +265,14 @@ class DataViewModel: ViewModel() {
             }
     }
 
-    suspend fun uploadToStorage(uri: Uri, context: Context): Uri? {
+    private suspend fun uploadToStorage(uri: Uri, context: Context): Uri? {
         val storage = Firebase.storage
 
         // Create a storage reference from app
-        var storageRef = storage.reference
+        val storageRef = storage.reference
 
         val unique_image_name = "${UUID.randomUUID()}"
-        var spaceRef: StorageReference
-        spaceRef = storageRef.child("pets/$unique_image_name.jpeg")
+        val spaceRef: StorageReference = storageRef.child("pets/$unique_image_name.jpeg")
 
         val byteArray: ByteArray? = context.contentResolver
             .openInputStream(uri)
@@ -292,7 +281,7 @@ class DataViewModel: ViewModel() {
         var uploadedURI: Uri? = Uri.EMPTY
 
         byteArray?.let{
-            var uploadTask = spaceRef.putBytes(byteArray)
+            val uploadTask = spaceRef.putBytes(byteArray)
             uploadTask
                 .addOnFailureListener {
                     Toast.makeText(

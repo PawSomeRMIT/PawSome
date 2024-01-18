@@ -1,11 +1,23 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.homescreen
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pawsome.data.repository.AuthRepo
-import com.example.pawsome.data.repository.BackEndRepo
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.FilterChipData
 import com.example.pawsome.model.PetDetail
@@ -24,11 +36,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-//@HiltViewModel
 class HomeScreenViewModel (
-//    private val authRepo: AuthRepo,
-//    private val backEndRepo: BackEndRepo,
-//    private val client: ChatClient,
     val currentLocation: LatLng,
     val user: User
 ) : ViewModel(
@@ -52,7 +60,7 @@ class HomeScreenViewModel (
     private val _filterType = MutableStateFlow("All")
     val filterType = _filterType.asStateFlow()
 
-    var petsList = MutableStateFlow(getPetsFromFireStore())
+    private var petsList = MutableStateFlow(getPetsFromFireStore())
     val matchedPets = petsList.asStateFlow()
         .combine(searchText) {pets, text ->
             if (text.isNotBlank()) {
@@ -65,22 +73,6 @@ class HomeScreenViewModel (
             }
         }
         .combine(filterType) {pets, type ->
-            Log.d("TEST", type)
-
-//            if (type.contains("Cat")) {
-//                pets.filter {
-//                    it.petAnimal.contains("Cat")
-//                }
-//            }
-//            else if (type.contains("Dog")) {
-//                pets.filter {
-//                    it.petAnimal.contains("Dog")
-//                }
-//            }
-//            else {
-//                pets
-
-
             if (type == "All") {
                 pets
             }
@@ -105,8 +97,6 @@ class HomeScreenViewModel (
                 db.collection("pets").get().addOnSuccessListener { documents ->
                     viewModelScope.launch{
                         _isLoading.send(true)
-
-                        Log.d("HOMESCREEN", user.toString())
 
                         for (document in documents) {
                             // Calculate distance in meter and convert to km

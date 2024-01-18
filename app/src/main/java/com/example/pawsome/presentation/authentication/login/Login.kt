@@ -2,16 +2,18 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-
-package com.example.pawsome.presentation.authentication
+package com.example.pawsome.presentation.authentication.login
 
 import android.content.pm.PackageManager
 import android.util.Log
@@ -64,7 +66,6 @@ import com.example.pawsome.common.LoadingScreen
 import com.example.pawsome.common.NormalText
 import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.login.LoginUIEvent
-import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
@@ -79,7 +80,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
