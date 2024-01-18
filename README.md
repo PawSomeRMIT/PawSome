@@ -44,7 +44,7 @@ Our application offers a comprehensive suite of features designed to enhance use
 - **Notification**: Stay updated with timely alerts and notifications relevant to your interests and activities.
 - **Membership**: Gain access to exclusive benefits and features by becoming a member.
 - **Authentication**: A secure login system that ensures the safety and privacy of your data.
-- 
+
 ### Extra Features (2/2 completed)
 - **ID card verification**: Additional security layer requiring ID verification for enhanced trust and safety.
 - **Chat**: Communicate directly with service providers or support through the app.
