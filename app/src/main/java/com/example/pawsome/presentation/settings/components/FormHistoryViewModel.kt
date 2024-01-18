@@ -1,16 +1,27 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.settings.components
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.maps.android.ktx.utils.sphericalDistance
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -74,34 +85,5 @@ class FormHistoryViewModel(
         Log.d("PET_LIST", petList.toString())
 
         return petList
-    }
-
-
-    suspend fun getUserFromFireStore(uId: String) : User {
-        val db = FirebaseFirestore.getInstance()
-        var user = User()
-
-        try {
-            db.collection("user").whereEqualTo("userID", uId).get().await().map {
-                val result = User(
-                    userID = it.get("userID").toString(),
-                    username = it.get("username").toString(),
-                    email = it.get("email").toString(),
-                    image = it.get("image").toString(),
-                    membership = it.get("membership").toString(),
-                    chatToken = it.get("chatToken").toString(),
-                    history = it.get("history") as List<Booking>
-                )
-
-                user = result
-            }
-        }
-        catch (e: FirebaseFirestoreException) {
-            Log.d("error", "getDataFromFireStore: $e")
-        }
-
-        Log.d("Fetched", user.toString())
-
-        return user
     }
 }

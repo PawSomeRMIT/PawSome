@@ -2,11 +2,14 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
@@ -37,10 +40,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,8 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pawsome.R
 import com.example.pawsome.common.FilterChipsWithEmoji
 import com.example.pawsome.domain.HomeNavGraph
-import com.example.pawsome.domain.PetsListScreen
-import com.example.pawsome.model.FilterChipData
+import com.example.pawsome.domain.screens.PetsListScreen
 import com.example.pawsome.model.User
 import com.example.pawsome.presentation.homescreen.component.BottomBar
 import com.example.pawsome.presentation.homescreen.component.CenterActionButton
@@ -92,8 +91,7 @@ fun HomeScreen(
     ) {
         HomeNavGraph(
             rootNavController = rootNavController,
-            homeNavController = homeNavController,
-            userID
+            homeNavController = homeNavController
         )
     }
 }
@@ -105,7 +103,6 @@ fun HomeContent(
     navHostController: NavHostController,
     location: LatLng,
     user: User
-//    homeScreenViewModel: HomeScreenViewModel = HomeScreenViewModel(currentLocation = location),
 ) {
     val context = LocalContext.current
 

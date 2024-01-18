@@ -1,8 +1,21 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.settings.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,10 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material.icons.outlined.ManageAccounts
-import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,12 +36,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage

@@ -1,13 +1,24 @@
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
 package com.example.pawsome.presentation.detailscreen
 
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +44,6 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.EventAvailable
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.VerifiedUser
-import androidx.compose.material.icons.outlined.EventAvailable
 import androidx.compose.material.icons.outlined.Pets
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -55,14 +65,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
-import com.example.pawsome.common.TitleText
 import com.example.pawsome.domain.Graph
-import com.example.pawsome.domain.PetsListScreen
+import com.example.pawsome.domain.screens.PetsListScreen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.User
@@ -74,7 +82,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -83,7 +90,6 @@ import kotlinx.coroutines.tasks.await
 fun DetailScreen(
     petDetail: PetDetail,
     owner: User,
-    onVideoCall: () -> Unit,
     onBackClick: () -> Unit,
     navHostController: NavHostController,
     detailScreenViewModel: DetailScreenViewModel = hiltViewModel()
@@ -119,32 +125,6 @@ fun DetailScreen(
 
     // Check data loading
     val loadingState by detailScreenViewModel.isLoading.collectAsState(initial = false)
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            // Permission granted, you can access the location
-        } else {
-            // Permission denied, handle the denial
-        }
-    }
-
-    val checkAndRequestPermission = {
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) -> {
-                // Permissions are granted, proceed with your functionality
-            }
-
-            else -> {
-                // Permissions are not granted, request them
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-        }
-    }
 
     if (loadingState) {
         Column (
@@ -220,7 +200,6 @@ fun DetailScreen(
                             Spacer(modifier = Modifier.height(10.dp))
 
                             Row (
-//                                modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Start
                             ) {

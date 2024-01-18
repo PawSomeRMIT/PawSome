@@ -13,15 +13,12 @@
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-package com.example.pawsome.model.api_model
+package com.example.pawsome.domain
 
-data class CheckLivenessObject(
-    val face_swapping: Boolean,
-    val face_swapping_prob: Double,
-    val fake_liveness: Boolean,
-    val fake_liveness_prob: Double,
-    val fake_print_photo: Boolean,
-    val fake_print_photo_prob: Double,
-    val liveness: String,
-    val liveness_msg: String
-)
+object Graph {
+    const val ROOT = "root_graph"
+    const val HOME = "home_graph"
+    const val CHAT = "chat_graph"
+    const val PETSLIST = "petList_graph"
+    const val SETTING = "setting_graph"
+}

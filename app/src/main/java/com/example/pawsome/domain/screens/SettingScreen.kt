@@ -13,15 +13,17 @@
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
-package com.example.pawsome.model.api_model
+package com.example.pawsome.domain.screens
 
-data class CheckLivenessObject(
-    val face_swapping: Boolean,
-    val face_swapping_prob: Double,
-    val fake_liveness: Boolean,
-    val fake_liveness_prob: Double,
-    val fake_print_photo: Boolean,
-    val fake_print_photo_prob: Double,
-    val liveness: String,
-    val liveness_msg: String
-)
+sealed class SettingScreen(val route: String) {
+    object SettingMenu: SettingScreen(route = "SettingMenu")
+
+    object BookingHistory: SettingScreen(route = "BookingHistory")
+    object MyPetList: SettingScreen(
+        route = "MyPetList"
+    )
+
+    object EditPet: SettingScreen(
+        route = "EditPet"
+    )
+}
