@@ -129,7 +129,7 @@ fun SettingScreen(
             .background(Color.White)
             .padding(10.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
             Profile(
                 userData = userData
             )

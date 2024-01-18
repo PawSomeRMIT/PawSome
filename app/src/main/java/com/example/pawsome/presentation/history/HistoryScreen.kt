@@ -21,13 +21,17 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.ContactSupport
@@ -106,7 +110,7 @@ fun HistoryScreen(
                 Row (
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
                         onClick = {
@@ -121,18 +125,14 @@ fun HistoryScreen(
                         )
                     }
 
-                    Column (
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
                         Text(
                             text = "Booking History",
+                            modifier = Modifier.padding(top=10.dp),
                             fontWeight = FontWeight.Bold,
                             fontSize = 25.sp,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Left
                         )
-                    }
+                    Spacer(modifier = Modifier.width(400.dp))
                 }
             }
         ) { paddingValues ->
@@ -143,12 +143,18 @@ fun HistoryScreen(
             ) {
                 if (bookings.isEmpty()) {
                     item {
-                        Text(
-                            text = "Do not have any booking yet",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                        )
+                        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+                            Spacer(modifier = Modifier.height(100.dp))
+                            Text(
+                                text = "You have no booking yet 😄",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentWidth(Alignment.CenterHorizontally),
+                                fontSize = 22.sp,
+                            )
+                        }
+
+
                     }
                 }
                 else {
