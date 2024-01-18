@@ -21,19 +21,19 @@ data class ValidationResult(
 object FormValidator {
     fun validatePetName(petName: String) : ValidationResult {
         return ValidationResult(
-            (!petName.isNullOrEmpty())
+            (petName.isNotEmpty())
         )
     }
 
     fun validatePetBreed(petBreed: String) : ValidationResult {
         return ValidationResult(
-            (!petBreed.isNullOrEmpty())
+            (petBreed.isNotEmpty())
         )
     }
 
     fun validatePetGender(petGender: String) : ValidationResult {
         return ValidationResult(
-            (!petGender.isNullOrEmpty() && (petGender.lowercase() == "male" ||
+            (petGender.isNotEmpty() && (petGender.lowercase() == "male" ||
                                             petGender.lowercase() == "female" ||
                                             petGender.lowercase() == "m" ||
                                             petGender.lowercase() == "f"))
@@ -42,39 +42,44 @@ object FormValidator {
 
     fun validatePetColor(petColor: String) : ValidationResult {
         return ValidationResult(
-            (!petColor.isNullOrEmpty())
+            (petColor.isNotEmpty())
         )
     }
 
     fun validatePetType(petType: String) : ValidationResult {
         return ValidationResult(
-            (!petType.isNullOrEmpty() && (petType.lowercase() == "dog" ||
+            (petType.isNotEmpty() && (petType.lowercase() == "dog" ||
                                             petType.lowercase() == "cat"))
         )
     }
 
     fun validatePetAge(petAge: String) : ValidationResult {
-        return ValidationResult(
-            (!petAge.isNullOrEmpty() && petAge.toInt() <= 15)
-        )
+        return try {ValidationResult(
+
+            (petAge.isNotEmpty() && petAge.toInt() <= 15)
+        )} catch (e:Exception){
+            ValidationResult(false)
+        }
     }
 
 
     fun validatePetLocation(petLocation: String) : ValidationResult {
         return ValidationResult(
-            (!petLocation.isNullOrEmpty())
+            (petLocation.isNotEmpty())
         )
     }
 
     fun validatePetDescription(petDescription: String) : ValidationResult {
         return ValidationResult(
-            (!petDescription.isNullOrEmpty())
+            (petDescription.isNotEmpty())
         )
     }
 
     fun validateBookingPrice(bookingPrice: String) : ValidationResult {
-        return ValidationResult(
-            (!bookingPrice.isNullOrEmpty() && bookingPrice.toFloat() < 100)
-        )
+        return try { ValidationResult(
+            (bookingPrice.isNotEmpty() && bookingPrice.toFloat() < 100)
+        )} catch (e: Exception) {
+            ValidationResult(false)
+        }
     }
 }

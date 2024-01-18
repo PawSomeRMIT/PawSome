@@ -15,6 +15,7 @@
 
 package com.example.pawsome.presentation.authentication.login
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -115,18 +116,44 @@ fun Login(
 
     val launchMultiplePermissions = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) {permissionMap ->
-        val areGranted = permissionMap.values.reduce{ acc, next -> acc && next}
+    ) { permissions ->
+        var allPermissionsGranted = true
+        permissions.entries.forEach { (permission, isGranted) ->
+            if (!isGranted) {
+                allPermissionsGranted = false
+                Log.d("Permissions", "Permission Denied: $permission")
+            }
+        }
 
-        if (areGranted) {
+        if (allPermissionsGranted) {
             loginViewModel.locationRequired = true
-
             Log.d("KEOY", "Start call LocationUpdate")
             loginViewModel.startLocationUpdate()
-            Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "All Permissions Granted", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "One or More Permissions Denied", Toast.LENGTH_SHORT).show()
         }
-        else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+    }
+
+// When you need to request the permissions
+    val requiredPermissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_MEDIA_IMAGES
+    )
+
+    var allPermissionsGranted by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        allPermissionsGranted = requiredPermissions.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (!allPermissionsGranted) {
+            launchMultiplePermissions.launch(requiredPermissions)
         }
     }
 

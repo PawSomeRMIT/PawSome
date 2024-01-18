@@ -91,7 +91,7 @@ fun HistoryScreen(
     val loadingState by historyViewModel.isLoading.collectAsState(initial = false)
 
     if (loadingState) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -99,24 +99,22 @@ fun HistoryScreen(
                 color = colorResource(id = R.color.yellow)
             )
         }
-    }
-    else {
+    } else {
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(bottom = 30.dp)
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                Row (
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
                         onClick = {
-                             navController.popBackStack()
-                        }
-                        , modifier = Modifier.padding(top = 10.dp, start = 0.dp)
+                            navController.popBackStack()
+                        }, modifier = Modifier.padding(top = 10.dp, start = 0.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBackIosNew,
@@ -125,39 +123,37 @@ fun HistoryScreen(
                         )
                     }
 
-                        Text(
-                            text = "Booking History",
-                            modifier = Modifier.padding(top=10.dp),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 25.sp,
-                            textAlign = TextAlign.Left
-                        )
+                    Text(
+                        text = "Booking History",
+                        modifier = Modifier.padding(top = 10.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        textAlign = TextAlign.Left
+                    )
                     Spacer(modifier = Modifier.width(400.dp))
                 }
             }
         ) { paddingValues ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                if (bookings.isEmpty()) {
-                    item {
-                        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
-                            Spacer(modifier = Modifier.height(100.dp))
-                            Text(
-                                text = "You have no booking yet 😄",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentWidth(Alignment.CenterHorizontally),
-                                fontSize = 22.sp,
-                            )
-                        }
+            if (bookings.isEmpty()) {
 
-
-                    }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "You have no booking yet 😄",
+                        fontSize = 22.sp,
+                    )
                 }
-                else {
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+
+
                     items(bookings.size) { index ->
                         val booking = bookings[index]
                         Card(
@@ -176,7 +172,7 @@ fun HistoryScreen(
                                     .padding(vertical = 10.dp, horizontal = 20.dp),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.Start
-                            ){
+                            ) {
                                 Text(
                                     text = "Customer Verified Name: ${booking.customerCardIdName}",
                                     fontWeight = FontWeight.Bold,
@@ -186,7 +182,7 @@ fun HistoryScreen(
                                         .padding(8.dp)
                                 )
                                 Text(
-                                    text ="Customer Identify Card: ${booking.customerCardIdNumber}",
+                                    text = "Customer Identify Card: ${booking.customerCardIdNumber}",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp,
                                     modifier = Modifier
@@ -218,7 +214,7 @@ fun HistoryScreen(
                                         .padding(8.dp)
                                 )
 
-                                Row (
+                                Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.End,
                                     verticalAlignment = Alignment.CenterVertically
@@ -227,14 +223,19 @@ fun HistoryScreen(
                                         text = "Contact Owner",
                                         color = colorResource(id = R.color.yellow),
                                         icon = Icons.Outlined.ContactSupport,
-                                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 20.dp),
+                                        modifier = Modifier.padding(
+                                            vertical = 8.dp,
+                                            horizontal = 20.dp
+                                        ),
                                         onClick = {
                                             scope.launch {
                                                 val db = FirebaseFirestore.getInstance()
                                                 var owner = User()
                                                 var user = User()
 
-                                                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+                                                val userId =
+                                                    FirebaseAuth.getInstance().currentUser?.uid
+                                                        ?: ""
 
                                                 Log.d("HISTORYSCREEN", booking.petDetail.ownerId)
 
@@ -249,7 +250,8 @@ fun HistoryScreen(
                                                         username = it.get("username").toString(),
                                                         email = it.get("email").toString(),
                                                         image = it.get("image").toString(),
-                                                        membership = it.get("membership").toString(),
+                                                        membership = it.get("membership")
+                                                            .toString(),
                                                         chatToken = it.get("chatToken").toString(),
                                                         history = it.get("history") as List<Booking>
                                                     )
@@ -270,7 +272,8 @@ fun HistoryScreen(
                                                         username = it.get("username").toString(),
                                                         email = it.get("email").toString(),
                                                         image = it.get("image").toString(),
-                                                        membership = it.get("membership").toString(),
+                                                        membership = it.get("membership")
+                                                            .toString(),
                                                         chatToken = it.get("chatToken").toString(),
                                                         history = it.get("history") as List<Booking>
                                                     )
@@ -280,11 +283,17 @@ fun HistoryScreen(
 
                                                 Log.d("HISTORYSCREEN", owner.toString())
 
-                                                val channelID = historyViewModel.createChannel(owner.email.split("@")[0], user.email.split("@")[0])
+                                                val channelID = historyViewModel.createChannel(
+                                                    owner.email.split("@")[0],
+                                                    user.email.split("@")[0]
+                                                )
 
                                                 Log.d("HISTORYSCREEN", channelID)
 
-                                                navController.currentBackStackEntry?.savedStateHandle?.set("channelId", channelID)
+                                                navController.currentBackStackEntry?.savedStateHandle?.set(
+                                                    "channelId",
+                                                    channelID
+                                                )
 
                                                 navController.navigate(Graph.CHAT)
                                             }
@@ -292,13 +301,12 @@ fun HistoryScreen(
 
                                     )
                                 }
-
-
                             }
                         }
                     }
-                }
 
+
+                }
             }
         }
     }

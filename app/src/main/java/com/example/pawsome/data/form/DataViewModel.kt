@@ -15,14 +15,20 @@
 
 package com.example.pawsome.data.form
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.example.pawsome.R
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.getLocationFromAddress
@@ -37,7 +43,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
-class DataViewModel: ViewModel() {
+class DataViewModel : ViewModel() {
     // Temp fetching data
     private val tempFetchData = mutableStateOf(listOf<PetDetail>())
 
@@ -134,7 +140,11 @@ class DataViewModel: ViewModel() {
         Log.d(tag, formUIState.value.toString())
     }
 
-    suspend fun saveForm(petDetail: PetDetail, context: Context, navHostController: NavHostController) {
+    suspend fun saveForm(
+        petDetail: PetDetail,
+        context: Context,
+        navHostController: NavHostController
+    ) {
         // Create a storage reference
         val storage = FirebaseStorage.getInstance().reference.child("pets/${UUID.randomUUID()}.jpg")
 
@@ -161,7 +171,7 @@ class DataViewModel: ViewModel() {
             petDetail.img?.let {
 
                 // Store object image to Storage and get its public url
-                val uploadURI = uploadToStorage(Uri.parse(it), context= context)
+                val uploadURI = uploadToStorage(Uri.parse(it), context = context)
                 petDetail.img = uploadURI.toString()
 
                 storage.putFile(Uri.parse(it))
@@ -180,9 +190,12 @@ class DataViewModel: ViewModel() {
                                         }
 
                                         Log.d("Firestore", "Inside_OnSuccessListener")
-                                        Log.d("Firestore", "Form ${petDetail.id} is saved successfully")
+                                        Log.d(
+                                            "Firestore",
+                                            "Form ${petDetail.id} is saved successfully"
+                                        )
                                     }
-                                    .addOnFailureListener{
+                                    .addOnFailureListener {
                                         Log.d("Firestore", "Inside_OnFailureListener")
                                         Log.d("Firestore", "Exception= ${it.message}")
                                         Log.d("Firestore", "Exception= ${it.localizedMessage}")
@@ -248,7 +261,7 @@ class DataViewModel: ViewModel() {
         val tag = "Firestore"
 
         db.collection("forms").get()
-            .addOnSuccessListener {snapshot ->
+            .addOnSuccessListener { snapshot ->
                 val petList = mutableListOf<PetDetail>()
 
                 for (document in snapshot) {
@@ -259,61 +272,86 @@ class DataViewModel: ViewModel() {
                 onResult(petList)
                 Log.e(tag, "Get all event data success")
             }
-            .addOnFailureListener {e ->
+            .addOnFailureListener { e ->
                 onResult(emptyList())
                 Log.e(tag, "Failed to get event data: ${e.message}")
             }
     }
 
     private suspend fun uploadToStorage(uri: Uri, context: Context): Uri? {
-        val storage = Firebase.storage
+        try {
+            val storage = Firebase.storage
 
-        // Create a storage reference from app
-        val storageRef = storage.reference
+            // Create a storage reference from app
+            val storageRef = storage.reference
 
-        val unique_image_name = "${UUID.randomUUID()}"
-        val spaceRef: StorageReference = storageRef.child("pets/$unique_image_name.jpeg")
+            val unique_image_name = "${UUID.randomUUID()}"
+            val spaceRef: StorageReference = storageRef.child("pets/$unique_image_name.jpeg")
 
-        val byteArray: ByteArray? = context.contentResolver
-            .openInputStream(uri)
-            ?.use { it.readBytes() }
+            val byteArray: ByteArray? = context.contentResolver
+                .openInputStream(uri)
+                ?.use { it.readBytes() }
 
-        var uploadedURI: Uri? = Uri.EMPTY
+            var uploadedURI: Uri? = Uri.EMPTY
 
-        byteArray?.let{
-            val uploadTask = spaceRef.putBytes(byteArray)
-            uploadTask
+            byteArray?.let {
+                val uploadTask = spaceRef.putBytes(byteArray)
+                uploadTask
+                    .addOnFailureListener {
+                        Toast.makeText(
+                            context,
+                            "upload failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnSuccessListener { taskSnapshot ->
+
+                        sendUploadSuccessNotification(context)
+                    }.await()
+            }
+
+            spaceRef.downloadUrl
                 .addOnFailureListener {
                     Toast.makeText(
                         context,
-                        "upload failed",
+                        "Failed to get url",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                .addOnSuccessListener { taskSnapshot ->
-                    Toast.makeText(
-                        context,
-                        "upload successed",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }.await()
+                .addOnSuccessListener {
+                    uploadedURI = it
+                    println("1: " + uploadedURI.toString())
+                }
+                .await()
+            println("23: " + uploadedURI.toString())
+
+            return uploadedURI
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    private fun sendUploadSuccessNotification(context: Context) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // Create a notification channel for Android 8.0 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "upload_channel",
+                "Upload Notifications",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
         }
 
-        spaceRef.downloadUrl
-            .addOnFailureListener {
-                Toast.makeText(
-                    context,
-                    "Failed to get url",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            .addOnSuccessListener {
-                uploadedURI = it
-                println("1: " + uploadedURI.toString())
-            }
-            .await()
-        println("23: " + uploadedURI.toString())
-        return uploadedURI
+        val notification = NotificationCompat.Builder(context, "upload_channel")
+            .setContentTitle("Upload Successful")
+            .setContentText("Your file has been uploaded successfully.")
+            .setSmallIcon(R.drawable.background_11) // Replace with your own drawable
+            .build()
+
+        notificationManager.notify(0, notification)
     }
 
     private fun vailidateForm() {
@@ -386,9 +424,9 @@ class DataViewModel: ViewModel() {
 
         allFormValidatePassed.value =
             petNameResult.status && petAgeResult.status &&
-            petBreedResult.status && petColorResult.status &&
-            petLocationResult.status && petDescriptionResult.status &&
-            petGenderResult.status && petTypeResult.status &&
-            bookingPriceResult.status
+                    petBreedResult.status && petColorResult.status &&
+                    petLocationResult.status && petDescriptionResult.status &&
+                    petGenderResult.status && petTypeResult.status &&
+                    bookingPriceResult.status
     }
 }
