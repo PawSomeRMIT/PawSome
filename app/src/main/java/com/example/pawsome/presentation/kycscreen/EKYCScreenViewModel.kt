@@ -1,4 +1,19 @@
-package com.example.pawsome.presentation.kycscreen.upload
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
+package com.example.pawsome.presentation.kycscreen
 
 import android.content.Context
 import android.net.Uri
@@ -19,7 +34,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import com.stripe.android.paymentsheet.PaymentSheetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -106,7 +120,6 @@ class EKYCScreenViewModel @Inject constructor(
 
             Log.d("EKYC", frontHash.hash)
             Log.d("EKYC", frontHash.tokenId)
-//            Log.d("EKYC", resultBack.`object`.hash)
 
             // Announce done uploading
             Toast.makeText(context, "Upload Images Successfully!", Toast.LENGTH_SHORT).show()
@@ -114,32 +127,35 @@ class EKYCScreenViewModel @Inject constructor(
             val resultFront = checkLiveness(frontHash.hash)
 
             if (resultFront) {
-//                val resultBack = checkLiveness(backHash)
-//
-//                if (resultBack) {
-//                    Toast.makeText(context, "Successfully Verify Your ID!", Toast.LENGTH_SHORT).show()
-//
-//                    _isLoading.send(false)
-//                }
+                val resultBack = checkLiveness(backHash)
 
-                val requestBody = ExtractInfoBody(
-                    img_front = frontHash.hash,
-                    client_session = "ANDROID_nokia7.2_28_Simulator_2.4.2_08d2d8686ee5fa0e_1581910116532",
-                    type = 2,
-                    validate_postcode = true,
-                    token = frontHash.tokenId
+                if (resultBack) {
+                    Toast.makeText(context, "Successfully Verify Your ID!", Toast.LENGTH_SHORT).show()
+
+                    val requestBody = ExtractInfoBody(
+                        img_front = frontHash.hash,
+                        client_session = "ANDROID_nokia7.2_28_Simulator_2.4.2_08d2d8686ee5fa0e_1581910116532",
+                        type = 2,
+                        validate_postcode = true,
+                        token = frontHash.tokenId
                     )
 
-                val extractInfoResult = ekycRepo.extract_front_info(requestBody)
+                    val extractInfoResult = ekycRepo.extract_front_info(requestBody)
 
-                _idNumber.value = extractInfoResult.`object`.id
-                _idName.value = extractInfoResult.`object`.name
+                    _idNumber.value = extractInfoResult.`object`.id
+                    _idName.value = extractInfoResult.`object`.name
 
-                Log.d("EKYC", extractInfoResult.`object`.toString())
+                    Log.d("EKYC", extractInfoResult.`object`.toString())
 
-                isVeificationCompleted.value = true
+                    isVeificationCompleted.value = true
 
-                _isLoading.send(false)
+                    _isLoading.send(false)
+                }
+                else {
+                    Toast.makeText(context, "Failed to Verify Your Back Side Card!", Toast.LENGTH_SHORT).show()
+
+                    _isLoading.send(false)
+                }
 
             }
             else {
@@ -151,7 +167,7 @@ class EKYCScreenViewModel @Inject constructor(
         }
     }
 
-    suspend fun checkLiveness(image_hash: String): Boolean {
+    private suspend fun checkLiveness(image_hash: String): Boolean {
         Log.d("EKYC", "Entered")
 
         val requestBody = CheckLivenessBody(img = image_hash, client_session = "ANDROID_nokia7.2_28_Simulator_2.4.2_08d2d8686ee5fa0e_1581910116532")

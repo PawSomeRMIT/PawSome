@@ -11,7 +11,7 @@
  */
 
 
-package com.example.pawsome.presentation.add_form
+package com.example.pawsome.presentation.form
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -40,7 +40,6 @@ import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -77,16 +76,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.text.DateFormatSymbols
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 
 var imageUri: Uri? = null
 
 @SuppressLint("SimpleDateFormat")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormScreen(
     petDetail: PetDetail? = null,
@@ -104,15 +98,11 @@ fun FormScreen(
     var petDescription by rememberSaveable { mutableStateOf("") }
     var petlocation by rememberSaveable { mutableStateOf("") }
     var bookingPrice by rememberSaveable { mutableStateOf("") }
-    var isExpanded by remember { mutableStateOf(false) }
 
     // Remember scroll state
     val scrollState = rememberScrollState()
 
     val scope = rememberCoroutineScope()
-
-    // Location
-    // 1. Current location -> Geocode (Long, Lat)
 
     // Get user details
     val auth = FirebaseAuth.getInstance()
@@ -162,6 +152,7 @@ fun FormScreen(
                 IconButton(onClick = onBackClick) {
                     Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Back", tint = Color.Black)
                 }
+
                 TitleText(value = if (petDetail != null) "Update pet detail" else "Add new pet")
             }
 
@@ -371,11 +362,6 @@ fun FormScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            val sdf = SimpleDateFormat("dd-MM-yyyy")
-            val currentDate = sdf.format(Date())
-
-//        val addressLatLong = getLocationFromAddress(petlocation, LocalContext.current)
-
             val context = LocalContext.current
 
             val newPetDetail: PetDetail
@@ -451,13 +437,6 @@ fun ImagePicker(maxSelection: Int = 1) {
         onResult = { uri -> selectedImage = uri }
     )
 
-//    val multipleImagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickMultipleVisualMedia(
-//            maxItems = if (maxSelection > 1) maxSelection else 2
-//        ),
-//        onResult = { uris -> selectedImages = uris }
-//    )
-
     fun launchPhotoPicker() {
         singleImagePickerLauncher.launch(
             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -520,19 +499,4 @@ fun ImageLayoutView(selectedImages: Uri?) {
             .width(380.dp)
             .clip(RoundedCornerShape(20.dp))
     )
-}
-
-fun Int.toMonthName(): String {
-    return DateFormatSymbols().months[this]
-}
-
-fun Date.toFormattedString(): String {
-    val simpleDateFormat = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
-    return simpleDateFormat.format(this)
-}
-
-
-fun formatDate(timeInMillis: Long): String {
-    val formatter = SimpleDateFormat("LLLL dd, yyyy", Locale.getDefault())
-    return formatter.format(Date(timeInMillis))
 }

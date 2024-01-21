@@ -2,17 +2,20 @@
     RMIT University Vietnam
     Course: COSC2657 Android Development
     Semester: 2023C
-    Assessment: Assignment 2
-    Author: Lai Nghiep Tri
-    ID: s3799602
-    Created  date: 19/12/2023
-    Last modified: 20/12/2023
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
     Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
  */
 
+package com.example.pawsome.presentation.authentication.login
 
-package com.example.pawsome.presentation.authentication
-
+import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -64,7 +67,6 @@ import com.example.pawsome.common.LoadingScreen
 import com.example.pawsome.common.NormalText
 import com.example.pawsome.common.TitleText
 import com.example.pawsome.data.login.LoginUIEvent
-import com.example.pawsome.data.login.LoginViewModel
 import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
@@ -79,7 +81,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -115,18 +116,44 @@ fun Login(
 
     val launchMultiplePermissions = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) {permissionMap ->
-        val areGranted = permissionMap.values.reduce{ acc, next -> acc && next}
+    ) { permissions ->
+        var allPermissionsGranted = true
+        permissions.entries.forEach { (permission, isGranted) ->
+            if (!isGranted) {
+                allPermissionsGranted = false
+                Log.d("Permissions", "Permission Denied: $permission")
+            }
+        }
 
-        if (areGranted) {
+        if (allPermissionsGranted) {
             loginViewModel.locationRequired = true
-
             Log.d("KEOY", "Start call LocationUpdate")
             loginViewModel.startLocationUpdate()
-            Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "All Permissions Granted", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "One or More Permissions Denied", Toast.LENGTH_SHORT).show()
         }
-        else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+    }
+
+// When you need to request the permissions
+    val requiredPermissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+        Manifest.permission.POST_NOTIFICATIONS,
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_MEDIA_IMAGES
+    )
+
+    var allPermissionsGranted by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        allPermissionsGranted = requiredPermissions.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (!allPermissionsGranted) {
+            launchMultiplePermissions.launch(requiredPermissions)
         }
     }
 

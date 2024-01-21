@@ -1,4 +1,19 @@
-package drawable
+/*
+    RMIT University Vietnam
+    Course: COSC2657 Android Development
+    Semester: 2023C
+    Assessment: Assignment 3
+    Author:
+        Thieu Tran Tri Thuc - s3870730
+        Lai Nghiep Tri - s3799602
+        Bui Minh Nhat - s3878174
+        Phan Bao Kim Ngan - s3914582
+    Created  date: 1/1/2024
+    Last modified: 19/1/2024
+    Acknowledgement: Figma UI, Android Developer documentation, Firebase Documentation, etc
+ */
+
+package com.example.pawsome.presentation.kycscreen
 
 import android.net.Uri
 import android.util.Log
@@ -8,7 +23,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,17 +72,13 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.pawsome.R
 import com.example.pawsome.common.ColorButton
-import com.example.pawsome.domain.ChatScreen
 import com.example.pawsome.domain.Graph
-import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.model.PetDetail
-import com.example.pawsome.presentation.kycscreen.upload.EKYCScreenViewModel
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.rememberPaymentSheet
 import kotlinx.coroutines.launch
 
-//import com.example.pawsome.viewmodel.CameraViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
