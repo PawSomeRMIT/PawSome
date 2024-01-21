@@ -89,7 +89,7 @@ Application demo video can be found [here](https://rmiteduau-my.sharepoint.com/:
 | Team Member  | Main Features                                                                                                       | Extra Features                     | Contribution |
 |--------------|---------------------------------------------------------------------------------------------------------------------|------------------------------------|--------------|
 | Nhat Bui     | Pet Detail, About Us, Notification                                                                                  |                                    | 25%          |
-| Thuc Thieu   | Pet List(distance sort, search, filter type)\n, Booking feature, Navigation graphs, Backend API, Payment, Membership| ID card verification, Chat Feature | 25%          |
+| Thuc Thieu   | Pet List(distance sort, search, filter type), Booking feature, Navigation graphs, Backend API, Payment, Membership| ID card verification, Chat Feature | 25%          |
 | Tri Lai      | Authentication, Setting UI, Adding pet, My Pets(showing, edit)                                                      |                                    | 25%          |
 | Ngan Phan    | Booking History                                                                                                     |                                    | 25%          |
 
