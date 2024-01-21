@@ -29,14 +29,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +49,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.pawsome.common.AlertDialogBox
+import com.example.pawsome.data.form.DataViewModel
 import com.example.pawsome.domain.screens.SettingScreen
 import com.example.pawsome.presentation.homescreen.component.HorizontalHomeEventCard
 import kotlinx.coroutines.launch
@@ -51,18 +58,39 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyPetListScreen(
     navHostController: NavHostController,
-    user: com.example.pawsome.model.User
+    user: com.example.pawsome.model.User,
+    dataViewModel: DataViewModel = viewModel()
 ) {
     val formHistoryViewModel: FormHistoryViewModel = viewModel(factory = viewModelFactory {
         FormHistoryViewModel(user = user)
     })
 
+    val context = LocalContext.current
+
     // Check data loading
     val loadingState by formHistoryViewModel.isLoading.collectAsState(initial = false)
 
     val myPetList by formHistoryViewModel.petsList.collectAsState()
+    var deletedPetID: String? = null
 
     val scope = rememberCoroutineScope()
+
+    val isDialogOpen = remember { mutableStateOf(false) }
+
+    when {
+        isDialogOpen.value -> {
+            AlertDialogBox(
+                onDismissRequest = { isDialogOpen.value = false },
+                onConfirmation = {
+                    isDialogOpen.value = false
+                    dataViewModel.deletePetDetail(deletedPetID, context, navHostController)
+                },
+                dialogTitle = "Delete confirmation",
+                dialogText = "This form cannot be restored once it is deleted.",
+                dialogIcon = Icons.Outlined.Warning
+            )
+        }
+    }
 
     if (loadingState) {
         Text(text = "Loading data...")
@@ -84,7 +112,7 @@ fun MyPetListScreen(
                     },
                     modifier = Modifier.padding(top = 10.dp, start = 0.dp)
                 ) {
-                    androidx.compose.material.Icon(
+                    Icon(
                         imageVector = Icons.Filled.ArrowBackIosNew,
                         contentDescription = "Back",
                         tint = Color.Black
@@ -118,8 +146,12 @@ fun MyPetListScreen(
 
                                     navHostController.navigate(SettingScreen.EditPet.route)
                                 }
-                            }
-                        )
+                            },
+                            onDeleteButtonClick = {
+                                deletedPetID = pet.id
+                                isDialogOpen.value = true
+                            },
+                    )
 
                         // Add spacing at last form displayed
                         if (pet == myPetList[myPetList.size - 1])

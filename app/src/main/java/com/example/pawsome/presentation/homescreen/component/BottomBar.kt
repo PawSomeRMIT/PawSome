@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomAppBar
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChatBubble
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -124,7 +122,7 @@ fun BottomBar(navController: NavController) {
             ) {
                 Icon(
                     Icons.Outlined.Info,
-                    contentDescription = "Booking History",
+                    contentDescription = "About us",
                     tint = colorResource(
                         id = if (currentDestination?.route == BottomBarScreen.AboutUs.route) R.color.yellow
                         else R.color.gray

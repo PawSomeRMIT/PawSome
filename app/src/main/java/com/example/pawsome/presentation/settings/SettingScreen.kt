@@ -1,8 +1,8 @@
 package com.example.pawsome.presentation.settings
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,18 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.ManageAccounts
 import androidx.compose.material.icons.outlined.ManageHistory
 import androidx.compose.material.icons.outlined.Pets
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,10 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.pawsome.R
@@ -46,9 +40,9 @@ import com.example.pawsome.domain.screens.Screen
 import com.example.pawsome.domain.screens.SettingScreen
 import com.example.pawsome.model.Booking
 import com.example.pawsome.model.User
-import com.example.pawsome.presentation.authentication.components.ButtonComponent
 import com.example.pawsome.presentation.authentication.login.LoginViewModel
 import com.example.pawsome.presentation.settings.components.Profile
+import com.example.pawsome.presentation.settings.components.SquareCard
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -63,7 +57,7 @@ fun SettingScreen(
     navController: NavHostController,
     rootNavController: NavHostController,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    settingViewModel: SettingViewModel = hiltViewModel()
+    settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val auth = FirebaseAuth.getInstance()
     val userID = auth.currentUser?.uid
@@ -127,12 +121,19 @@ fun SettingScreen(
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .background(Color.White)
-            .padding(10.dp)
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.setting_background),
+            contentDescription = "Setting background"
+        )
+
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
-            Profile(
-                userData = userData
-            )
+
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp))
+
+            Profile(userData = userData)
 
             Spacer(modifier = Modifier
                 .fillMaxWidth()
@@ -140,119 +141,60 @@ fun SettingScreen(
 
             if (userData.membership == "normal") {
                 Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            val currentConfig = customerConfig
-                            val currentClientSecret = paymentIntentClientSecret
-
-                            if (currentConfig != null && currentClientSecret != null) {
-                                presentPaymentSheet(
-                                    paymentSheet,
-                                    currentConfig,
-                                    currentClientSecret
-                                )
-                            }
-                        },
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.ManageAccounts,
-                        contentDescription = "Icon description",
-                        modifier = Modifier.size(40.dp),
-                        tint = colorResource(id = R.color.gray_800)
-                    )
+                    // Booking history
+                    SquareCard(name = "Booking History", icon = Icons.Outlined.ManageHistory) {
+                        navController.navigate(SettingScreen.BookingHistory.route)
+                    }
 
-                    Spacer(modifier = Modifier.width(40.dp))
+                    // Upgrade account
+                    SquareCard(name = "Upgrade Account", icon = Icons.Outlined.ManageAccounts) {
+                        val currentConfig = customerConfig
+                        val currentClientSecret = paymentIntentClientSecret
 
-                    Text(
-                        text = "Upgrade Account",
-                        color = colorResource(id = R.color.gray_800),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 25.sp,
-                    )
+                        if (currentConfig != null && currentClientSecret != null) {
+                            presentPaymentSheet(
+                                paymentSheet,
+                                currentConfig,
+                                currentClientSecret
+                            )
+                        }
+                    }
+                }
+            } else {
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                )  {
+                    // Booking history
+                    SquareCard(name = "Booking History", icon = Icons.Outlined.ManageHistory) {
+                        navController.navigate(SettingScreen.BookingHistory.route)
+                    }
+                }
+            }
+
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // View my pets
+                SquareCard(name = "View my pets", icon = Icons.Outlined.Pets) {
+                    navController.currentBackStackEntry?.savedStateHandle?.set("user", userData)
+                    navController.navigate(SettingScreen.MyPetList.route)
                 }
 
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp))
-            }
-
-            // About US
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(SettingScreen.BookingHistory.route)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.ManageHistory,
-                    contentDescription = "Icon description",
-                    modifier = Modifier.size(40.dp),
-                    tint = colorResource(id = R.color.gray_800)
-                )
-
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = "Booking History",
-                    color = colorResource(id = R.color.gray_800),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 25.sp,
-                )
-            }
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp))
-
-            // Uploaded pets
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "user",
-                            userData
-                        )
-
-                        navController.navigate(SettingScreen.MyPetList.route)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Pets,
-                    contentDescription = "Icon description",
-                    modifier = Modifier.size(40.dp),
-                    tint = colorResource(id = R.color.gray_800)
-                )
-
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = "My Pets",
-                    color = colorResource(id = R.color.gray_800),
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 25.sp,
-                )
-            }
-
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp))
-
-            ButtonComponent(
-                value = "Sign out",
-                modifier = Modifier
-                    .height(48.dp)
-                    .padding(horizontal = 40.dp),
-                onButtonClicked = {
+                // Sign out button
+                SquareCard(name = "Log out",
+                    icon = Icons.Outlined.Logout,
+                    iconColor = R.color.red,
+                    textColor = R.color.red,
+                    color = R.color.white) {
                     scope.launch {
                         // Sign out the current user
                         loginViewModel.onEvent(LoginUIEvent.LogoutButtonClicked)
@@ -264,11 +206,16 @@ fun SettingScreen(
                             }
                         }
                     }
-                },
-                isEnabled = true
-            )
+                }
+            }
+
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(120.dp))
         }
     }
+
+
 
     LaunchedEffect(key1 = settingViewModel.isPaymentCompleted.value) {
         scope.launch {

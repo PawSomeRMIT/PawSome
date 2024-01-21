@@ -25,6 +25,7 @@ import com.example.pawsome.domain.graph.settingNavGraph
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.presentation.aboutus.AboutUsScreen
 import com.example.pawsome.presentation.form.FormScreen
+import com.example.pawsome.presentation.success.SuccessScreen
 
 @Composable
 fun HomeNavGraph(
@@ -51,6 +52,21 @@ fun HomeNavGraph(
                 navHostController = homeNavController,
                 onBackClick = {
                     homeNavController.popBackStack()
+                }
+            )
+        }
+
+        composable(BottomBarScreen.SuccessScreen.route) {
+            SuccessScreen(
+                action = "Upload",
+                buttonTitle = "Back",
+                buttonAction = {
+                    // Back to home screen
+                    homeNavController.navigate(BottomBarScreen.Home.route) {
+                        popUpTo(BottomBarScreen.Home.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

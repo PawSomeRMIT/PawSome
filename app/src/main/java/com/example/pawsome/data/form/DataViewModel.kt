@@ -186,14 +186,14 @@ class DataViewModel : ViewModel() {
 
                                         notiService.showNotification(
                                             title = "Upload Successfully!",
-                                            content = "Successfully upload your  ${petDetail.petName} - "
-                                                    + petDetail.petBreed + petDetail.petAnimal
+                                            content = "Successfully upload your ${petDetail.petName} - "
+                                                    + petDetail.petBreed + " " +petDetail.petAnimal
                                                     + ". Your pet now available for booking. You can review your pet information by My Pets option at Setting Menu."
                                         )
 
-                                        // Back to home screen
-                                        navHostController.navigate(BottomBarScreen.Home.route) {
-                                            popUpTo(BottomBarScreen.Home.route) {
+                                        // Go to success screen
+                                        navHostController.navigate(BottomBarScreen.SuccessScreen.route) {
+                                            popUpTo(BottomBarScreen.SuccessScreen.route) {
                                                 inclusive = true
                                             }
                                         }
@@ -244,7 +244,7 @@ class DataViewModel : ViewModel() {
                 .addOnSuccessListener {
                     val notiService = NotificationService(context)
 
-                    notiService.showNotification(title = "Update Successfully!", content = "Successfully update information of your ${petDetail.petName} - " + petDetail.petBreed + petDetail.petAnimal)
+                    notiService.showNotification(title = "Update Successfully!", content = "Successfully update information of your ${petDetail.petName} - " + petDetail.petBreed + " " + petDetail.petAnimal)
 
                     Log.d(tag, "Form $formID is updated")
 
@@ -263,6 +263,30 @@ class DataViewModel : ViewModel() {
         } else {
             Toast.makeText(context, "Invalid address. Try again!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun deletePetDetail(
+        formID: String?,
+        context: Context,
+        navHostController: NavHostController
+    ) {
+        val tag = "Firestore"
+        val db = Firebase.firestore
+
+        db.collection("pets").document(formID.toString()).delete()
+            .addOnCompleteListener {
+                Log.d(tag, "Delete pet $formID success")
+                // Back to home screen
+                navHostController.navigate(BottomBarScreen.Home.route) {
+                    popUpTo(BottomBarScreen.Home.route) {
+                        inclusive = true
+                    }
+                }
+                Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Delete failed", Toast.LENGTH_SHORT).show()
+            }
     }
 
 

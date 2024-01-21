@@ -37,4 +37,8 @@ sealed class BottomBarScreen (
     object FormScreen: BottomBarScreen(
         route = "form"
     )
+
+    object SuccessScreen: BottomBarScreen(
+        route = "success"
+    )
 }

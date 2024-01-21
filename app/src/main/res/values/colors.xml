@@ -12,6 +12,7 @@
     <color name="light_gray">#FFF2F3F3</color>
     <color name="blue">#2C77FF</color>
     <color name="red">#ff3a30</color>
+    <color name="custom_red">#FF7777</color>
     <color name="text_gray">#FFA1A1A1</color>
     <color name="yellow">#FFE8BE13</color>
     <color name="light_yellow">#FFE3D28D</color>

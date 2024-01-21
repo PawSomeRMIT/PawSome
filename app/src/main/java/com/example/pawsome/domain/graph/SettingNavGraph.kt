@@ -37,7 +37,10 @@ fun NavGraphBuilder.settingNavGraph(
         startDestination = SettingScreen.SettingMenu.route
     ) {
         composable(route = SettingScreen.SettingMenu.route) {
-            SettingScreen(navController = homeNavController, rootNavController = rootNavController)
+            SettingScreen(
+                navController = homeNavController,
+                rootNavController = rootNavController,
+            )
         }
 
         composable(route = SettingScreen.BookingHistory.route) {
