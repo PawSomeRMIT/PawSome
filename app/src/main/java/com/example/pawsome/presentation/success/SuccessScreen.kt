@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,11 +30,10 @@ fun SuccessScreen(action: String = "Create", buttonTitle: String = "Go Back", bu
     ) {
         Image(painter = painterResource(id = R.drawable.tick), contentDescription = "green tick")
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "${action} Success", fontSize = 28.sp)
-        Spacer(modifier = Modifier.height(20.dp))
+        Text(text = "$action Success", fontSize = 28.sp)
+        Spacer(modifier = Modifier.height(550.dp))
         Box(modifier = Modifier.width(300.dp)) {
             ButtonComponent(value = buttonTitle, onButtonClicked = { buttonAction()}, isEnabled = true)
         }
-
     }
 }
