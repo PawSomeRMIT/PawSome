@@ -10,14 +10,15 @@ For best experience, please view this file with a Markdown viewer
 ## Introduction
 Pawsome is an app that connects pet lovers with pet fosters who have dogs, cats, and other adorable animals that are waiting for their forever homes. Users can book a pet for an hour or a day, enjoy the companionship of a cuddly creature and learn how to raise and live with a pet before coming to an adopted decision. Or simply having fun with a pet and going to a coffee shop with friends.
 
-Pawsome is easy to use and has two types of accounts: customer and foster. As a customer, users are able to browse a list of available pets for booking, see their photos, profiles, and reviews. They can chat with the foster directly and ask any questions related to pets. Moreover, they can access booking history and rate experience with the pet and the agency. The foster account requires users to do an upgrade and its process involves a transaction API and fee. As the foster, users can post new pets for booking and edit their information. You can also chat with the customers and arrange the details of the booking.
+Pawsome is easy to use and has two types of accounts: *normal* and *subscribed*. As a normal user, they are able to browse a list of available pets (images, basic details, address and proporsed renting price) for booking. Normal users can chat with pet owners directly and ask any questions related to pets and can access booking history. Creating pet for booking requires users to upgrade their account and its process involves a transaction API and payment. As a *subscribed* user, they can post new pets for booking and edit their information. They can also chat with the customers and arrange the details of the booking.
 
 
 ## Tech Stack
 
-- **Firebase**: Authentication, Realtime Database, FireStore, Storage
+- **Firebase**: Authentication, FireStore, Storage
 - **Payment process**: Stripe API
 - **Language**: Kotlin
+- **Package**: Retrofit for HHTP API requests
 - **UI toolkit**: Jetpack Compose
 - **Dependency Injection**: Dagger-Hilt
 - **Map service**: Google Maps API
@@ -33,18 +34,18 @@ Our application offers a comprehensive suite of features designed to enhance use
 ### Main Features (9/9 completed)
 
 - **History**: Keep track of your past activities and transactions within the app.
-- **Pet Detail**: Access in-depth information about pets, including health, history, and care instructions.
-- **Recommendation**: Get personalized suggestions based on your preferences and previous interactions.
-- **Booking**: Easily book appointments or services directly through the app.
+- **Pet Detail**: Access in-depth information about pets, including their photos, profiles (breed, type, color, age, description), adopting address, proposed renting price.
+- **Recommendation**: Get suggestions based on your nearest current location.
+- **Booking**: User can rent pets they like based on pet details.
 - **Payment**: Secure and versatile payment options for all transactions within the app.
-- **Settings (UI completion)**: Customize your app experience by adjusting the settings to your liking.
+- **Settings**: User can view list of their booking and own created pets history.
 - **Notification**: User will received a notification if they have successfully create a pet for booking.
-- **Membership**: Gain access to exclusive benefits and features by becoming a member.
+- **Membership**: Gain access to exclusive benefits and features by becoming a *subscribed* user.
 - **Authentication**: A secure login system that ensures the safety and privacy of your data.
 
 ### Extra Features (2/2 completed)
-- **ID card verification**: Additional security layer requiring ID verification for enhanced trust and safety.
-- **Chat**: Communicate directly with service providers or support through the app.
+- **ID card verification**: Additional security layer requiring user ID card to verify user's identity to prevent pets from being stolen.
+- **Chat**: Communicate directly with pet owners.
 
 ## Limitations
 
