@@ -32,6 +32,7 @@ import com.example.pawsome.R
 import com.example.pawsome.domain.screens.BottomBarScreen
 import com.example.pawsome.model.PetDetail
 import com.example.pawsome.model.getLocationFromAddress
+import com.example.pawsome.util.NotificationService
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -181,6 +182,14 @@ class DataViewModel : ViewModel() {
                                 db.collection("pets")
                                     .add(petDetail)
                                     .addOnSuccessListener {
+                                        val notiService = NotificationService(context)
+
+                                        notiService.showNotification(
+                                            title = "Upload Successfully!",
+                                            content = "Successfully upload your  ${petDetail.petName} - "
+                                                    + petDetail.petBreed + petDetail.petAnimal
+                                                    + ". Your pet now available for booking. You can review your pet information by My Pets option at Setting Menu."
+                                        )
 
                                         // Back to home screen
                                         navHostController.navigate(BottomBarScreen.Home.route) {
@@ -233,6 +242,10 @@ class DataViewModel : ViewModel() {
             db.collection("pets").document(formID.toString())
                 .set(petDetail)
                 .addOnSuccessListener {
+                    val notiService = NotificationService(context)
+
+                    notiService.showNotification(title = "Update Successfully!", content = "Successfully update information of your ${petDetail.petName} - " + petDetail.petBreed + petDetail.petAnimal)
+
                     Log.d(tag, "Form $formID is updated")
 
                     // Back to home screen
@@ -300,13 +313,11 @@ class DataViewModel : ViewModel() {
                     .addOnFailureListener {
                         Toast.makeText(
                             context,
-                            "upload failed",
+                            "Image upload failed",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                     .addOnSuccessListener { taskSnapshot ->
-
-                        sendUploadSuccessNotification(context)
                     }.await()
             }
 
@@ -329,29 +340,6 @@ class DataViewModel : ViewModel() {
         } catch (e: Exception) {
             return null
         }
-    }
-
-    private fun sendUploadSuccessNotification(context: Context) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        // Create a notification channel for Android 8.0 and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "upload_channel",
-                "Upload Notifications",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notification = NotificationCompat.Builder(context, "upload_channel")
-            .setContentTitle("Upload Successful")
-            .setContentText("Your file has been uploaded successfully.")
-            .setSmallIcon(R.drawable.background_11) // Replace with your own drawable
-            .build()
-
-        notificationManager.notify(0, notification)
     }
 
     private fun vailidateForm() {

@@ -17,8 +17,10 @@ package com.example.pawsome.presentation.authentication.login
 
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Looper
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -58,9 +60,11 @@ class LoginViewModel @Inject constructor (
     private val _signInState = Channel<SignInState>()
     val signInState = _signInState.receiveAsFlow()
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     val permissions = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
         android.Manifest.permission.ACCESS_FINE_LOCATION,
+//        android.Manifest.permission.POST_NOTIFICATIONS,
     )
 
     lateinit var fusedLocationClient: FusedLocationProviderClient

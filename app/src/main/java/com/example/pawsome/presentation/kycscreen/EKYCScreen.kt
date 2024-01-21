@@ -74,6 +74,7 @@ import com.example.pawsome.R
 import com.example.pawsome.common.ColorButton
 import com.example.pawsome.domain.Graph
 import com.example.pawsome.model.PetDetail
+import com.example.pawsome.util.NotificationService
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.paymentsheet.PaymentSheet
 import com.stripe.android.paymentsheet.rememberPaymentSheet
@@ -376,7 +377,9 @@ fun EKYCUploadScreen(
     LaunchedEffect(key1 = ekycScreenViewModel.isPaymentCompleted.value) {
         scope.launch {
             if (ekycScreenViewModel.isPaymentCompleted.value) {
-                Toast.makeText(context, "Payment Completed!", Toast.LENGTH_SHORT).show()
+                val notiService = NotificationService(context)
+
+                notiService.showNotification(title = "Payment Completed!", content = "You have successfully booked ${petDetail.petName} - " + petDetail.petBreed + petDetail.petAnimal + "\nReview your bookings by Booking History in Setting Menu.")
 
                 ekycScreenViewModel.createBooking(petDetail = petDetail)
 
