@@ -16,6 +16,7 @@
 package com.example.pawsome.presentation.settings.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -51,10 +53,12 @@ import com.example.pawsome.model.User
 fun Profile(
     userData: User
 ) {
-    Row(
+    Column(
         modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 20.dp)
-            .fillMaxWidth()
+            .padding(top = 60.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
             userData.image,
@@ -63,59 +67,57 @@ fun Profile(
             modifier = Modifier
                 .size(140.dp)
                 .clip(CircleShape)
+                .border(
+                    width = 4.dp,
+                    color = colorResource(id = R.color.white),
+                    shape = CircleShape
+                )
         )
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Column {
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TitleText(value = userData.username)
+        Row(
+            modifier = Modifier.padding(start = 25.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TitleText(value = userData.username)
 
-                if (userData.membership == "Subscribed") {
-                    Spacer(modifier = Modifier.width(10.dp))
+            if (userData.membership == "Subscribed") {
+                Spacer(modifier = Modifier.width(10.dp))
 
-                    Icon(
-                        imageVector = Icons.Filled.VerifiedUser,
-                        contentDescription = "Icon description",
-                        modifier = Modifier.size(40.dp),
-                        tint = Color.Green
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Filled.VerifiedUser,
+                    contentDescription = "Icon description",
+                    modifier = Modifier.size(25.dp),
+                    tint = Color.Green
+                )
             }
+        }
 
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-            Row (
-                modifier = Modifier.fillMaxWidth(),
+        Row {
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = userData.history.size.toString(),
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp
-                        )
+                Text(
+                    text = userData.history.size.toString(),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
                     )
-
-                    NormalText(value = "bookings")
-                }
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                NormalText(value = "bookings")
             }
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.width(20.dp))
 
-            Row (
-                modifier = Modifier.fillMaxWidth(),
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Center
             ) {
                 Image(
                     painter = painterResource(
@@ -132,7 +134,7 @@ fun Profile(
                     color = Color.Black,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp,
-                    )
+                )
             }
         }
     }

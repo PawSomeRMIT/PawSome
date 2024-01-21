@@ -18,24 +18,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.example.pawsome.R
 
 @Composable
-fun NormalText(value: String, textAlign: TextAlign = TextAlign.Center) {
+fun NormalText(value: String, color: Color =Color.DarkGray, textAlign: TextAlign = TextAlign.Center) {
     Text(text = value,
         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Light),
-        color = Color.DarkGray,
+        color = color,
         textAlign = textAlign
     )
 }
 
 @Composable
-fun TitleText(value: String) {
+fun TitleText(value: String, style: String = "bold", color: Int = R.color.black, fontSize: TextUnit = 32.sp) {
     Text(text = value,
-        fontSize = 32.sp,
-        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+        color = colorResource(id = color),
+        fontSize = fontSize,
+        style = if (style == "bold")
+            MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold) else
+            MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Light),
         textAlign = TextAlign.Center
     )
 }

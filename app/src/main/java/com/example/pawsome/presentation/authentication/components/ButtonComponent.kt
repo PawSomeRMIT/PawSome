@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,6 +43,7 @@ fun ButtonComponent(
     value: String,
     onButtonClicked: () -> Unit,
     isEnabled: Boolean = false,
+    elevation: ButtonElevation = ButtonDefaults.buttonElevation(5.dp),
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .height(48.dp),
@@ -51,6 +53,7 @@ fun ButtonComponent(
         contentPadding = PaddingValues(),
         colors = ButtonDefaults.buttonColors(colorResource(id = R.color.yellow)),
         shape = shape,
+        elevation = elevation,
         enabled = isEnabled,
         onClick = { onButtonClicked.invoke() }
     ) {
