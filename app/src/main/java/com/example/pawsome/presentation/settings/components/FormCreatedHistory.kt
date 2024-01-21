@@ -134,9 +134,8 @@ fun MyPetListScreen(
             else {
                 Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
                     Text(
-                        text = "No pet for booking 🥲", fontSize = 22.sp
+                        text = "You haven't not uploaded any pet yet 🥲", fontSize = 22.sp
                     )
-
                 }
             }
         }

@@ -17,10 +17,12 @@ package com.example.pawsome.presentation.authentication.login
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -74,6 +76,7 @@ import com.example.pawsome.presentation.authentication.components.ButtonComponen
 import com.example.pawsome.presentation.authentication.components.CustomTextField
 import com.example.pawsome.presentation.authentication.components.DividerComponent
 import com.example.pawsome.presentation.authentication.components.PasswordTextField
+import com.example.pawsome.util.NotificationService
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
@@ -84,6 +87,7 @@ import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun Login(
     navHostController: NavHostController,
@@ -116,46 +120,37 @@ fun Login(
 
     val launchMultiplePermissions = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        var allPermissionsGranted = true
-        permissions.entries.forEach { (permission, isGranted) ->
+    ) { permissionMap ->
+        var areGranted = true
+
+        permissionMap.entries.forEach { (permission, isGranted) ->
             if (!isGranted) {
-                allPermissionsGranted = false
+                areGranted = false
                 Log.d("Permissions", "Permission Denied: $permission")
             }
         }
 
-        if (allPermissionsGranted) {
+        if (areGranted) {
             loginViewModel.locationRequired = true
-            Log.d("KEOY", "Start call LocationUpdate")
             loginViewModel.startLocationUpdate()
-            Toast.makeText(context, "All Permissions Granted", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "One or More Permissions Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show()
+        }
+        else {
+            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
         }
     }
 
-// When you need to request the permissions
-    val requiredPermissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        Manifest.permission.POST_NOTIFICATIONS,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_MEDIA_IMAGES
-    )
-
-    var allPermissionsGranted by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = Unit) {
-        allPermissionsGranted = requiredPermissions.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-        }
-
-        if (!allPermissionsGranted) {
-            launchMultiplePermissions.launch(requiredPermissions)
-        }
-    }
+//    var allPermissionsGranted by remember { mutableStateOf(false) }
+//
+//    LaunchedEffect(key1 = Unit) {
+//        allPermissionsGranted = loginViewModel.permissions.all {
+//            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+//        }
+//
+//        if (!allPermissionsGranted) {
+//            launchMultiplePermissions.launch(loginViewModel.permissions)
+//        }
+//    }
 
     val scope = rememberCoroutineScope()
 
