@@ -85,12 +85,12 @@ We are actively working to address these limitations and hope to provide updates
 Application demo video can be found [here](https://rmiteduau-my.sharepoint.com/:v:/g/personal/s3870730_rmit_edu_vn/EYPXAPmDDPpNh0UhCRRsg-0BNxFU9Io--DruPORMlgpCFw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=njbIWD)
 
 ## Team Work Distribution
-| Team Member  | Main Features                             | Extra Features         | Contribution |
-|--------------|-------------------------------------------|------------------------|--------------|
-| Nhat Bui     | History, Pet Detail (50%)                 | Authentication         | 25%          |
-| Thuc Thieu   | Recommendation, Pet Detail (50%)          | ID card verification   | 25%          |
-| Tri Lai      | Booking, Membership                       |                        | 25%          |
-| Ngan Phan    | Payment, Setting (UI completion), Notification |                    | 25%          |
+| Team Member  | Main Features                                                                                                       | Extra Features                     | Contribution |
+|--------------|---------------------------------------------------------------------------------------------------------------------|------------------------------------|--------------|
+| Nhat Bui     | Pet Detail, About Us, Notification                                                                                  |                                    | 25%          |
+| Thuc Thieu   | Pet List(distance sort, search, filter type)\n, Booking feature, Navigation graphs, Backend API, Payment, Membership| ID card verification, Chat Feature | 25%          |
+| Tri Lai      | Authentication, Setting UI, Adding pet, My Pets(showing, edit)                                                      |                                    | 25%          |
+| Ngan Phan    | Booking History                                                                                                     |                                    | 25%          |
 
 
 ## References 
