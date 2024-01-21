@@ -142,7 +142,7 @@ fun HistoryScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "You have no booking yet 😄",
+                        text = "You have no completed booking yet 😄",
                         fontSize = 22.sp,
                     )
                 }

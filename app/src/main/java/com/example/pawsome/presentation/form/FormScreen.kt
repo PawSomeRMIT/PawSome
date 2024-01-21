@@ -314,6 +314,7 @@ fun FormScreen(
                 onTextChanged = {
                     scope.launch {
                         dataViewModel.onEvent(FormUIEvent.PetLocationChanged(it))
+
                         if (petDetail != null) {
                             petDetail.petAddress = it
                         } else {

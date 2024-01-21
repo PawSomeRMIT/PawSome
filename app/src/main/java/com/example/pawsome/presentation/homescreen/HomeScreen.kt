@@ -218,7 +218,7 @@ fun HomeContent(
                         )
 
                         if (pet == displayPetsList[displayPetsList.size-1]) {
-                            Spacer(modifier = Modifier.fillMaxWidth().height(40.dp))
+                            Spacer(modifier = Modifier.fillMaxWidth().height(75.dp))
                         }
                     }
                 }
